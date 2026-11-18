@@ -6,11 +6,11 @@ This repository is a working skeleton. Recommendations come from rules and retri
 
 **Decision support for a human biller. Not a final coding or coverage determination.**
 
-The home page is a four-step check for a dental office manager: pick a procedure, answer yes / no / not sure, read one result, and print a one-page summary. Questions and result rules live in `questions/procedures.yaml`. Each one cites a source registered from `corpus/office/`. Answers stay in the browser session. The case is not written to the database, and there is no login.
+The office workspace is a four-step check for a dental office manager: pick a procedure, answer yes / no / not sure, read one result, and print a one-page summary. The sidebar opens Cases, New check, the Procedures library, Sources, and Help. Questions and result rules live in `questions/procedures.yaml`. Each one cites a source registered from `corpus/office/`. The check in progress stays in a signed browser cookie. A finished check is saved in the browser only. The case is not written to the database, and there is no login. Cases marked SYNTHETIC demo are examples built from those rules when the page renders.
 
-The engineer case screen is at `/advanced`. `POST /api/evaluate` is unchanged.
+The engineer case screen is at `/advanced`, linked from the bottom of the sidebar. `POST /api/evaluate` is unchanged. A future chat endpoint is described in `docs/chat-endpoint-plan.md` and is not built.
 
-Two procedures are active: sleep apnea oral appliance, and dental care needed before a medical treatment (Medicare). The registered public sources are Medicare LCD L33611, Policy Article A52512, Medicare Benefit Policy Manual Chapter 15 §150, and the CMS Medicare dental coverage page. `corpus/office/` stores the short facts this tool is allowed to cite, with the public URL and effective date. It is not a copy of those publications. A line that cannot be tied to an in-window source is shown as `not found`.
+Two procedures are active: sleep apnea oral appliance, and dental care needed before a medical treatment (Medicare). The registered public sources are Medicare LCD L33611, Policy Article A52512, Medicare Benefit Policy Manual Chapter 15 §150, and the CMS Medicare dental coverage page. `corpus/office/` stores the short facts this tool is allowed to cite, with the public URL and effective date. It is not a copy of those publications. A line that cannot be tied to an in-window source keeps the internal status `not found`. The office screen says: Our sources don't cover this yet. Confirm with the payer.
 
 ## The five rules
 

@@ -1,0 +1,3 @@
+{% macro gap_text(text) -%}
+<span class="gap-copy"{% if text == "not found" %} data-internal-status="not found"{% endif %}>{{ text|plain_gap }}</span>
+{%- endmacro %}

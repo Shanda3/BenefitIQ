@@ -21,6 +21,7 @@ from benefitiq.config import samples_dir
 from benefitiq.db import session_scope
 from benefitiq.engine.recommend import evaluate
 from benefitiq.models import Source
+from benefitiq.office.present import plain_gap
 from benefitiq.office.routes import router as office_router
 from benefitiq.schemas import CaseInput
 
@@ -28,6 +29,7 @@ app = FastAPI(title="BenefitIQ", version="0.1.0")
 
 _UI = Path(__file__).resolve().parent / "ui"
 templates = Jinja2Templates(directory=str(_UI / "templates"))
+templates.env.filters["plain_gap"] = plain_gap
 app.mount("/static", StaticFiles(directory=str(_UI / "static")), name="static")
 app.include_router(office_router)
 
@@ -58,6 +60,7 @@ def _render_result(request: Request, result) -> HTMLResponse:
             "disclaimer": DISCLAIMER,
             "result": result,
             "samples": _sample_ids(),
+            "nav": "advanced",
         },
     )
 
@@ -77,7 +80,7 @@ def advanced_index(request: Request):
     return templates.TemplateResponse(
         request,
         "advanced.html",
-        {"disclaimer": DISCLAIMER, "samples": _sample_ids()},
+        {"disclaimer": DISCLAIMER, "samples": _sample_ids(), "nav": "advanced"},
     )
 
 
@@ -95,6 +98,7 @@ def sample_result(sample_id: str, request: Request):
                 "message": "Unknown synthetic sample.",
                 "back_href": "/advanced",
                 "back_label": "Back to the engineer view",
+                "nav": "advanced",
             },
             status_code=404,
         )
@@ -123,6 +127,7 @@ def evaluate_form(
                 "message": "Case JSON was not accepted. Submit a synthetic case only.",
                 "back_href": "/advanced",
                 "back_label": "Back to the engineer view",
+                "nav": "advanced",
             },
             status_code=422,
         )
@@ -146,6 +151,7 @@ async def http_error(request: Request, exc: StarletteHTTPException):
                 "message": "That page is not available.",
                 "back_href": "/",
                 "back_label": "Back to the start",
+                "nav": "",
             },
             status_code=404,
         )

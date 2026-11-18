@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — help{% endblock %}
+{% block body %}
+<div class="help-page" data-testid="help-page">
+  <h1>Help</h1>
+  <section class="panel card">
+    <h2>A check, not a claim</h2>
+    <p>Start under New check or from an active procedure. Answer yes, no, or not sure. The result is one of three phrases: Bill medical first, Probably not medical, or Need more info. Nothing on this screen is sent to a payer.</p>
+  </section>
+  <section class="panel card">
+    <h2>How cases are grouped</h2>
+    <ul>
+      <li><strong>Ready to bill.</strong> The answers matched a cited rule for billing medical insurance first.</li>
+      <li><strong>Needs documentation.</strong> An answer was missing or not sure, or the chart is missing something the rule asks for.</li>
+      <li><strong>Not covered or not found.</strong> The answers point away from medical billing, or the sources do not cover that line. Confirm with the payer.</li>
+    </ul>
+    <p>Cards marked SYNTHETIC demo are examples. A check you finish is saved in this browser only. Clear my cases on the Cases page removes those saved checks. The database does not keep them.</p>
+  </section>
+  <section class="panel card">
+    <h2>Sources and codes</h2>
+    <p>A line names a source and an effective date, or it says: Our sources don't cover this yet. Confirm with the payer. Code numbers use the placeholder labels in this app. Descriptor text for CDT and CPT codes is not shown.</p>
+  </section>
+  <section class="panel card">
+    <h2>The line on every screen</h2>
+    <p>The banner at the top is part of the product, including the printed summary. It reads: Decision support for a human biller. Not a final coding or coverage determination.</p>
+    <p>The side panel labeled Ask about this case is off. It does not send a message. Advanced, at the bottom of the sidebar, opens the engineer view.</p>
+  </section>
+</div>
+{% endblock %}

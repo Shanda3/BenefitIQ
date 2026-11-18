@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — saved case{% endblock %}
+{% block body %}
+<article class="case-detail" id="local-case" data-testid="local-case">
+  <header class="panel card case-head">
+    <div>
+      <p class="kicker">SYNTHETIC</p>
+      <h1>Saved case</h1>
+      <p class="quiet" data-local-empty>This browser has no saved case for that id.</p>
+    </div>
+  </header>
+</article>
+{% endblock %}
+{% block chat %}{% include "chat.html" %}{% endblock %}
