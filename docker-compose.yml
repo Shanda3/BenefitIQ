@@ -1,0 +1,29 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: benefitiq
+      POSTGRES_PASSWORD: benefitiq
+      POSTGRES_DB: benefitiq
+    ports:
+      - "5432:5432"
+    volumes:
+      - benefitiq_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U benefitiq -d benefitiq"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://benefitiq:benefitiq@db:5432/benefitiq
+      PYTHONUNBUFFERED: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  benefitiq_pg:

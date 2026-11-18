@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ result {{ result.case_id }}{% endblock %}
+{% block body %}
+<section class="panel">
+  <p class="kicker">Result</p>
+  <h1>{{ result.case_id }}</h1>
+  <dl class="meta">
+    <div><dt>Date of service</dt><dd>{{ result.date_of_service }}</dd></div>
+    <div><dt>Date altered</dt><dd>{{ "yes" if result.date_of_service_altered else "no" }}</dd></div>
+    <div><dt>Scenario</dt><dd>{{ result.scenario }}</dd></div>
+    <div><dt>Routing</dt><dd>{{ result.routing.pathway }} · {{ result.routing.status }}</dd></div>
+  </dl>
+  <p class="routing-text">{{ result.routing.text }}</p>
+  {% if result.routing.citations %}
+  <ul class="citations">
+    {% for citation in result.routing.citations %}
+    <li>
+      <a href="{{ citation.url }}">{{ citation.title }}</a>
+      <span>{{ citation.effective_from }}{% if citation.effective_to %} – {{ citation.effective_to }}{% else %} – open{% endif %}</span>
+      <span class="anchor">{{ citation.section_anchor }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+
+{% if result.guardrails %}
+<section class="panel">
+  <h2>Guardrails</h2>
+  {% for guard in result.guardrails %}
+  <article class="guard">
+    <h3>{{ guard.type }} · {{ guard.status }}</h3>
+    <p>{{ guard.message }}</p>
+    {% if guard.codes %}<p>Codes: {{ guard.codes | join(", ") }}</p>{% endif %}
+    {% if guard.missing_elements %}
+    <p>Documentation missing: {{ guard.missing_elements | join(", ") }}</p>
+    {% endif %}
+    {% if guard.citations %}
+    <ul class="citations">
+      {% for citation in guard.citations %}
+      <li>
+        <a href="{{ citation.url }}">{{ citation.title }}</a>
+        <span>{{ citation.effective_from }}{% if citation.effective_to %} – {{ citation.effective_to }}{% else %} – open{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="panel">
+  <h2>Documentation missing</h2>
+  {% if result.documentation_missing %}
+  <ul class="gaps">
+    {% for gap in result.documentation_missing %}
+    <li>
+      <strong>{{ gap.element }}</strong>
+      <span>{{ gap.status }}</span>
+      {% if gap.related_codes %}<span>related {{ gap.related_codes | join(", ") }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="quiet">No documentation gaps were recorded for this case.</p>
+  {% endif %}
+</section>
+
+<section class="pathways">
+  {% for title, lines in (("Dental pathway", result.dental_lines), ("Medical pathway", result.medical_lines)) %}
+  <section class="panel pathway">
+    <h2>{{ title }}</h2>
+    {% if lines %}
+      {% for line in lines %}
+      <article class="line status-{{ line.status }}">
+        <header>
+          <span class="kind">{{ line.kind }}</span>
+          <span class="status">{{ line.status }}</span>
+        </header>
+        {% if line.code %}
+        <p class="code">{{ line.code_system }} {{ line.code }}</p>
+        <p class="label">{{ line.label }}</p>
+        {% endif %}
+        <p class="line-text">{{ line.text }}</p>
+        {% if line.frequency_token %}
+        <p>Frequency token: {{ line.frequency_token }}</p>
+        {% endif %}
+        {% if line.requirement_element %}
+        <p>Requirement: {{ line.requirement_element }} · {{ line.requirement_status }}</p>
+        {% endif %}
+        {% if line.supporting_span_ids %}
+        <p class="spans">Documentation spans: {{ line.supporting_span_ids | join(", ") }}</p>
+        {% endif %}
+        {% if line.citations %}
+        <ul class="citations">
+          {% for citation in line.citations %}
+          <li>
+            <a href="{{ citation.url }}">{{ citation.url }}</a>
+            <span>{{ citation.effective_from }}{% if citation.effective_to %} – {{ citation.effective_to }}{% else %} – open{% endif %}</span>
+            <span class="anchor">{{ citation.section_anchor }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+      {% endfor %}
+    {% else %}
+    <p class="quiet">No cited recommendations.</p>
+    {% endif %}
+  </section>
+  {% endfor %}
+</section>
+<p class="back"><a href="/">Evaluate another synthetic case</a></p>
+{% endblock %}

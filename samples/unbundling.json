@@ -1,0 +1,21 @@
+{
+  "case_id": "SYN-BUNDLE-001",
+  "synthetic": true,
+  "date_of_service": "2025-02-20",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "bundled_crown",
+  "requested_codes": [
+    {"system": "CDT", "code": "D2740"},
+    {"system": "CDT", "code": "D2950"}
+  ],
+  "spans": [
+    {
+      "id": "span-crown",
+      "kind": "procedure_note",
+      "text": "Fictional adult patient. Crown procedure completed. Core material placed at the same visit. Synthetic case only."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case_id": "SYN-NOCOV-001",
+  "synthetic": true,
+  "date_of_service": "2025-02-01",
+  "payer_dental": "Synthetic Payer Not In Corpus",
+  "payer_medical": "Synthetic Payer Not In Corpus",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "unknown_coverage",
+  "requested_codes": [
+    {"system": "CDT", "code": "D1110"}
+  ],
+  "spans": [
+    {
+      "id": "span-none",
+      "kind": "clinical_note",
+      "text": "Fictional adult patient. Prophylaxis completed. Synthetic case only."
+    }
+  ]
+}

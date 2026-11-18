@@ -1,0 +1,29 @@
+stub: FICTIONAL STUB
+coding_rules:
+  - rule_id: osa-device
+    scenario: sleep_apnea_appliance
+    pathway: medical
+    code_system: HCPCS
+    code: E0486
+    requires: [osa_diagnosis, sleep_study, prescription, cpap_intolerance]
+    volunteer: true
+    report_gap: true
+routing_rules:
+  - route_id: osa-equipment
+    scenario: sleep_apnea_appliance
+    primary_pathway: medical
+    statement: medical equipment pathway
+    requires: [osa_diagnosis]
+checklist:
+  - item_id: osa-sleep-study
+    scenario: sleep_apnea_appliance
+    pathway: medical
+    element: sleep_study
+  - item_id: osa-prescription
+    scenario: sleep_apnea_appliance
+    pathway: medical
+    element: prescription
+  - item_id: osa-cpap
+    scenario: sleep_apnea_appliance
+    pathway: medical
+    element: cpap_intolerance

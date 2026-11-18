@@ -1,0 +1,9 @@
+[project]
+name = "benefitiq"
+version = "0.1.0"
+description = "BenefitIQ dental coding and billing decision-support skeleton"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

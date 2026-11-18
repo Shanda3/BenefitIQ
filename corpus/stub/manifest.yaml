@@ -1,0 +1,145 @@
+# Fictional stub corpus. Not a payer, CMS, ADA, or AMA publication.
+documents:
+  - path: policies/trauma_guidance.md
+    source_id: stub-trauma-guidance
+    family_id: stub-trauma-guidance
+    title: Stub trauma coding guidance (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/trauma-guidance
+    effective_from: 2024-01-01
+    doc_type: policy
+    loader: prose
+    program: medical
+
+  - path: tables/trauma_rules.yaml
+    source_id: stub-trauma-rules
+    family_id: stub-trauma-rules
+    title: Stub trauma coding rules (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/trauma-rules
+    effective_from: 2024-01-01
+    doc_type: coding_rules
+    loader: structured
+    program: medical
+
+  - path: policies/biopsy_guidance.md
+    source_id: stub-biopsy-guidance
+    family_id: stub-biopsy-guidance
+    title: Stub biopsy coding guidance (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/biopsy-guidance
+    effective_from: 2024-01-01
+    doc_type: policy
+    loader: prose
+    program: medical
+
+  - path: tables/biopsy_rules.yaml
+    source_id: stub-biopsy-rules
+    family_id: stub-biopsy-rules
+    title: Stub biopsy coding rules (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/biopsy-rules
+    effective_from: 2024-01-01
+    doc_type: coding_rules
+    loader: structured
+    program: medical
+
+  - path: policies/osa_guidance.md
+    source_id: stub-osa-guidance
+    family_id: stub-osa-guidance
+    title: Stub Payer B oral appliance policy (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/payer-b/osa-guidance
+    effective_from: 2024-01-01
+    doc_type: policy
+    loader: prose
+    payer: Stub Payer B
+    plan_type: commercial
+    program: medical
+
+  - path: tables/osa_rules.yaml
+    source_id: stub-osa-rules
+    family_id: stub-osa-rules
+    title: Stub Payer B oral appliance rules (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/payer-b/osa-rules
+    effective_from: 2024-01-01
+    doc_type: policy
+    loader: structured
+    payer: Stub Payer B
+    plan_type: commercial
+    program: medical
+
+  - path: tables/exam_rules.yaml
+    source_id: stub-exam-rules
+    family_id: stub-exam-rules
+    title: Stub exam level rules (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/exam-rules
+    effective_from: 2024-01-01
+    doc_type: coding_rules
+    loader: structured
+
+  - path: tables/bundle_rules.yaml
+    source_id: stub-payer-a-bundling
+    family_id: stub-payer-a-bundling
+    title: Stub Payer A bundling rule (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/payer-a/bundling
+    effective_from: 2024-01-01
+    doc_type: bundling_rule
+    loader: structured
+    payer: Stub Payer A
+    plan_type: commercial
+    program: dental
+
+  - path: tables/payer_a_dental_v2024.yaml
+    source_id: stub-payer-a-dental-v2024
+    family_id: stub-payer-a-dental
+    title: Stub Payer A dental policy v2024 (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/payer-a/dental/v2024
+    effective_from: 2024-01-01
+    effective_to: 2025-06-30
+    doc_type: policy
+    loader: structured
+    payer: Stub Payer A
+    plan_type: commercial
+    program: dental
+
+  - path: tables/payer_a_dental_v2025.yaml
+    source_id: stub-payer-a-dental-v2025
+    family_id: stub-payer-a-dental
+    title: Stub Payer A dental policy v2025 (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/payer-a/dental/v2025
+    effective_from: 2025-07-01
+    doc_type: policy
+    loader: structured
+    payer: Stub Payer A
+    plan_type: commercial
+    program: dental
+
+  - path: tables/code_index.yaml
+    source_id: stub-code-index
+    family_id: stub-code-index
+    title: Stub code index (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/code-index
+    effective_from: 2020-01-01
+    doc_type: code_table
+    loader: structured
+
+  - path: policies/medicaid_note.md
+    source_id: stub-medicaid-dental
+    family_id: stub-medicaid-dental
+    title: Stub Medicaid dental note (FICTIONAL STUB)
+    publisher: BenefitIQ Stub Corpus
+    url: https://example.test/stub/medicaid-dental
+    effective_from: 2024-01-01
+    doc_type: policy
+    loader: prose
+    payer: Stub Medicaid Plan
+    state: ZZ
+    plan_type: medicaid
+    program: dental

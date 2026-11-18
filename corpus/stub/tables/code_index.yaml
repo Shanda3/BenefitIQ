@@ -1,0 +1,46 @@
+stub: FICTIONAL STUB
+code_rows:
+  - code_row_id: cdt-D0140
+    code_system: CDT
+    code: D0140
+    label_ref: D0140
+  - code_row_id: cdt-D0150
+    code_system: CDT
+    code: D0150
+    label_ref: D0150
+  - code_row_id: cdt-D0160
+    code_system: CDT
+    code: D0160
+    label_ref: D0160
+  - code_row_id: cdt-D0367
+    code_system: CDT
+    code: D0367
+    label_ref: D0367
+  - code_row_id: cdt-D1110
+    code_system: CDT
+    code: D1110
+    label_ref: D1110
+  - code_row_id: cdt-D2740
+    code_system: CDT
+    code: D2740
+    label_ref: D2740
+  - code_row_id: cdt-D2950
+    code_system: CDT
+    code: D2950
+    label_ref: D2950
+  - code_row_id: hcpcs-E0486
+    code_system: HCPCS
+    code: E0486
+    label_ref: E0486
+  - code_row_id: icd-S02
+    code_system: ICD10CM
+    code: S02.5XXA
+    label_ref: S02.5XXA
+  - code_row_id: icd-V18
+    code_system: ICD10CM
+    code: V18.0XXA
+    label_ref: V18.0XXA
+  - code_row_id: icd-K13
+    code_system: ICD10CM
+    code: K13.70
+    label_ref: K13.70

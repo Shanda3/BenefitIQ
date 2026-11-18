@@ -1,0 +1,32 @@
+stub: FICTIONAL STUB
+coding_rules:
+  - rule_id: trauma-tooth
+    scenario: trauma
+    pathway: medical
+    code_system: ICD10CM
+    code: S02.5XXA
+    requires: [tooth_fracture, dental_exam]
+    volunteer: true
+    report_gap: true
+  - rule_id: trauma-external
+    scenario: trauma
+    pathway: medical
+    code_system: ICD10CM
+    code: V18.0XXA
+    requires: [bicycle_fall, date_of_injury, place_of_injury, tooth_fracture]
+    volunteer: true
+    report_gap: true
+  - rule_id: trauma-exam
+    scenario: trauma
+    pathway: dental
+    code_system: CDT
+    code: D0140
+    requires: [limited_exam, dental_exam, tooth_fracture]
+    volunteer: false
+    report_gap: false
+routing_rules:
+  - route_id: trauma-medical-first
+    scenario: trauma
+    primary_pathway: medical
+    statement: medical pathway considered first
+    requires: [tooth_fracture, er_note]

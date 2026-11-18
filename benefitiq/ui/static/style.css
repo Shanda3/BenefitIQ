@@ -1,0 +1,154 @@
+:root {
+  --ink: #1c1915;
+  --muted: #5c564c;
+  --paper: #f3efe6;
+  --card: #fffdf8;
+  --line: #d9d0c1;
+  --banner: #fff3cc;
+  --banner-ink: #3f2e04;
+  --banner-edge: #8a6d1f;
+  --teal: #0f4c5c;
+  --cited: #e5f2e9;
+  --missing: #f8e8e4;
+  --refused: #f4ead2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.45;
+}
+
+a { color: var(--teal); }
+
+.top {
+  padding: 1.1rem 1.5rem 0.4rem;
+}
+
+.brand {
+  display: flex;
+  gap: 0.8rem;
+  align-items: baseline;
+}
+
+.brand a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  font-size: 1.35rem;
+}
+
+.brand span { color: var(--muted); font-size: 0.95rem; }
+
+.banner {
+  margin: 0.6rem 1.5rem 1rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--banner);
+  color: var(--banner-ink);
+  border: 1px solid var(--banner-edge);
+  border-left-width: 6px;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+main { padding: 0 1.5rem 2.5rem; }
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 1rem 1.1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+
+h1, h2, h3 { font-weight: 650; margin: 0 0 0.6rem; }
+
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.15rem; }
+
+.lede, .quiet { color: var(--muted); }
+
+.sample-row, .case-form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+button {
+  font: inherit;
+  background: white;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+
+button.primary, .case-form button {
+  background: var(--teal);
+  color: white;
+}
+
+textarea {
+  width: 100%;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  padding: 0.6rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.meta div { margin: 0; }
+.meta dt { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.meta dd { margin: 0.1rem 0 0; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+.pathways {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.line, .guard {
+  border-top: 1px solid var(--line);
+  padding-top: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+.line header, .citations li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.8rem;
+  align-items: baseline;
+}
+
+.kind, .status, .anchor {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-cited { background: var(--cited); padding: 0.6rem; }
+.status-not_found { background: var(--missing); padding: 0.6rem; }
+.status-refused, .guard { background: var(--refused); padding: 0.6rem; }
+
+.code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.05rem; margin: 0.25rem 0; }
+.label, .line-text, .spans { margin: 0.15rem 0; }
+.citations { list-style: none; padding: 0; margin: 0.4rem 0 0; }
+.citations a { word-break: break-all; }
+.gaps { padding-left: 1.1rem; }
+.back { margin-top: 0.5rem; }
+
+@media (max-width: 800px) {
+  .pathways { grid-template-columns: 1fr; }
+  .banner, .top, main { margin-left: 0.7rem; margin-right: 0.7rem; }
+  main { padding-left: 0.7rem; padding-right: 0.7rem; }
+}
