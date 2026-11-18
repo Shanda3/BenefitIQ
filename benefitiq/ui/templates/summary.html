@@ -1,11 +1,17 @@
 {% extends "base.html" %}
+{% from "gap.html" import gap_text %}
 {% block title %}BenefitIQ summary {{ decision.case_id }}{% endblock %}
 {% block body_class %}print-view{% endblock %}
 {% block body %}
 {% include "steps.html" %}
+<p class="page-actions no-print">
+  <button type="button" onclick="window.print()">Print this page</button>
+  <a class="button quiet-button" href="{{ request.url.path|replace('/print', '') if '/cases/' in request.url.path else '/office/result' }}">Back to the result</a>
+</p>
 <article class="print-summary" data-testid="print-summary">
   <p class="kicker">Biller summary</p>
   <h1>{{ decision.result_label }}</h1>
+  <p><span class="chip {{ chip_class }}">{{ board_status }}</span></p>
   <dl class="meta">
     <div><dt>Case</dt><dd data-testid="case-id">{{ decision.case_id }}</dd></div>
     <div><dt>Date</dt><dd data-testid="case-date">{{ decision.as_of }}</dd></div>
@@ -18,7 +24,7 @@
     {% endfor %}
   </ol>
   <h2>Result</h2>
-  <p>{{ decision.reason.text }}
+  <p>{{ gap_text(decision.reason.text) }}
     {% if decision.reason.text != "not found" %}
     {% with citations=decision.reason.citations %}{% include "cite_short.html" %}{% endwith %}
     {% endif %}
@@ -29,7 +35,7 @@
   <h2>Codes to consider</h2>
   {% for code in decision.codes %}
   <p>
-    {% if code.code %}Code {{ code.code }} — {{ code.label }}. {% endif %}{{ code.note }}
+    {% if code.code %}Code {{ code.code }} — {{ code.label }}. {% endif %}{{ gap_text(code.note) }}
     {% if code.note != "not found" %}
     {% with citations=code.citations %}{% include "cite_short.html" %}{% endwith %}
     {% endif %}
@@ -37,12 +43,14 @@
   {% if code.note != "not found" %}
   {% with citations=code.citations %}{% include "citations.html" %}{% endwith %}
   {% endif %}
+  {% else %}
+  <p>{{ gap_text("not found") }}</p>
   {% endfor %}
   <h2>Documentation missing</h2>
   {% if decision.gaps %}
   <ul>
     {% for gap in decision.gaps %}
-    <li>{{ gap.text }}
+    <li>{{ gap_text(gap.text) }}
       {% if gap.text != "not found" %}
       {% with citations=gap.citations %}{% include "cite_short.html" %}{% endwith %}
       {% with citations=gap.citations %}{% include "citations.html" %}{% endwith %}
@@ -56,7 +64,7 @@
   <h2>Checklist</h2>
   <ul class="checklist">
     {% for item in decision.checklist %}
-    <li>{{ item.text }}
+    <li>{{ gap_text(item.text) }}
       {% if item.text != "not found" %}
       {% with citations=item.citations %}{% include "cite_short.html" %}{% endwith %}
       {% with citations=item.citations %}{% include "citations.html" %}{% endwith %}
@@ -75,11 +83,7 @@
     {% endfor %}
   </ul>
   {% else %}
-  <p>not found</p>
+  <p>{{ gap_text("not found") }}</p>
   {% endif %}
 </article>
-<p class="actions no-print">
-  <button type="button" onclick="window.print()">Print this page</button>
-  <a class="button quiet-button" href="/office/result">Back to the result</a>
-</p>
 {% endblock %}

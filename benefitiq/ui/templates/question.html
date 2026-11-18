@@ -2,9 +2,16 @@
 {% block title %}BenefitIQ — question {{ number }}{% endblock %}
 {% block body %}
 {% include "steps.html" %}
-<section class="panel office">
-  <p class="kicker">{{ procedure.title }}</p>
+<section class="panel office card">
+  <header class="case-head">
+    <div>
+      <p class="kicker">{{ procedure.title }}</p>
+      <p class="case-id">{{ case_id }}</p>
+    </div>
+    <span class="chip chip-progress">In progress</span>
+  </header>
   <p class="progress" role="status" data-testid="question-progress">Question {{ number }} of {{ total }}</p>
+  <div class="bar" aria-hidden="true"><span style="width: {{ (number * 100 / total)|round|int }}%"></span></div>
   <h1>{{ question.prompt }}</h1>
   {% if question.help %}<p class="help">{{ question.help }}</p>{% endif %}
   {% if previous %}<p class="previous">Previous answer: {{ previous }}</p>{% endif %}
@@ -20,3 +27,4 @@
   {% with citations=citations %}{% include "citations.html" %}{% endwith %}
 </section>
 {% endblock %}
+{% block chat %}{% include "chat.html" %}{% endblock %}

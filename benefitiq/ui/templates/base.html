@@ -4,24 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}BenefitIQ{% endblock %}</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">Skip to content</a>
-  <header class="top">
-    <div class="brand">
-      <a href="/">BenefitIQ</a>
-      <span>{% block tagline %}For the office manager{% endblock %}</span>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <button type="button" class="sidebar-close" data-menu-close>Close</button>
+      <a class="wordmark" href="/cases">
+        <span class="monogram" aria-hidden="true">B</span>
+        <span class="wordmark-text">BenefitIQ</span>
+      </a>
+      <p class="wordmark-note">Office workspace</p>
+      <nav class="side-nav" aria-label="Workspace">
+        <a href="/cases" {% if nav == "cases" %}aria-current="page"{% endif %}>Cases</a>
+        <a href="/" {% if nav == "check" %}aria-current="page"{% endif %}>New check</a>
+        <a href="/procedures" {% if nav == "procedures" %}aria-current="page"{% endif %}>Procedures library</a>
+        <a href="/sources" {% if nav == "sources" %}aria-current="page"{% endif %}>Sources</a>
+        <a href="/help" {% if nav == "help" %}aria-current="page"{% endif %}>Help</a>
+      </nav>
+      <a class="nav-advanced" href="/advanced" {% if nav == "advanced" %}aria-current="page"{% endif %}>Advanced</a>
+    </aside>
+    <div class="nav-backdrop" data-nav-close hidden></div>
+    <div class="workspace">
+      <div class="workspace-top">
+        <button type="button" class="menu-button" data-menu aria-controls="sidebar" aria-expanded="false">Menu</button>
+      </div>
+      <div class="banner" role="note" data-testid="decision-support-banner">
+        {{ disclaimer }}
+      </div>
+      <div class="workspace-body">
+        <main id="main">
+          {% block body %}{% endblock %}
+        </main>
+        {% block chat %}{% endblock %}
+      </div>
     </div>
-  </header>
-  <div class="banner" role="note" data-testid="decision-support-banner">
-    {{ disclaimer }}
   </div>
-  <main id="main">
-    {% block body %}{% endblock %}
-  </main>
-  <footer class="foot no-print">
-    {% block footer %}<a href="/advanced">Advanced</a>{% endblock %}
-  </footer>
+  <script src="/static/workspace.js" defer></script>
 </body>
 </html>

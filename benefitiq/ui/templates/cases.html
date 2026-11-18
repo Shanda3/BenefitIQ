@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — cases{% endblock %}
+{% block body %}
+<header class="page-head">
+  <div>
+    <h1>Cases</h1>
+    <p class="lede">Synthetic checks for the office. Demo cards are labeled SYNTHETIC demo. Checks you finish stay in this browser only.</p>
+  </div>
+  <div class="page-actions">
+    <a class="button" href="/">New check</a>
+    <form method="post" action="/office/clear" id="clear-my-cases-form">
+      <button type="submit" class="quiet-button" data-testid="clear-my-cases">Clear my cases</button>
+    </form>
+  </div>
+</header>
+<p class="quiet clear-note">Clear my cases removes checks saved in this browser. It does not remove the SYNTHETIC demo cases, and it does not write to the database.</p>
+<nav class="view-toggle" aria-label="Case layout">
+  <a href="/cases?view=board" {% if view == "board" %}aria-current="page"{% endif %}>Board</a>
+  <a href="/cases?view=list" {% if view == "list" %}aria-current="page"{% endif %}>List</a>
+</nav>
+
+<section class="board" data-testid="cases-board" {% if view != "board" %}hidden{% endif %}>
+  {% for column in columns %}
+  <section class="column" data-testid="column-{{ 'ready' if column == 'Ready to bill' else 'docs' if column == 'Needs documentation' else 'none' }}" data-column="{{ column }}">
+    <header class="column-head">
+      <h2>{{ column }}</h2>
+      <span class="count">{{ grouped[column]|length }}</span>
+    </header>
+    <div class="column-cards">
+      {% for card in grouped[column] %}
+      <article class="case-card" data-demo-case="{{ card.case_id }}" data-board-status="{{ card.board_status }}">
+        <a class="card-link" href="/cases/{{ card.case_id }}">
+          <span class="flag">{{ card.synthetic_label }}</span>
+          <span class="case-id">{{ card.case_id }}</span>
+          <span class="procedure">{{ card.procedure_title }}</span>
+          <span class="date">{{ card.as_of }}</span>
+          <span class="chip {{ card.chip_class }}">{{ card.board_status }}</span>
+          <span class="progress-line">Checklist <span data-progress-for="{{ card.case_id }}">{{ card.progress_label }}</span></span>
+          <span class="bar" aria-hidden="true"><span style="width: {{ card.progress_percent }}%"></span></span>
+        </a>
+      </article>
+      {% endfor %}
+      <div data-user-cases="{{ column }}"></div>
+    </div>
+  </section>
+  {% endfor %}
+</section>
+
+<section class="list-wrap panel card" data-testid="cases-list" {% if view != "list" %}hidden{% endif %}>
+  <table class="case-table">
+    <caption>Synthetic cases</caption>
+    <thead>
+      <tr>
+        <th scope="col">Case</th>
+        <th scope="col">Procedure</th>
+        <th scope="col">Date</th>
+        <th scope="col">Status</th>
+        <th scope="col">Checklist</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for card in cards %}
+      <tr data-demo-case="{{ card.case_id }}">
+        <td><a href="/cases/{{ card.case_id }}">{{ card.case_id }}</a><span class="flag">{{ card.synthetic_label }}</span></td>
+        <td>{{ card.procedure_title }}</td>
+        <td>{{ card.as_of }}</td>
+        <td><span class="chip {{ card.chip_class }}">{{ card.board_status }}</span></td>
+        <td data-progress-for="{{ card.case_id }}">{{ card.progress_label }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tbody data-user-cases="list"></tbody>
+  </table>
+</section>
+
+<template id="user-case-card">
+  <article class="case-card user-case" data-user-case>
+    <a class="card-link" href="#">
+      <span class="flag" data-field="label"></span>
+      <span class="case-id" data-field="case_id"></span>
+      <span class="procedure" data-field="procedure"></span>
+      <span class="date" data-field="date"></span>
+      <span class="chip" data-field="board_status"></span>
+      <span class="progress-line">Checklist <span data-field="progress"></span></span>
+    </a>
+  </article>
+</template>
+<template id="user-case-row">
+  <tr class="user-case" data-user-case>
+    <td><a href="#" data-field="case_id"></a><span class="flag">SYNTHETIC</span></td>
+    <td data-field="procedure"></td>
+    <td data-field="date"></td>
+    <td><span class="chip" data-field="board_status"></span></td>
+    <td data-field="progress"></td>
+  </tr>
+</template>
+{% endblock %}

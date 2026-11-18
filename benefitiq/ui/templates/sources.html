@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — sources{% endblock %}
+{% block body %}
+<section class="page-intro">
+  <h1>Sources</h1>
+  <p class="lede">Registered sources with the public URL and the effective dates stored for each one. This list is read-only.</p>
+</section>
+<div class="list-wrap panel card" data-testid="sources-page" data-readonly="true">
+  <table class="case-table" data-testid="sources-table">
+    <caption>Registered sources</caption>
+    <thead>
+      <tr>
+        <th scope="col">Source</th>
+        <th scope="col">Kind</th>
+        <th scope="col">URL</th>
+        <th scope="col">Effective from</th>
+        <th scope="col">Effective to</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for source in sources %}
+      <tr>
+        <td>
+          <span class="source-title">{{ source.title }}</span>
+          <span class="quiet">{{ source.publisher }}</span>
+        </td>
+        <td>{{ source.kind }}</td>
+        <td><a href="{{ source.url }}">{{ source.url }}</a></td>
+        <td>{{ source.effective_from }}</td>
+        <td>{% if source.effective_to %}{{ source.effective_to }}{% else %}No end date{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

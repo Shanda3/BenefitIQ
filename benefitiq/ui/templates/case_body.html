@@ -1,0 +1,119 @@
+{% from "gap.html" import gap_text %}
+<article class="case-detail" data-testid="case-detail">
+  <header class="panel card case-head">
+    <div>
+      <p class="kicker">{% if demo %}{{ demo.synthetic_label }} · {% else %}SYNTHETIC · {% endif %}<span data-testid="case-id">{{ decision.case_id }}</span></p>
+      <h1 data-testid="result-phrase">{{ decision.result_label }}</h1>
+      <p class="case-sub">{{ decision.procedure_title }} · <span data-testid="case-date">{{ decision.as_of }}</span></p>
+    </div>
+    <span class="chip {{ chip_class }}" data-testid="status-chip">{{ board_status }}</span>
+  </header>
+
+  <section class="panel card" data-testid="question-stepper">
+    <h2>Questions</h2>
+    {% if review_answer %}
+    <p class="progress" role="status" data-testid="review-progress">Question {{ review }} of {{ review_total }}</p>
+    <div class="bar" aria-hidden="true"><span style="width: {{ (review * 100 / review_total)|round|int }}%"></span></div>
+    <p class="question-prompt">{{ review_answer.prompt }}</p>
+    <p class="previous">Answer: <strong>{{ review_answer.display }}</strong></p>
+    <div class="stepper-actions">
+      {% if review > 1 %}
+      <a class="button quiet-button" href="{{ stepper_path }}?review={{ review - 1 }}">Previous question</a>
+      {% endif %}
+      {% if review < review_total %}
+      <a class="button quiet-button" href="{{ stepper_path }}?review={{ review + 1 }}">Next question</a>
+      {% endif %}
+      {% if editable %}
+      <form method="post" action="/office/edit">
+        <input type="hidden" name="question_index" value="{{ review - 1 }}">
+        <button type="submit">Edit this answer</button>
+      </form>
+      {% endif %}
+    </div>
+    {% if not editable %}
+    <p class="quiet">This is a SYNTHETIC demo. Start a new check to answer these questions yourself.</p>
+    {% endif %}
+    {% endif %}
+  </section>
+
+  <section class="panel card" id="result-card">
+    <h2>Result</h2>
+    <p class="reason" data-testid="result-reason"{% if decision.reason.text == "not found" %} data-internal-status="not found"{% endif %}>{{ gap_text(decision.reason.text) }}</p>
+    {% if decision.reason.text != "not found" %}
+    {% with citations=decision.reason.citations %}{% include "citations.html" %}{% endwith %}
+    {% endif %}
+  </section>
+
+  <section class="panel card" data-testid="codes-to-consider">
+    <h2>Codes to consider</h2>
+    {% for code in decision.codes %}
+    <article class="code-block status-{{ code.status }}">
+      {% if code.code %}
+      <p class="code">Code {{ code.code }}</p>
+      <p class="label">{{ code.label }}</p>
+      {% endif %}
+      <p>{{ gap_text(code.note) }}</p>
+      {% if code.note != "not found" %}
+      {% with citations=code.citations %}{% include "citations.html" %}{% endwith %}
+      {% endif %}
+    </article>
+    {% else %}
+    <p>{{ gap_text("not found") }}</p>
+    {% endfor %}
+  </section>
+
+  <section class="panel card" data-testid="documentation-missing">
+    <h2>Documentation missing</h2>
+    {% if decision.gaps %}
+    <ul class="gaps">
+      {% for gap in decision.gaps %}
+      <li>
+        <p>{{ gap_text(gap.text) }}</p>
+        {% if gap.text != "not found" %}
+        {% with citations=gap.citations %}{% include "citations.html" %}{% endwith %}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="quiet">No documentation missing was recorded for these answers.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel card" id="checklist" data-testid="checklist">
+    <h2>Documentation checklist</h2>
+    <p class="progress" data-testid="checklist-progress" data-progress-for="{{ decision.case_id }}">{{ demo.checklist_checked if demo else 0 }} of {{ decision.checklist|length }}</p>
+    <ul class="check-list">
+      {% for item in decision.checklist %}
+      <li>
+        <label class="check-row">
+          <input type="checkbox" data-case-id="{{ decision.case_id }}" data-check-index="{{ loop.index0 }}" {% if demo and loop.index0 < demo.checklist_checked %}checked{% endif %}>
+          {{ gap_text(item.text) }}
+        </label>
+        {% if item.text != "not found" %}
+        {% with citations=item.citations %}{% include "citations.html" %}{% endwith %}
+        {% else %}
+        <p class="quiet">No registered source covers this item.</p>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="panel card" data-testid="biller-summary-card">
+    <h2>Biller summary</h2>
+    <p>{{ gap_text(decision.reason.text) }}</p>
+    <p class="quiet">Print keeps the decision-support line on the page.</p>
+    <p class="actions inline-actions no-print">
+      <a class="button" href="{{ print_href }}">Open the one-page summary</a>
+      {% if editable %}
+      <a class="button quiet-button" href="/">Start over</a>
+      {% else %}
+      <a class="button quiet-button" href="/cases">Back to cases</a>
+      {% endif %}
+    </p>
+  </section>
+</article>
+{% if snapshot %}
+<script type="application/json" id="case-snapshot">{{ snapshot|tojson }}</script>
+{% endif %}

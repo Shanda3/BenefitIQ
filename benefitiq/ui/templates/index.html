@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}BenefitIQ — pick a procedure{% endblock %}
+{% block title %}BenefitIQ — new check{% endblock %}
 {% block body %}
 {% include "steps.html" %}
 <section class="panel office">
-  <h1>Pick a procedure</h1>
-  <p class="lede">Answer a few yes or no questions. This helps a person decide whether to bill medical insurance. It does not send a claim.</p>
+  <h1>New check</h1>
+  <p class="lede">Pick a procedure, then answer a few yes or no questions. This helps a person decide whether to bill medical insurance. It does not send a claim.</p>
   <div class="tiles">
     {% for procedure in procedures %}
       {% if procedure.active %}
