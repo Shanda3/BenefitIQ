@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block title %}BenefitIQ result {{ result.case_id }}{% endblock %}
+{% block tagline %}Engineer view{% endblock %}
+{% block footer %}<a href="/">Office tool</a>{% endblock %}
 {% block body %}
 <section class="panel">
   <p class="kicker">Result</p>
@@ -111,5 +113,5 @@
   </section>
   {% endfor %}
 </section>
-<p class="back"><a href="/">Evaluate another synthetic case</a></p>
+<p class="back"><a href="/advanced">Evaluate another synthetic case</a></p>
 {% endblock %}

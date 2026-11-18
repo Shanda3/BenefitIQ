@@ -6,6 +6,12 @@ This repository is a working skeleton. Recommendations come from rules and retri
 
 **Decision support for a human biller. Not a final coding or coverage determination.**
 
+The home page is a four-step check for a dental office manager: pick a procedure, answer yes / no / not sure, read one result, and print a one-page summary. Questions and result rules live in `questions/procedures.yaml`. Each one cites a source registered from `corpus/office/`. Answers stay in the browser session. The case is not written to the database, and there is no login.
+
+The engineer case screen is at `/advanced`. `POST /api/evaluate` is unchanged.
+
+Two procedures are active: sleep apnea oral appliance, and dental care needed before a medical treatment (Medicare). The registered public sources are Medicare LCD L33611, Policy Article A52512, Medicare Benefit Policy Manual Chapter 15 §150, and the CMS Medicare dental coverage page. `corpus/office/` stores the short facts this tool is allowed to cite, with the public URL and effective date. It is not a copy of those publications. A line that cannot be tied to an in-window source is shown as `not found`.
+
 ## The five rules
 
 1. **Codes follow documentation.** The engine does not suggest upcoding, unbundling, or a different date of service. If the note does not support a code, the result lists that item as `documentation missing` instead of recommending the code.
@@ -52,6 +58,7 @@ export DATABASE_URL=postgresql+psycopg://benefitiq:benefitiq@localhost:5432/bene
 python -m benefitiq.cli wait-db
 python -m benefitiq.cli init-db
 python -m benefitiq.cli ingest --manifest corpus/stub/manifest.yaml
+python -m benefitiq.cli ingest --manifest corpus/office/manifest.yaml
 uvicorn benefitiq.main:app --reload
 ```
 

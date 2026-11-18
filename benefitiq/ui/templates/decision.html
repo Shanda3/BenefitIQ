@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — {{ decision.result_label }}{% endblock %}
+{% block body %}
+{% include "steps.html" %}
+<section class="panel office">
+  <p class="kicker">{{ decision.procedure_title }}</p>
+  <dl class="meta">
+    <div><dt>Case</dt><dd>{{ decision.case_id }}</dd></div>
+    <div><dt>Date</dt><dd>{{ decision.as_of }}</dd></div>
+  </dl>
+  <h1 data-testid="result-phrase">{{ decision.result_label }}</h1>
+  <p class="reason" data-testid="result-reason">{{ decision.reason.text }}</p>
+  {% with citations=decision.reason.citations %}{% include "citations.html" %}{% endwith %}
+</section>
+<section class="panel office" data-testid="codes-to-consider">
+  <h2>Codes to consider</h2>
+  {% for code in decision.codes %}
+  <article class="code-block status-{{ code.status }}">
+    {% if code.code %}
+    <p class="code">Code {{ code.code }}</p>
+    <p class="label">{{ code.label }}</p>
+    {% endif %}
+    <p>{{ code.note }}</p>
+    {% if code.note != "not found" %}
+    {% with citations=code.citations %}{% include "citations.html" %}{% endwith %}
+    {% endif %}
+  </article>
+  {% else %}
+  <p>not found</p>
+  {% endfor %}
+</section>
+<section class="panel office" data-testid="documentation-missing">
+  <h2>Documentation missing</h2>
+  {% if decision.gaps %}
+  <ul class="gaps">
+    {% for gap in decision.gaps %}
+    <li>
+      <p>{{ gap.text }}</p>
+      {% if gap.text != "not found" %}
+      {% with citations=gap.citations %}{% include "citations.html" %}{% endwith %}
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="quiet">No documentation missing was recorded for these answers.</p>
+  {% endif %}
+</section>
+<section class="panel office" data-testid="checklist">
+  <h2>Checklist</h2>
+  <ul class="gaps">
+    {% for item in decision.checklist %}
+    <li>
+      <p>{{ item.text }}</p>
+      {% if item.text != "not found" %}
+      {% with citations=item.citations %}{% include "citations.html" %}{% endwith %}
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+<p class="actions no-print">
+  <a class="button" href="/office/print">Open the one-page summary</a>
+  <a class="button quiet-button" href="/">Start over</a>
+</p>
+{% endblock %}

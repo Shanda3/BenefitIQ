@@ -1,0 +1,7 @@
+<nav class="steps-nav" aria-label="Progress">
+  <ol class="steps">
+    {% for label in ["Pick a procedure", "Answer questions", "See the result", "Print the summary"] %}
+    <li {% if loop.index == step %}aria-current="step"{% endif %}>{{ loop.index }}. {{ label }}</li>
+    {% endfor %}
+  </ol>
+</nav>

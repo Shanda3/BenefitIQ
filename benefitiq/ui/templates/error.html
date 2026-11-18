@@ -2,8 +2,8 @@
 {% block title %}BenefitIQ{% endblock %}
 {% block body %}
 <section class="panel">
-  <h1>Case not evaluated</h1>
+  <h1>{{ heading|default("Please try again") }}</h1>
   <p>{{ message }}</p>
-  <p><a href="/">Return to case entry</a></p>
+  <p><a href="{{ back_href|default('/') }}">{{ back_label|default("Back to the start") }}</a></p>
 </section>
 {% endblock %}

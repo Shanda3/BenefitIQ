@@ -1,0 +1,14 @@
+<ul class="citations">
+  {% for citation in citations %}
+  <li>
+    {% if citation.status == "cited" %}
+    <a href="{{ citation.url }}" data-source-id="{{ citation.source_id }}">{{ citation.title }}</a>
+    <span>Effective {{ citation.effective_from }}{% if citation.effective_to %} to {{ citation.effective_to }}{% endif %}</span>
+    {% else %}
+    <span>not found</span>
+    {% endif %}
+  </li>
+  {% else %}
+  <li><span>not found</span></li>
+  {% endfor %}
+</ul>

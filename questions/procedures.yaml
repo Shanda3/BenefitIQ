@@ -1,0 +1,459 @@
+# Question trees for the office-manager flow.
+# A new procedure is another entry here. Result text is shown only when the
+# cited source resolves in the registry. Empty citations display as "not found".
+procedures:
+  - id: sleep_appliance
+    title: Sleep apnea oral appliance
+    blurb: A custom mouthpiece for sleep apnea.
+    active: true
+    questions:
+      - id: sleep_test
+        prompt: Has the patient had a qualifying sleep test?
+        help: This is the sleep study Medicare uses for this appliance.
+        gap: qualifying sleep test
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-lcd-l33611
+            section: qualifying-sleep-test
+      - id: osa_diagnosis
+        prompt: Does the chart show diagnosis code G47.33?
+        help: This is the diagnosis code the policy article lists for this appliance.
+        gap: diagnosis code G47.33
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-article-a52512
+            section: diagnosis-code
+      - id: practitioner_order
+        prompt: Did a physician, nurse practitioner, or physician assistant see the patient in person and order the appliance?
+        help: The dentist cannot order it.
+        gap: in-person order from a physician, nurse practitioner, or physician assistant
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-lcd-l33611
+            section: practitioner-order
+      - id: custom_device
+        prompt: Is the appliance a custom device, code E0486, and not a prefabricated device, code E0485?
+        help: A prefabricated device is not payable.
+        gap: whether the device is custom code E0486
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-lcd-l33611
+            section: custom-device
+      - id: product_list
+        prompt: Will a licensed dentist bill the device, and is it on Medicare's product list?
+        help: A licensed dentist must bill it, and the device must be on Medicare's product list.
+        gap: licensed dentist billing and the Medicare product list
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-lcd-l33611
+            section: dentist-bills
+          - source_id: cms-article-a52512
+            section: pdac-list
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - system: HCPCS
+            code: E0486
+            status: consider
+            note: Code to consider.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+          - system: ICD10CM
+            code: G47.33
+            status: consider
+            note: Diagnosis code to consider.
+            citations:
+              - source_id: cms-article-a52512
+                section: diagnosis-code
+        checklist:
+          - text: Keep the qualifying sleep test in the chart.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: qualifying-sleep-test
+          - text: Keep diagnosis code G47.33 in the chart.
+            citations:
+              - source_id: cms-article-a52512
+                section: diagnosis-code
+          - text: Keep the in-person visit and order from a physician, nurse practitioner, or physician assistant. The dentist cannot order the appliance.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: practitioner-order
+          - text: Bill code E0486 only for a custom device. Do not bill code E0485.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+          - text: A licensed dentist bills the device, and the device is on Medicare's product list.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: dentist-bills
+              - source_id: cms-article-a52512
+                section: pdac-list
+          - text: The claim uses modifier KX, GA, or GZ, as the policy article describes.
+            citations:
+              - source_id: cms-article-a52512
+                section: modifiers
+          - text: Fitting and adjustments for the first 90 days stay in the device payment. Do not bill them on their own.
+            citations:
+              - source_id: cms-article-a52512
+                section: ninety-days
+          - text: Replacement is every 5 years.
+            citations:
+              - source_id: cms-article-a52512
+                section: five-year-replacement
+          - text: The office is enrolled to bill Medicare medical equipment.
+            uncited: true
+          - text: Hold the dental claim until the medical explanation of benefits arrives.
+            uncited: true
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - system: HCPCS
+            code: E0486
+            status: not_recommended
+            note: Do not bill this code.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+          - system: ICD10CM
+            code: G47.33
+            status: not_recommended
+            note: Do not bill from this diagnosis until the rules are met.
+            citations:
+              - source_id: cms-article-a52512
+                section: diagnosis-code
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - system: HCPCS
+            code: E0486
+            status: not_recommended
+            note: Not recommended yet. Documentation is missing.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+          - system: ICD10CM
+            code: G47.33
+            status: not_recommended
+            note: Not recommended yet. Documentation is missing.
+            citations:
+              - source_id: cms-article-a52512
+                section: diagnosis-code
+    rules:
+      - id: sleep-no-sleep-test
+        result: probably_not_medical
+        when:
+          - id: sleep_test
+            answer: "no"
+        reason: Do not bill medical insurance for this appliance. A qualifying sleep test is required.
+        reason_citations:
+          - source_id: cms-lcd-l33611
+            section: qualifying-sleep-test
+        checklist:
+          - text: A qualifying sleep test is required before this appliance is billed to medical insurance.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: qualifying-sleep-test
+      - id: sleep-no-diagnosis
+        result: probably_not_medical
+        when:
+          - id: osa_diagnosis
+            answer: "no"
+        reason: Do not bill medical insurance for this appliance. Diagnosis code G47.33 was not confirmed.
+        reason_citations:
+          - source_id: cms-article-a52512
+            section: diagnosis-code
+        checklist:
+          - text: Diagnosis code G47.33 has to be in the chart before this appliance is billed to medical insurance.
+            citations:
+              - source_id: cms-article-a52512
+                section: diagnosis-code
+      - id: sleep-no-order
+        result: probably_not_medical
+        when:
+          - id: practitioner_order
+            answer: "no"
+        reason: Do not bill medical insurance for this appliance. A physician, nurse practitioner, or physician assistant must see the patient in person and order it. The dentist cannot order it.
+        reason_citations:
+          - source_id: cms-lcd-l33611
+            section: practitioner-order
+        checklist:
+          - text: The order has to come from a physician, nurse practitioner, or physician assistant after an in-person visit. The dentist cannot order the appliance.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: practitioner-order
+      - id: sleep-no-custom
+        result: probably_not_medical
+        when:
+          - id: custom_device
+            answer: "no"
+        reason: Do not bill medical insurance for this appliance. Code E0486 is the custom device. Code E0485, a prefabricated device, is not payable.
+        reason_citations:
+          - source_id: cms-lcd-l33611
+            section: custom-device
+        extra_codes:
+          - system: HCPCS
+            code: E0485
+            status: not_recommended
+            note: Do not bill this code. A prefabricated device is not payable.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+        checklist:
+          - text: Code E0485 is not payable. Code E0486 is the custom device these rules describe.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: custom-device
+      - id: sleep-no-product-list
+        result: probably_not_medical
+        when:
+          - id: product_list
+            answer: "no"
+        reason: Do not bill medical insurance for this appliance. A licensed dentist must bill it, and the device must be on Medicare's product list.
+        reason_citations:
+          - source_id: cms-lcd-l33611
+            section: dentist-bills
+          - source_id: cms-article-a52512
+            section: pdac-list
+        checklist:
+          - text: A licensed dentist must bill the device, and the device must be on Medicare's product list.
+            citations:
+              - source_id: cms-lcd-l33611
+                section: dentist-bills
+              - source_id: cms-article-a52512
+                section: pdac-list
+      - id: sleep-not-sure
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: sleep_test
+            answer: not_sure
+          - id: osa_diagnosis
+            answer: not_sure
+          - id: practitioner_order
+            answer: not_sure
+          - id: custom_device
+            answer: not_sure
+          - id: product_list
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: sleep-bill
+        result: bill_medical_first
+        when:
+          - id: sleep_test
+            answer: "yes"
+          - id: osa_diagnosis
+            answer: "yes"
+          - id: practitioner_order
+            answer: "yes"
+          - id: custom_device
+            answer: "yes"
+          - id: product_list
+            answer: "yes"
+        reason: The answers match the Medicare rules checked here for this custom appliance.
+        reason_citations:
+          - source_id: cms-lcd-l33611
+            section: custom-device
+          - source_id: cms-article-a52512
+            section: pdac-list
+
+  - id: medicare_dental
+    title: Dental care needed before a medical treatment (Medicare)
+    blurb: Dental work before a medical treatment, for Medicare.
+    active: true
+    questions:
+      - id: linked_service
+        prompt: Is this dental care needed so a covered medical treatment can go ahead?
+        help: Examples are taking teeth out before radiation for head or neck cancer, clearing an infection before an organ or stem-cell transplant, heart valve surgery, certain cancer treatments, or dialysis.
+        gap: whether the dental care is needed for a covered medical treatment
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-bp102c15-150
+            section: linked-care
+          - source_id: cms-medicare-dental
+            section: linked-examples
+      - id: care_coordination
+        prompt: Did the dentist and the medical provider write down that they worked together on this care?
+        help: Medicare looks for that written coordination before it pays the dental care.
+        gap: written coordination between the dentist and the medical provider
+        gap_on: [not_sure, "no"]
+        citations:
+          - source_id: cms-bp102c15-150
+            section: care-coordination
+          - source_id: cms-medicare-dental
+            section: care-coordination
+      - id: routine_impacted
+        prompt: Is this only a routine removal of an impacted tooth, with no linked medical treatment?
+        help: That kind of removal, by itself, is not covered.
+        gap: whether this is only a routine impacted-tooth removal
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-medicare-dental
+            section: impacted-tooth
+      - id: replacement_device
+        prompt: Is this a replacement implant or crown for a tooth that was pulled only to clear an infection?
+        help: That replacement is not payable.
+        gap: whether this is a replacement implant or crown after an infection removal
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-bp102c15-150
+            section: implant-crown
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: The dental care is needed so a covered medical treatment can go ahead. Examples include tooth removal before radiation for head or neck cancer, clearing an infection before an organ or stem-cell transplant, heart valve surgery, certain cancer treatments, or dialysis.
+            citations:
+              - source_id: cms-bp102c15-150
+                section: linked-care
+              - source_id: cms-medicare-dental
+                section: linked-examples
+          - text: The dentist and the medical provider wrote down how they coordinated this care.
+            citations:
+              - source_id: cms-bp102c15-150
+                section: care-coordination
+              - source_id: cms-medicare-dental
+                section: care-coordination
+          - text: Do not bill a routine impacted-tooth extraction that stands alone.
+            citations:
+              - source_id: cms-medicare-dental
+                section: impacted-tooth
+          - text: Do not bill a replacement implant or crown for a tooth pulled only to clear an infection.
+            citations:
+              - source_id: cms-bp102c15-150
+                section: implant-crown
+          - text: From July 1, 2025, the dental claim needs modifier KX and an ICD-10 code. No specific diagnosis code number was found.
+            citations:
+              - source_id: cms-medicare-dental
+                section: kx-icd10
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: dental-replacement
+        result: probably_not_medical
+        when:
+          - id: replacement_device
+            answer: "yes"
+        reason: Do not bill medical insurance for this. A replacement implant or crown for a tooth pulled only to clear an infection is not payable.
+        reason_citations:
+          - source_id: cms-bp102c15-150
+            section: implant-crown
+        checklist:
+          - text: A replacement implant or crown for a tooth pulled only to clear an infection is not payable.
+            citations:
+              - source_id: cms-bp102c15-150
+                section: implant-crown
+      - id: dental-conflict
+        result: need_more_info
+        when:
+          - id: linked_service
+            answer: "yes"
+          - id: routine_impacted
+            answer: "yes"
+        reason: These answers disagree, so this is not ready to bill. One answer says this is only a routine impacted-tooth removal, and another says it is needed for a medical treatment.
+        reason_citations:
+          - source_id: cms-medicare-dental
+            section: impacted-tooth
+          - source_id: cms-bp102c15-150
+            section: linked-care
+        checklist:
+          - text: The answers disagree. Confirm whether this is only a routine impacted-tooth removal or care needed for a medical treatment.
+            citations:
+              - source_id: cms-medicare-dental
+                section: impacted-tooth
+              - source_id: cms-bp102c15-150
+                section: linked-care
+      - id: dental-routine
+        result: probably_not_medical
+        when:
+          - id: routine_impacted
+            answer: "yes"
+        reason: Do not bill medical insurance for this. A routine impacted-tooth extraction by itself is not covered.
+        reason_citations:
+          - source_id: cms-medicare-dental
+            section: impacted-tooth
+        checklist:
+          - text: A routine impacted-tooth extraction, with no linked medical treatment, is not covered.
+            citations:
+              - source_id: cms-medicare-dental
+                section: impacted-tooth
+      - id: dental-not-linked
+        result: probably_not_medical
+        when:
+          - id: linked_service
+            answer: "no"
+        reason: Do not bill medical insurance for this. Medicare pays for this dental care only when it is needed so a covered medical treatment can go ahead.
+        reason_citations:
+          - source_id: cms-bp102c15-150
+            section: linked-care
+          - source_id: cms-medicare-dental
+            section: linked-examples
+        checklist:
+          - text: This dental care is paid only when it is needed so a covered medical treatment can go ahead.
+            citations:
+              - source_id: cms-bp102c15-150
+                section: linked-care
+              - source_id: cms-medicare-dental
+                section: linked-examples
+      - id: dental-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: linked_service
+            answer: not_sure
+          - id: care_coordination
+            answer: not_sure
+          - id: care_coordination
+            answer: "no"
+          - id: routine_impacted
+            answer: not_sure
+          - id: replacement_device
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: dental-bill
+        result: bill_medical_first
+        when:
+          - id: linked_service
+            answer: "yes"
+          - id: care_coordination
+            answer: "yes"
+          - id: routine_impacted
+            answer: "no"
+          - id: replacement_device
+            answer: "no"
+        reason: The answers match the Medicare rules checked here for dental care needed before a covered medical treatment.
+        reason_citations:
+          - source_id: cms-bp102c15-150
+            section: linked-care
+          - source_id: cms-bp102c15-150
+            section: care-coordination
+
+  - id: tmj
+    title: TMJ
+    active: false
+
+  - id: injury_trauma
+    title: Injury/trauma
+    active: false
+
+  - id: biopsy
+    title: Biopsy
+    active: false
+
+  - id: cbct
+    title: CBCT scan
+    active: false

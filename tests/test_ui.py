@@ -11,7 +11,7 @@ def test_pages_and_api_carry_the_disclaimer():
     assert home.status_code == 200
     assert DISCLAIMER in home.text
 
-    page = client.post("/evaluate", data={"sample_id": "trauma"})
+    page = client.post("/advanced/evaluate", data={"sample_id": "trauma"})
     assert page.status_code == 200
     assert DISCLAIMER in page.text
     assert 'data-testid="decision-support-banner"' in page.text
@@ -21,7 +21,7 @@ def test_pages_and_api_carry_the_disclaimer():
     assert "https://example.test/stub/trauma-rules" in page.text
     assert "2024-01-01" in page.text
 
-    sample = client.get("/sample/biopsy")
+    sample = client.get("/advanced/sample/biopsy")
     assert sample.status_code == 200
     assert DISCLAIMER in sample.text
     assert "K13.70" in sample.text
