@@ -1,0 +1,26 @@
+{
+  "case_id": "SYN-TRAUMA-002",
+  "synthetic": true,
+  "date_of_service": "2025-03-12",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "trauma",
+  "requested_codes": [
+    {"system": "ICD10CM", "code": "S02.5XXA"},
+    {"system": "ICD10CM", "code": "V18.0XXA"}
+  ],
+  "spans": [
+    {
+      "id": "span-er",
+      "kind": "er_note",
+      "text": "Fictional adult patient. Emergency department note. Fell from a bicycle. Upper front tooth fractured. Synthetic case only."
+    },
+    {
+      "id": "span-dental",
+      "kind": "dental_exam",
+      "text": "Fictional dental exam. Limited exam for a complaint of an injured upper front tooth. Tooth fracture confirmed. Synthetic case only."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# BenefitIQ placeholder labels.
+# These strings are internal handles for code numbers.
+# They are not CDT, CPT, HCPCS, or ICD-10-CM descriptors.
+codes:
+  D0140: "placeholder: exam-level-1"
+  D0150: "placeholder: exam-level-2"
+  D0160: "placeholder: exam-level-3"
+  D0367: "placeholder: imaging-volume"
+  D1110: "placeholder: prevention-visit"
+  D2740: "placeholder: crown-procedure"
+  D2950: "placeholder: core-procedure"
+  E0486: "placeholder: airway-device"
+  "S02.5XXA": "placeholder: injury-tooth"
+  "V18.0XXA": "placeholder: external-pedal-cycle"
+  "K13.70": "placeholder: oral-lesion"
+  "C06.9": "placeholder: code-c069"

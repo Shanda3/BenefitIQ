@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}BenefitIQ{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <a href="/">BenefitIQ</a>
+      <span>Dental coding and billing assistant</span>
+    </div>
+  </header>
+  <div class="banner" role="note" data-testid="decision-support-banner">
+    {{ disclaimer }}
+  </div>
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+</body>
+</html>

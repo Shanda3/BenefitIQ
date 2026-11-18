@@ -1,0 +1,12 @@
+stub: FICTIONAL STUB
+bundle_rules:
+  - bundle_id: stub-a-crown-core
+    scenario: bundled_crown
+    codes: ["D2740", "D2950"]
+    statement: components are not separately reportable
+routing_rules:
+  - route_id: crown-dental
+    scenario: bundled_crown
+    primary_pathway: dental
+    statement: dental pathway
+    requires: [crown_procedure]

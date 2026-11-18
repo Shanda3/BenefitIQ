@@ -1,0 +1,20 @@
+{
+  "case_id": "SYN-OSA-001",
+  "synthetic": true,
+  "date_of_service": "2025-04-18",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "sleep_apnea_appliance",
+  "requested_codes": [
+    {"system": "HCPCS", "code": "E0486"}
+  ],
+  "spans": [
+    {
+      "id": "span-osa",
+      "kind": "clinical_note",
+      "text": "Fictional adult patient. Physician diagnosed obstructive sleep apnea. A sleep study was completed. A prescription was written for an oral appliance. Synthetic case only."
+    }
+  ]
+}

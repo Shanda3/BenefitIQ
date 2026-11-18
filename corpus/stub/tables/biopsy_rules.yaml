@@ -1,0 +1,15 @@
+stub: FICTIONAL STUB
+coding_rules:
+  - rule_id: biopsy-lesion
+    scenario: biopsy
+    pathway: medical
+    code_system: ICD10CM
+    code: K13.70
+    requires: [oral_lesion, biopsy_performed]
+    volunteer: true
+    report_gap: true
+checklist:
+  - item_id: biopsy-pathology
+    scenario: biopsy
+    pathway: medical
+    element: pathology_report

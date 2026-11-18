@@ -1,0 +1,30 @@
+stub: FICTIONAL STUB
+coding_rules:
+  - rule_id: exam-limited
+    scenario: exam_level
+    pathway: dental
+    code_system: CDT
+    code: D0140
+    requires: [limited_exam, specific_complaint]
+    volunteer: false
+    report_gap: true
+  - rule_id: exam-comprehensive
+    scenario: exam_level
+    pathway: dental
+    code_system: CDT
+    code: D0150
+    requires:
+      - limited_exam
+      - specific_complaint
+      - full_dentition_review
+      - periodontal_status
+      - medical_history_review
+      - treatment_plan
+    volunteer: false
+    report_gap: true
+routing_rules:
+  - route_id: exam-dental
+    scenario: exam_level
+    primary_pathway: dental
+    statement: dental pathway
+    requires: [limited_exam]

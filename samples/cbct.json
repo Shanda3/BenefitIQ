@@ -1,0 +1,20 @@
+{
+  "case_id": "SYN-CBCT-001",
+  "synthetic": true,
+  "date_of_service": "2025-06-02",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "cbct_implant_planning",
+  "requested_codes": [
+    {"system": "CDT", "code": "D0367"}
+  ],
+  "spans": [
+    {
+      "id": "span-cbct",
+      "kind": "imaging_note",
+      "text": "Fictional adult patient. CBCT captured for implant planning. Synthetic case only."
+    }
+  ]
+}

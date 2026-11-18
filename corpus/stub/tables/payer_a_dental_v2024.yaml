@@ -1,0 +1,16 @@
+stub: FICTIONAL STUB
+coverage_rules:
+  - rule_id: payer-a-d1110-old
+    scenario: prophylaxis_coverage
+    pathway: dental
+    code_system: CDT
+    code: D1110
+    requires: [prophylaxis_done]
+    frequency_token: FREQ-OLD
+    marker: FREQOLDTOKEN
+routing_rules:
+  - route_id: prophy-dental-old
+    scenario: prophylaxis_coverage
+    primary_pathway: dental
+    statement: dental pathway
+    requires: [prophylaxis_done]

@@ -1,0 +1,21 @@
+{
+  "case_id": "SYN-UPCODE-001",
+  "synthetic": true,
+  "date_of_service": "2025-04-02",
+  "alternate_date_of_service": "2025-01-01",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "exam_level",
+  "requested_codes": [
+    {"system": "CDT", "code": "D0150"}
+  ],
+  "spans": [
+    {
+      "id": "span-exam",
+      "kind": "clinical_note",
+      "text": "Fictional adult patient. Limited exam for a specific complaint of cold sensitivity. Synthetic case only."
+    }
+  ]
+}

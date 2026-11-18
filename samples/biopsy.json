@@ -1,0 +1,21 @@
+{
+  "case_id": "SYN-BIOPSY-001",
+  "synthetic": true,
+  "date_of_service": "2025-05-06",
+  "payer_dental": "Stub Payer A",
+  "payer_medical": "Stub Payer B",
+  "state": "XX",
+  "plan_type": "commercial",
+  "scenario": "biopsy",
+  "requested_codes": [
+    {"system": "ICD10CM", "code": "K13.70"},
+    {"system": "ICD10CM", "code": "C06.9"}
+  ],
+  "spans": [
+    {
+      "id": "span-biopsy",
+      "kind": "procedure_note",
+      "text": "Fictional adult patient. An oral lesion was biopsied. Pathology is pending. No pathology report is in the chart. Synthetic case only."
+    }
+  ]
+}
