@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ICD10CM.tabular>
+  <version>2027</version>
+  <chapter>
+    <name>1</name>
+    <desc>Certain infectious and parasitic diseases</desc>
+    <section>
+      <diag>
+        <name>A00</name>
+        <desc>Cholera</desc>
+        <diag>
+          <name>A00.0</name>
+          <desc>Cholera due to Vibrio cholerae 01, biovar cholerae</desc>
+        </diag>
+      </diag>
+    </section>
+  </chapter>
+</ICD10CM.tabular>

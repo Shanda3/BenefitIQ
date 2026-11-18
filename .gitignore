@@ -6,3 +6,5 @@ __pycache__/
 .env
 .coverage
 htmlcov/
+corpus/public/cache/
+*.partial

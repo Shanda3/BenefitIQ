@@ -64,6 +64,10 @@ class LoadedCode:
 class LoadedDocument:
     chunks: list[LoadedChunk] = field(default_factory=list)
     code_rows: list[LoadedCode] = field(default_factory=list)
+    # Rows kept after a state filter. Code tables report the codes stored.
+    source_rows: int = 0
+    scanned_rows: int = 0
+    rejected_codes: list[str] = field(default_factory=list)
 
 
 def register_loader(name: str) -> Callable[[Loader], Loader]:
@@ -75,6 +79,10 @@ def register_loader(name: str) -> Callable[[Loader], Loader]:
 
 
 def get_loader(name: str) -> Loader:
+    if name not in LOADER_REGISTRY:
+        # Importing registers the public-source loaders without a cycle at module import.
+        import benefitiq.ingestion.public_loaders  # noqa: F401
+
     try:
         return LOADER_REGISTRY[name]
     except KeyError as exc:

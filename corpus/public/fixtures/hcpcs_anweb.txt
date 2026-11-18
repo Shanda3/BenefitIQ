@@ -1,0 +1,6 @@
+D0140001003FIXTUREDCODETEXT should not be stored                                           FIXTUREDSHORTX
+D0140001004FIXTUREDCODETEXT continuation
+A0426001003FIXTURELEVELIITEXT should not be stored                                         FIXTURESHORTII
+   A1001007FIXTUREMODTEXT modifier
+99213001003FIXTURECPTTEXT should not be stored                                             FIXTURECPTSHORT
+0001U001003FIXTUREPLATEXT should not be stored                                             FIXTUREPLASHORT

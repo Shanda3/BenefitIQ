@@ -17,6 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from benefitiq.db import session_scope
+import benefitiq.ingestion.public_loaders  # noqa: F401  registers public loaders
 from benefitiq.ingestion.loaders import (
     IngestionError,
     LoadedDocument,
@@ -162,8 +163,9 @@ def _insert_document(
         )
     )
     session.flush()
-    for chunk in loaded.chunks:
-        session.add(
+    _flush_batches(
+        session,
+        (
             Chunk(
                 chunk_id=chunk.chunk_id,
                 source_id=entry.source_id,
@@ -172,10 +174,12 @@ def _insert_document(
                 embedding=embed(chunk.text),
                 meta=chunk.metadata,
             )
-        )
-    session.flush()
-    for code in loaded.code_rows:
-        session.add(
+            for chunk in loaded.chunks
+        ),
+    )
+    _flush_batches(
+        session,
+        (
             CodeRow(
                 code_row_id=code.code_row_id,
                 source_id=entry.source_id,
@@ -184,8 +188,46 @@ def _insert_document(
                 code=code.code,
                 label_ref=code.label_ref,
             )
-        )
+            for code in loaded.code_rows
+        ),
+    )
     return "inserted"
+
+
+def _flush_batches(session: Session, objects, *, size: int = 400) -> None:
+    """Insert in batches so a full public file does not stay in the identity map."""
+    batch: list = []
+    for obj in objects:
+        batch.append(obj)
+        if len(batch) >= size:
+            session.add_all(batch)
+            session.flush()
+            for item in batch:
+                session.expunge(item)
+            batch.clear()
+    if batch:
+        session.add_all(batch)
+        session.flush()
+        for item in batch:
+            session.expunge(item)
+
+
+def spec_from_entry(entry: ManifestEntry) -> SourceSpec:
+    return SourceSpec(
+        source_id=entry.source_id,
+        family_id=entry.family_id,
+        title=entry.title,
+        publisher=entry.publisher,
+        url=entry.url,
+        effective_from=entry.effective_from,
+        effective_to=entry.effective_to,
+        doc_type=entry.doc_type,
+        loader=entry.loader,
+        payer=entry.payer,
+        state=entry.state,
+        program=entry.program,
+        plan_type=entry.plan_type,
+    )
 
 
 def ingest_manifest(manifest_path: Path) -> dict[str, int]:
@@ -202,28 +244,15 @@ def ingest_manifest(manifest_path: Path) -> dict[str, int]:
                 raise IngestionError(
                     f"document path escapes the manifest directory: {entry.path}"
                 ) from exc
-            spec = SourceSpec(
-                source_id=entry.source_id,
-                family_id=entry.family_id,
-                title=entry.title,
-                publisher=entry.publisher,
-                url=entry.url,
-                effective_from=entry.effective_from,
-                effective_to=entry.effective_to,
-                doc_type=entry.doc_type,
-                loader=entry.loader,
-                payer=entry.payer,
-                state=entry.state,
-                program=entry.program,
-                plan_type=entry.plan_type,
-            )
-            loaded = get_loader(entry.loader)(file_path, spec)
+            loaded = get_loader(entry.loader)(file_path, spec_from_entry(entry))
             outcome = _insert_document(session, entry, loaded, _content_hash(file_path, entry))
             counts[outcome] += 1
             logger.info(
-                "ingest source_id=%s outcome=%s chunks=%s",
+                "ingest source_id=%s outcome=%s chunks=%s rows=%s scanned=%s",
                 entry.source_id,
                 outcome,
                 len(loaded.chunks),
+                loaded.source_rows,
+                loaded.scanned_rows,
             )
     return counts

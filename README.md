@@ -2,7 +2,7 @@
 
 BenefitIQ is a dental coding and billing assistant for a human biller. A case includes procedures, diagnoses, clinical documentation, and insurance context. The app shows how dental and medical insurance could be billed, and every coding or coverage line cites a corpus source.
 
-This repository is a working skeleton. Recommendations come from rules and retrieval. There is no language model in the path. The repo contains synthetic cases and a fictional stub corpus only.
+This repository is a working skeleton. Recommendations come from rules and retrieval. There is no language model in the path. The repo contains synthetic cases, a fictional stub corpus used by the tests and the offline demo, and loaders for a public Oklahoma source set. The public files are downloaded into a gitignored cache. They are not committed.
 
 **Decision support for a human biller. Not a final coding or coverage determination.**
 
@@ -11,7 +11,7 @@ This repository is a working skeleton. Recommendations come from rules and retri
 1. **Codes follow documentation.** The engine does not suggest upcoding, unbundling, or a different date of service. If the note does not support a code, the result lists that item as `documentation missing` instead of recommending the code.
 2. **No citation, no recommendation.** A coding or coverage line is returned only with a corpus source that has a URL and an effective window covering the date of service. Otherwise the line is `not found`. The app does not guess.
 3. **Synthetic patients only.** Do not put real patient data in the repo, fixtures, logs, prompts, or docs. CI runs `scripts/phi_scan.py`, which fails the build on SSN-shaped numbers, telephone numbers, member identifiers, and a personal name paired with a birth date.
-4. **No CDT or CPT descriptors.** Code numbers are shown with short placeholder labels from `labels.yaml` only. The same placeholder-label rule applies to every code set in this skeleton, including ICD-10-CM and HCPCS. Ingestion rejects descriptor fields.
+4. **No CDT or CPT descriptors.** Code numbers are shown with short placeholder labels from `labels.yaml` only. HCPCS Level II, including D-codes, is stored as the code number plus that placeholder. Descriptor text from the HCPCS file is dropped, and CPT/Level I codes are rejected. ICD-10-CM descriptors in the CMS code tables are public domain and may be stored. Structured stub rows still reject descriptor fields.
 5. **The decision-support banner is part of every result.** The UI and the API both carry this exact sentence: `Decision support for a human biller. Not a final coding or coverage determination.`
 
 ## Architecture
@@ -62,6 +62,8 @@ python scripts/phi_scan.py
 pytest
 ```
 
+Load the public Oklahoma corpus into Postgres with `make ingest`. That downloads the files below into `corpus/public/cache/` (gitignored), then ingests `corpus/public/manifest.yaml`. `make count` prints the Oklahoma row counts without writing the database. `make ingest-stub` loads only the fictional corpus. Docker Compose still loads the stub corpus so the sample UI can start offline.
+
 ## Stub corpus
 
 `corpus/stub/` is fictional. Titles say `FICTIONAL STUB`. It exists so the tests and the UI can run before a real corpus arrives. It includes:
@@ -75,7 +77,33 @@ pytest
 - a code-number index
 - one fictional Medicaid note used to exercise filters
 
-Nothing in that folder is a CMS, ADA, AMA, or payer publication.
+Nothing in that folder is a CMS, ADA, AMA, or payer publication. The tests and the Docker demo keep using it. It is separate from `corpus/public/`.
+
+## Public Oklahoma sources
+
+Each source below is one registry row. It stores the exact file URL, the publisher, the effective window, the retrieval time, and the SHA-256 of the downloaded bytes. Ingestion will not overwrite an id. A republication needs a new `source_id`. Marketplace and landscape loaders keep Oklahoma rows (`OK` or `Oklahoma`) and drop every other state. SHOP landscape files are part of the set; a plan year with no Oklahoma SHOP rows is stored as a source with zero plan rows, not as an invented plan.
+
+The effective window is the plan year, the ICD-10-CM fiscal year, or the HCPCS quarter named in the file. It is not the day the file was posted.
+
+| Source | File URL | Effective window |
+| --- | --- | --- |
+| PY2027 Plan Attributes PUF | https://download.cms.gov/marketplace-puf/2027/plan-attributes-puf.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 Benefits and Cost Sharing PUF | https://download.cms.gov/marketplace-puf/2027/benefits-and-cost-sharing-puf.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 Rate PUF | https://download.cms.gov/marketplace-puf/2027/rate-puf.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 Service Area PUF | https://download.cms.gov/marketplace-puf/2027/service-area-puf.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 QHP Landscape, individual medical | https://data.healthcare.gov/datafile/py2027/individual_market_medical.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 QHP Landscape, individual dental (SADP) | https://data.healthcare.gov/datafile/py2027/individual_market_dental.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 QHP Landscape, SHOP medical | https://data.healthcare.gov/datafile/py2027/shop_market_medical.zip | 2027-01-01 to 2027-12-31 |
+| PY2027 QHP Landscape, SHOP dental (SADP) | https://data.healthcare.gov/datafile/py2027/shop_market_dental.zip | 2027-01-01 to 2027-12-31 |
+| ICD-10-CM FY2027 code tables and tabular index | https://www.cms.gov/files/zip/2027-code-tables-tabular-index.zip | 2026-10-01 to 2027-09-30 |
+| HCPCS Level II, October 2026 | https://www.cms.gov/files/zip/october-2026-alpha-numeric-hcpcs-file.zip | 2026-10-01 to 2026-12-31 |
+| HCPCS Level II, January 2027 | https://www.cms.gov/files/zip/january-2027-alpha-numeric-hcpcs-file.zip | 2027-01-01 to 2027-03-31 |
+
+Publishers are the Centers for Medicare & Medicaid Services, and the Center for Consumer Information and Insurance Oversight for the landscape files. The PUF links are the files listed for plan year 2027 on the [CMS Exchange PUF page](https://www.cms.gov/marketplace/resources/data/public-use-files). The HCPCS links are the October 2026 and January 2027 alpha-numeric files on the [HCPCS Quarterly Update page](https://www.cms.gov/medicare/coding-billing/healthcare-common-procedure-system/quarterly-update). The landscape links are the PY2027 zip distributions under `https://data.healthcare.gov/datafile/py2027/`.
+
+`make ingest` checks `robots.txt` before each download. A missing robots.txt is treated as allowed. A disallow, a non-HTTPS URL, or a host other than `cms.gov`, `www.cms.gov`, `download.cms.gov`, or `data.healthcare.gov` stops the fetch. The fetcher does not log in and does not submit a license or terms form. ICD-10-CM tabular descriptors are stored. HCPCS rows store the Level II code number and the placeholder label only. D-code descriptor text from the HCPCS file is discarded. A CPT or other Level I code rejects the file.
+
+Small fixtures under `corpus/public/fixtures/` cover the loaders. They are a few synthetic rows. Any D-code descriptor text in the HCPCS fixture is a replacement token, not CDT wording.
 
 ## How to add a real source
 
@@ -122,4 +150,4 @@ The eight case files in `samples/` are the behaviors CI checks against the stub 
 
 ## What this skeleton does not do
 
-It does not call a payer, a clearinghouse, or a model provider. It does not ship CMS Public Use Files, ICD-10-CM, HCPCS, or real payer policies. It does not produce a claim file. A biller still has to make the coding and coverage decision.
+It does not call a payer, a clearinghouse, or a model provider. It does not commit the CMS or Healthcare.gov downloads. `make ingest` fetches those public files into the gitignored cache. It does not produce a claim file. A biller still has to make the coding and coverage decision.
