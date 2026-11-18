@@ -6,18 +6,22 @@
   <title>{% block title %}BenefitIQ{% endblock %}</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip" href="#main">Skip to content</a>
   <header class="top">
     <div class="brand">
       <a href="/">BenefitIQ</a>
-      <span>Dental coding and billing assistant</span>
+      <span>{% block tagline %}For the office manager{% endblock %}</span>
     </div>
   </header>
   <div class="banner" role="note" data-testid="decision-support-banner">
     {{ disclaimer }}
   </div>
-  <main>
+  <main id="main">
     {% block body %}{% endblock %}
   </main>
+  <footer class="foot no-print">
+    {% block footer %}<a href="/advanced">Advanced</a>{% endblock %}
+  </footer>
 </body>
 </html>

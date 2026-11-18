@@ -1,0 +1,52 @@
+# Public Medicare sources for the office-manager flow.
+# Facts in the markdown files are the rules this tool is allowed to cite.
+# They are not copies of the publications. URLs point at the public documents.
+# www.cms.gov robots.txt allows these URLs. localcoverage.cms.gov is not used.
+# Effective dates are the revision dates stated on the documents:
+# L33611 and A52512 revision effective date 2021-08-08,
+# Benefit Policy Manual Chapter 15 section 150 effective 2023-01-01 (Rev. 11995),
+# dental coverage page claim rule effective 2025-07-01.
+documents:
+  - path: lcd-l33611.md
+    source_id: cms-lcd-l33611
+    family_id: cms-lcd-l33611
+    title: Medicare LCD L33611 Oral Appliances for Obstructive Sleep Apnea
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=33611
+    effective_from: 2021-08-08
+    doc_type: policy
+    loader: prose
+    program: medicare
+
+  - path: article-a52512.md
+    source_id: cms-article-a52512
+    family_id: cms-article-a52512
+    title: Medicare Policy Article A52512 Oral Appliances for Obstructive Sleep Apnea
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52512
+    effective_from: 2021-08-08
+    doc_type: policy
+    loader: prose
+    program: medicare
+
+  - path: bp102c15-150.md
+    source_id: cms-bp102c15-150
+    family_id: cms-bp102c15-150
+    title: Medicare Benefit Policy Manual Chapter 15 Section 150 Dental Services
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/bp102c15.pdf
+    effective_from: 2023-01-01
+    doc_type: policy
+    loader: prose
+    program: medicare
+
+  - path: medicare-dental.md
+    source_id: cms-medicare-dental
+    family_id: cms-medicare-dental
+    title: CMS Medicare Dental Coverage
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/medicare/coverage/dental
+    effective_from: 2025-07-01
+    doc_type: policy
+    loader: prose
+    program: medicare

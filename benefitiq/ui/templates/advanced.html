@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ engineer view{% endblock %}
+{% block tagline %}Engineer view{% endblock %}
+{% block footer %}<a href="/">Office tool</a>{% endblock %}
+{% block body %}
+<section class="panel">
+  <h1>Synthetic case entry</h1>
+  <p class="lede">
+    Paste a synthetic case or run a shipped sample. The corpus shipped with this
+    skeleton is fictional. Nothing here is a final code or a coverage decision.
+  </p>
+  <h2>Samples</h2>
+  <div class="sample-row">
+    {% for sample in samples %}
+    <form method="post" action="/advanced/evaluate">
+      <input type="hidden" name="sample_id" value="{{ sample }}">
+      <button type="submit">{{ sample }}</button>
+    </form>
+    {% endfor %}
+  </div>
+</section>
+<section class="panel">
+  <h2>Case JSON</h2>
+  <form method="post" action="/advanced/evaluate" class="case-form">
+    <label for="case_json">Synthetic case</label>
+    <textarea id="case_json" name="case_json" rows="18" spellcheck="false" placeholder='{"case_id":"SYN-...","synthetic":true}'></textarea>
+    <button type="submit" class="primary">Evaluate</button>
+  </form>
+</section>
+{% endblock %}

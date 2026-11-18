@@ -1,28 +1,27 @@
 {% extends "base.html" %}
-{% block title %}BenefitIQ case entry{% endblock %}
+{% block title %}BenefitIQ — pick a procedure{% endblock %}
 {% block body %}
-<section class="panel">
-  <h1>Synthetic case entry</h1>
-  <p class="lede">
-    Paste a synthetic case or run a shipped sample. The corpus shipped with this
-    skeleton is fictional. Nothing here is a final code or a coverage decision.
-  </p>
-  <h2>Samples</h2>
-  <div class="sample-row">
-    {% for sample in samples %}
-    <form method="post" action="/evaluate">
-      <input type="hidden" name="sample_id" value="{{ sample }}">
-      <button type="submit">{{ sample }}</button>
-    </form>
+{% include "steps.html" %}
+<section class="panel office">
+  <h1>Pick a procedure</h1>
+  <p class="lede">Answer a few yes or no questions. This helps a person decide whether to bill medical insurance. It does not send a claim.</p>
+  <div class="tiles">
+    {% for procedure in procedures %}
+      {% if procedure.active %}
+      <form method="post" action="/office/start">
+        <input type="hidden" name="procedure_id" value="{{ procedure.id }}">
+        <button type="submit" class="ready" data-testid="procedure-tile">
+          {{ procedure.title }}
+          {% if procedure.blurb %}<span class="blurb">{{ procedure.blurb }}</span>{% endif %}
+        </button>
+      </form>
+      {% else %}
+      <button type="button" disabled aria-disabled="true" data-testid="procedure-soon">
+        {{ procedure.title }}
+        <span class="soon">Coming soon</span>
+      </button>
+      {% endif %}
     {% endfor %}
   </div>
-</section>
-<section class="panel">
-  <h2>Case JSON</h2>
-  <form method="post" action="/evaluate" class="case-form">
-    <label for="case_json">Synthetic case</label>
-    <textarea id="case_json" name="case_json" rows="18" spellcheck="false" placeholder='{"case_id":"SYN-...","synthetic":true}'></textarea>
-    <button type="submit" class="primary">Evaluate</button>
-  </form>
 </section>
 {% endblock %}

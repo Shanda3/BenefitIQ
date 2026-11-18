@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — question {{ number }}{% endblock %}
+{% block body %}
+{% include "steps.html" %}
+<section class="panel office">
+  <p class="kicker">{{ procedure.title }}</p>
+  <p class="progress" role="status" data-testid="question-progress">Question {{ number }} of {{ total }}</p>
+  <h1>{{ question.prompt }}</h1>
+  {% if question.help %}<p class="help">{{ question.help }}</p>{% endif %}
+  {% if previous %}<p class="previous">Previous answer: {{ previous }}</p>{% endif %}
+  <form method="post" action="/office/answer" class="choices">
+    <button type="submit" name="choice" value="yes">Yes</button>
+    <button type="submit" name="choice" value="no">No</button>
+    <button type="submit" name="choice" value="not_sure">Not sure</button>
+  </form>
+  <form method="post" action="/office/back" class="back-form">
+    <button type="submit">Back</button>
+  </form>
+  <h2>Where this question comes from</h2>
+  {% with citations=citations %}{% include "citations.html" %}{% endwith %}
+</section>
+{% endblock %}

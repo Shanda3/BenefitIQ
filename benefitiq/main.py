@@ -7,19 +7,21 @@ import re
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
-from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exception_handlers import http_exception_handler, request_validation_exception_handler
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
 from sqlalchemy import func, select
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from benefitiq.constants import DISCLAIMER
 from benefitiq.config import samples_dir
 from benefitiq.db import session_scope
 from benefitiq.engine.recommend import evaluate
 from benefitiq.models import Source
+from benefitiq.office.routes import router as office_router
 from benefitiq.schemas import CaseInput
 
 app = FastAPI(title="BenefitIQ", version="0.1.0")
@@ -27,6 +29,7 @@ app = FastAPI(title="BenefitIQ", version="0.1.0")
 _UI = Path(__file__).resolve().parent / "ui"
 templates = Jinja2Templates(directory=str(_UI / "templates"))
 app.mount("/static", StaticFiles(directory=str(_UI / "static")), name="static")
+app.include_router(office_router)
 
 _SAMPLE_ID = re.compile(r"^[a-z0-9_]+$")
 
@@ -69,16 +72,16 @@ def health():
     return {"status": "ok", "sources": int(count or 0)}
 
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request):
+@app.get("/advanced", response_class=HTMLResponse)
+def advanced_index(request: Request):
     return templates.TemplateResponse(
         request,
-        "index.html",
+        "advanced.html",
         {"disclaimer": DISCLAIMER, "samples": _sample_ids()},
     )
 
 
-@app.get("/sample/{sample_id}", response_class=HTMLResponse)
+@app.get("/advanced/sample/{sample_id}", response_class=HTMLResponse)
 def sample_result(sample_id: str, request: Request):
     try:
         case = CaseInput.model_validate(load_sample(sample_id))
@@ -86,13 +89,19 @@ def sample_result(sample_id: str, request: Request):
         return templates.TemplateResponse(
             request,
             "error.html",
-            {"disclaimer": DISCLAIMER, "message": "Unknown synthetic sample."},
+            {
+                "disclaimer": DISCLAIMER,
+                "heading": "Please try again",
+                "message": "Unknown synthetic sample.",
+                "back_href": "/advanced",
+                "back_label": "Back to the engineer view",
+            },
             status_code=404,
         )
     return _render_result(request, evaluate(case))
 
 
-@app.post("/evaluate", response_class=HTMLResponse)
+@app.post("/advanced/evaluate", response_class=HTMLResponse)
 def evaluate_form(
     request: Request,
     case_json: str | None = Form(default=None),
@@ -110,7 +119,10 @@ def evaluate_form(
             "error.html",
             {
                 "disclaimer": DISCLAIMER,
+                "heading": "Please try again",
                 "message": "Case JSON was not accepted. Submit a synthetic case only.",
+                "back_href": "/advanced",
+                "back_label": "Back to the engineer view",
             },
             status_code=422,
         )
@@ -120,6 +132,24 @@ def evaluate_form(
 @app.post("/api/evaluate")
 def evaluate_api(case: CaseInput):
     return evaluate(case)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_error(request: Request, exc: StarletteHTTPException):
+    if exc.status_code == 404 and not request.url.path.startswith("/api/"):
+        return templates.TemplateResponse(
+            request,
+            "error.html",
+            {
+                "disclaimer": DISCLAIMER,
+                "heading": "Please try again",
+                "message": "That page is not available.",
+                "back_href": "/",
+                "back_label": "Back to the start",
+            },
+            status_code=404,
+        )
+    return await http_exception_handler(request, exc)
 
 
 @app.exception_handler(RequestValidationError)

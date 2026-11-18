@@ -20,6 +20,11 @@ def labels_path() -> Path:
     return Path(override) if override else ROOT / "labels.yaml"
 
 
+def questions_path() -> Path:
+    override = os.environ.get("BENEFITIQ_QUESTIONS")
+    return Path(override) if override else ROOT / "questions" / "procedures.yaml"
+
+
 def samples_dir() -> Path:
     override = os.environ.get("BENEFITIQ_SAMPLES")
     return Path(override) if override else ROOT / "samples"

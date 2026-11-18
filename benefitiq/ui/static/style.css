@@ -17,10 +17,11 @@
 
 body {
   margin: 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
   line-height: 1.45;
+  font-size: 1.05rem;
 }
 
 a { color: var(--teal); }
@@ -152,3 +153,181 @@ textarea {
   .banner, .top, main { margin-left: 0.7rem; margin-right: 0.7rem; }
   main { padding-left: 0.7rem; padding-right: 0.7rem; }
 }
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 0.4rem;
+  background: white;
+  color: var(--ink);
+  padding: 0.4rem 0.6rem;
+  z-index: 2;
+}
+
+.skip:focus { left: 0.5rem; }
+
+:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.foot {
+  padding: 0 1.5rem 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.steps li {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.steps li[aria-current="step"] {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.office h1 { font-size: 1.8rem; }
+
+.lede, .help, .previous { max-width: 40rem; }
+
+.tiles {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tiles form { margin: 0; }
+
+.tiles button,
+.choices button,
+.actions .button,
+.actions button {
+  width: 100%;
+  min-height: 3.25rem;
+  font-size: 1.15rem;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 0.55rem;
+}
+
+.tiles button.ready {
+  background: var(--teal);
+  color: white;
+}
+
+.tiles button .blurb,
+.tiles button .soon {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 650;
+  margin-top: 0.2rem;
+}
+
+.tiles button[disabled] {
+  color: var(--muted);
+  border-color: var(--line);
+  background: #f6f3ec;
+  cursor: not-allowed;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.choices button[value="yes"] { background: var(--teal); color: white; }
+.choices button[value="no"] { background: white; color: var(--teal); }
+.choices button[value="not_sure"] {
+  background: var(--banner);
+  color: var(--banner-ink);
+  border-color: var(--banner-edge);
+}
+
+.back-form { margin-top: 0.8rem; }
+
+.back-form button {
+  min-height: 3rem;
+  width: 100%;
+  font-size: 1.05rem;
+}
+
+.progress { font-weight: 700; margin: 0 0 0.4rem; }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+a.button {
+  display: inline-block;
+  box-sizing: border-box;
+  background: var(--teal);
+  color: white;
+  text-decoration: none;
+  border: 1px solid var(--teal);
+}
+
+a.quiet-button,
+button.quiet-button {
+  background: white;
+  color: var(--teal);
+}
+
+.code-block { margin-top: 0.8rem; }
+
+.print-summary h1 { margin-top: 0.2rem; }
+
+.print-summary .answers { padding-left: 1.2rem; }
+
+.cite-short { display: none; }
+
+@media print {
+  .top, .foot, .no-print, .skip, .steps-nav { display: none !important; }
+  body { background: white; font-size: 9pt; line-height: 1.2; }
+  .banner, main { margin: 0; }
+  main { padding: 0; }
+  .banner {
+    border: 1px solid #333;
+    margin: 0 0 0.25rem;
+    padding: 0.15rem 0.35rem;
+    font-size: 8pt;
+  }
+  .panel, .print-summary { border: none; padding: 0; margin: 0; }
+  .kicker { margin: 0; font-size: 8pt; }
+  h1 { font-size: 14pt; margin: 0 0 0.15rem; }
+  h2 { font-size: 10pt; margin: 0.28rem 0 0.05rem; }
+  p, li { margin: 0.04rem 0; }
+  .print-summary .meta {
+    display: flex;
+    gap: 1.2rem;
+    margin: 0 0 0.1rem;
+  }
+  .print-summary .answers,
+  .print-summary .checklist,
+  .print-summary .print-sources {
+    margin: 0.05rem 0 0.1rem;
+    padding-left: 1rem;
+  }
+  .print-summary .citations { display: none !important; }
+  .cite-short { display: inline; color: #333; }
+  .cite-short span::before { content: " — "; }
+  .print-sources a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    word-break: break-all;
+  }
+}
+
+@page { size: letter; margin: 0.4in; }
