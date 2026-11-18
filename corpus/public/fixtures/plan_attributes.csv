@@ -1,0 +1,4 @@
+BusinessYear,StateCode,PlanId,PlanMarketingName,MetalLevel,description
+2027,OK,00000OK0000001,Example Oklahoma Plan,Silver,SHOULD_NOT_STORE_DESCRIPTION
+2027,Oklahoma,00000OK0000002,Example Oklahoma Plan Two,Bronze,SHOULD_NOT_STORE_DESCRIPTION
+2027,TX,00000TX0000001,Example Texas Plan,Gold,SHOULD_NOT_STORE_DESCRIPTION

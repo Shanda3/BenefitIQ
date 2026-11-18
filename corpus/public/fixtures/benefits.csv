@@ -1,0 +1,3 @@
+BusinessYear,StateCode,PlanId,BenefitName,IsCovered,CopayInnTier1
+2027,OK,00000OK0000001,Sample benefit alpha,Yes,10
+2027,TX,00000TX0000001,Sample benefit beta,No,20

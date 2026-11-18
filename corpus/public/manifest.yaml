@@ -1,0 +1,140 @@
+# Public sources for the Oklahoma corpus.
+# Raw files are downloaded into cache/ by `make ingest` and are not committed.
+# A new publication is a new source_id. Ingestion will not overwrite one of these ids.
+documents:
+  - path: cache/plan-attributes-puf.zip
+    source_id: cms-puf-py2027-plan-attributes
+    family_id: cms-marketplace-puf-plan-attributes
+    title: CMS Marketplace PY2027 Plan Attributes PUF (Oklahoma)
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://download.cms.gov/marketplace-puf/2027/plan-attributes-puf.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: plan_attributes
+    loader: cms_marketplace_puf
+    state: OK
+    program: marketplace
+
+  - path: cache/benefits-and-cost-sharing-puf.zip
+    source_id: cms-puf-py2027-benefits-cost-sharing
+    family_id: cms-marketplace-puf-benefits-cost-sharing
+    title: CMS Marketplace PY2027 Benefits and Cost Sharing PUF (Oklahoma)
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://download.cms.gov/marketplace-puf/2027/benefits-and-cost-sharing-puf.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: benefits
+    loader: cms_marketplace_puf
+    state: OK
+    program: marketplace
+
+  - path: cache/rate-puf.zip
+    source_id: cms-puf-py2027-rates
+    family_id: cms-marketplace-puf-rates
+    title: CMS Marketplace PY2027 Rate PUF (Oklahoma)
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://download.cms.gov/marketplace-puf/2027/rate-puf.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: rates
+    loader: cms_marketplace_puf
+    state: OK
+    program: marketplace
+
+  - path: cache/service-area-puf.zip
+    source_id: cms-puf-py2027-service-area
+    family_id: cms-marketplace-puf-service-area
+    title: CMS Marketplace PY2027 Service Area PUF (Oklahoma)
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://download.cms.gov/marketplace-puf/2027/service-area-puf.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: service_area
+    loader: cms_marketplace_puf
+    state: OK
+    program: marketplace
+
+  - path: cache/individual_market_medical.zip
+    source_id: qhp-landscape-py2027-individual-medical
+    family_id: qhp-landscape-individual-medical
+    title: PY2027 QHP Landscape Individual Medical (Oklahoma)
+    publisher: Center for Consumer Information and Insurance Oversight
+    url: https://data.healthcare.gov/datafile/py2027/individual_market_medical.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: landscape
+    loader: qhp_landscape
+    state: OK
+    program: marketplace
+
+  - path: cache/individual_market_dental.zip
+    source_id: qhp-landscape-py2027-individual-dental
+    family_id: qhp-landscape-individual-dental
+    title: PY2027 QHP Landscape Individual Dental SADP (Oklahoma)
+    publisher: Center for Consumer Information and Insurance Oversight
+    url: https://data.healthcare.gov/datafile/py2027/individual_market_dental.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: landscape
+    loader: qhp_landscape
+    state: OK
+    program: marketplace
+
+  - path: cache/shop_market_medical.zip
+    source_id: qhp-landscape-py2027-shop-medical
+    family_id: qhp-landscape-shop-medical
+    title: PY2027 QHP Landscape SHOP Medical (Oklahoma)
+    publisher: Center for Consumer Information and Insurance Oversight
+    url: https://data.healthcare.gov/datafile/py2027/shop_market_medical.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: landscape
+    loader: qhp_landscape
+    state: OK
+    program: marketplace
+
+  - path: cache/shop_market_dental.zip
+    source_id: qhp-landscape-py2027-shop-dental
+    family_id: qhp-landscape-shop-dental
+    title: PY2027 QHP Landscape SHOP Dental SADP (Oklahoma)
+    publisher: Center for Consumer Information and Insurance Oversight
+    url: https://data.healthcare.gov/datafile/py2027/shop_market_dental.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-12-31
+    doc_type: landscape
+    loader: qhp_landscape
+    state: OK
+    program: marketplace
+
+  - path: cache/icd10cm-fy2027-code-tables.zip
+    source_id: icd10cm-fy2027
+    family_id: icd10cm
+    title: ICD-10-CM FY2027 Code Tables and Tabular Index
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/files/zip/2027-code-tables-tabular-index.zip
+    effective_from: 2026-10-01
+    effective_to: 2027-09-30
+    doc_type: code_table
+    loader: icd10cm_tabular
+
+  - path: cache/hcpcs-level-ii-2026-10.zip
+    source_id: hcpcs-level-ii-2026-10
+    family_id: hcpcs-level-ii
+    title: HCPCS Level II October 2026 Alpha-Numeric File
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/files/zip/october-2026-alpha-numeric-hcpcs-file.zip
+    effective_from: 2026-10-01
+    effective_to: 2026-12-31
+    doc_type: code_table
+    loader: hcpcs_anweb
+
+  - path: cache/hcpcs-level-ii-2027-01.zip
+    source_id: hcpcs-level-ii-2027-01
+    family_id: hcpcs-level-ii
+    title: HCPCS Level II January 2027 Alpha-Numeric File
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/files/zip/january-2027-alpha-numeric-hcpcs-file.zip
+    effective_from: 2027-01-01
+    effective_to: 2027-03-31
+    doc_type: code_table
+    loader: hcpcs_anweb
