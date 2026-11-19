@@ -1,4 +1,4 @@
-<aside class="chat-panel" data-testid="case-chat" aria-label="Ask about this case (coming soon)">
+<aside class="chat-panel" data-testid="case-chat" data-chat-enabled="{{ 'yes' if chat_enabled() else 'no' }}" aria-label="Ask about this case (coming soon)">
   <div class="chat-head">
     <h2>Ask about this case (coming soon)</h2>
     <button type="button" data-chat-toggle aria-expanded="true" aria-controls="case-chat-body">Collapse</button>

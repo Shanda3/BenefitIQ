@@ -57,6 +57,23 @@ class Chunk(Base):
     meta: Mapped[dict] = mapped_column("metadata", JSONB)
 
 
+class AccessRequest(Base):
+    """Staff access request. No patient fields are stored on this table."""
+
+    __tablename__ = "access_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(80))
+    email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
+    office_name: Mapped[str] = mapped_column(String(120))
+    role: Mapped[str] = mapped_column(String(80))
+    status: Mapped[str] = mapped_column(String(16), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    decided_by: Mapped[str | None] = mapped_column(String(120), nullable=True)
+
+
 class CodeRow(Base):
     """Structured code-table row. The label is a key into labels.yaml, never a descriptor."""
 

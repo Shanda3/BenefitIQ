@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Request access — BenefitIQ{% endblock %}
+{% block body %}
+<section class="panel">
+  <h1>Request access</h1>
+  <p class="lede">This pilot is for the people who bill insurance at one dental office. It does not take patient information.</p>
+  {% if notice %}
+  <p class="guard" data-testid="request-notice">{{ notice }}</p>
+  {% endif %}
+  <form method="post" action="/request-access" class="stack-form" data-testid="request-access-form">
+    <label for="name">Your name</label>
+    <input id="name" name="name" type="text" autocomplete="name" required maxlength="80">
+    <label for="email">Work email</label>
+    <input id="email" name="email" type="email" autocomplete="email" required maxlength="120">
+    <label for="office_name">Office or practice name</label>
+    <input id="office_name" name="office_name" type="text" required maxlength="120">
+    <label for="role">Role</label>
+    <input id="role" name="role" type="text" required maxlength="80" placeholder="Office manager">
+    {% if turnstile %}
+    <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+    {% endif %}
+    <button type="submit" class="primary">Request access</button>
+  </form>
+  <p class="quiet">Do not enter patient names, dates of birth, member IDs, or other patient details.</p>
+</section>
+{% endblock %}
+{% block scripts %}
+{% if turnstile %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
+{% endblock %}

@@ -26,6 +26,10 @@ def new_case_id() -> str:
     return "SYN-OFFICE-" + secrets.token_hex(4).upper()
 
 
+def signing_key() -> bytes:
+    return _secret()
+
+
 def _secret() -> bytes:
     global _SECRET
     env = os.environ.get("BENEFITIQ_SESSION_SECRET")

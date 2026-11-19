@@ -24,6 +24,9 @@
         <a href="/sources" {% if nav == "sources" %}aria-current="page"{% endif %}>Sources</a>
         <a href="/payers" {% if nav == "payers" %}aria-current="page"{% endif %}>Payers</a>
         <a href="/help" {% if nav == "help" %}aria-current="page"{% endif %}>Help</a>
+        {% if request.state.is_admin %}
+        <a href="/access" {% if nav == "access" %}aria-current="page"{% endif %} data-testid="access-admin-link">Access requests</a>
+        {% endif %}
       </nav>
       <a class="nav-advanced" href="/advanced" {% if nav == "advanced" %}aria-current="page"{% endif %}>Advanced</a>
     </aside>
@@ -31,6 +34,9 @@
     <div class="workspace">
       <div class="workspace-top">
         <button type="button" class="menu-button" data-menu aria-controls="sidebar" aria-expanded="false">Menu</button>
+      </div>
+      <div class="banner banner-pilot" role="note" data-testid="pilot-banner">
+        {{ pilot_banner }}
       </div>
       <div class="banner" role="note" data-testid="decision-support-banner">
         {{ disclaimer }}
@@ -43,6 +49,7 @@
       </div>
     </div>
   </div>
+  {% block scripts %}{% endblock %}
   <script src="/static/workspace.js" defer></script>
 </body>
 </html>

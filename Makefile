@@ -1,7 +1,8 @@
-.PHONY: fetch ingest ingest-stub ingest-payers count test check-updates approve-policy
+.PHONY: fetch ingest ingest-stub ingest-payers count test check-updates approve-policy load-pilot deploy
 
-DATABASE_URL ?= postgresql+psycopg://benefitiq:benefitiq@localhost:5432/benefitiq
-export DATABASE_URL
+LOCAL_DATABASE_URL := postgresql+psycopg://benefitiq:benefitiq@localhost:5432/benefitiq
+
+fetch ingest ingest-stub ingest-payers count test check-updates approve-policy: export DATABASE_URL ?= $(LOCAL_DATABASE_URL)
 
 fetch:
 	python -m benefitiq.cli fetch-public --manifest corpus/public/manifest.yaml
@@ -36,3 +37,9 @@ count: fetch
 test:
 	python scripts/phi_scan.py
 	python -m pytest -q
+
+load-pilot:
+	python -m benefitiq.cli load-pilot
+
+deploy:
+	./scripts/deploy_pilot.sh

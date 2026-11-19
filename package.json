@@ -1,0 +1,11 @@
+{
+  "name": "benefitiq",
+  "private": true,
+  "description": "Worker proxy for the BenefitIQ pilot container. Local docker compose does not use this package.",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.45.0"
+  }
+}

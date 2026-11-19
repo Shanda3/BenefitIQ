@@ -182,6 +182,47 @@ a { color: var(--accent); }
   font-weight: 650;
 }
 
+.banner-pilot {
+  background: #e7eef6;
+  color: #1c3348;
+  border-color: #1f4e79;
+}
+
+.stack-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+  max-width: 36rem;
+}
+
+.stack-form label { font-weight: 650; margin-top: 0.35rem; }
+
+.stack-form input[type="text"],
+.stack-form input[type="email"] {
+  width: 100%;
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
+
+.access-table { width: 100%; border-collapse: collapse; }
+
+.access-table th,
+.access-table td {
+  text-align: left;
+  padding: 0.45rem 0.5rem;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.access-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.access-actions form { margin: 0; }
+
 .workspace-body {
   display: flex;
   align-items: flex-start;

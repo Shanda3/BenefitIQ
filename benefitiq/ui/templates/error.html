@@ -3,7 +3,7 @@
 {% block body %}
 <section class="panel">
   <h1>{{ heading|default("Please try again") }}</h1>
-  <p>{{ message }}</p>
+  <p {% if message_testid %}data-testid="{{ message_testid }}"{% endif %}>{{ message }}</p>
   <p><a href="{{ back_href|default('/') }}">{{ back_label|default("Back to the start") }}</a></p>
 </section>
 {% endblock %}

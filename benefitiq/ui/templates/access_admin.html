@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Access requests — BenefitIQ{% endblock %}
+{% block body %}
+<section class="panel" data-testid="access-admin">
+  <h1>Access requests</h1>
+  <p data-testid="pending-count">{{ waiting }}</p>
+  <p class="lede">Approve the people who work at the office. Revoke takes effect the next time they open a page.</p>
+  {% for key, title, empty in (
+    ("pending", "Waiting", "Nobody is waiting."),
+    ("approved", "Approved", "Nobody is approved yet."),
+    ("denied", "Denied", "Nobody has been denied."),
+    ("revoked", "Revoked", "Nobody has been revoked."),
+  ) %}
+  <h2>{{ title }}</h2>
+  {% if groups[key] %}
+  <table class="access-table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Work email</th>
+        <th scope="col">Office</th>
+        <th scope="col">Role</th>
+        <th scope="col">Requested</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in groups[key] %}
+      <tr>
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.office_name }}</td>
+        <td>{{ row.role }}</td>
+        <td>{{ format_when(row.created_at) }}</td>
+        <td class="access-actions">
+          {% if key != "approved" %}
+          <form method="post" action="/access/approve">
+            <input type="hidden" name="token" value="{{ csrf }}">
+            <input type="hidden" name="request_id" value="{{ row.id }}">
+            <button type="submit">Approve</button>
+          </form>
+          {% endif %}
+          {% if key == "pending" %}
+          <form method="post" action="/access/deny">
+            <input type="hidden" name="token" value="{{ csrf }}">
+            <input type="hidden" name="request_id" value="{{ row.id }}">
+            <button type="submit">Deny</button>
+          </form>
+          {% endif %}
+          {% if key == "approved" %}
+          <form method="post" action="/access/revoke">
+            <input type="hidden" name="token" value="{{ csrf }}">
+            <input type="hidden" name="request_id" value="{{ row.id }}">
+            <button type="submit">Revoke</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="quiet">{{ empty }}</p>
+  {% endif %}
+  {% endfor %}
+</section>
+{% endblock %}
