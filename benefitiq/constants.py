@@ -4,6 +4,18 @@ DISCLAIMER = (
     "Decision support for a human biller. Not a final coding or coverage determination."
 )
 
+# Shown on every page of the private pilot. It is not a substitute for the disclaimer.
+PILOT_BANNER = (
+    "Pilot: do not enter patient names, dates of birth, member IDs, or other patient details. "
+    "Decision support for a human biller."
+)
+
+# Returned when free text looks like patient information. The submitted text is not included.
+PHI_REJECTION = (
+    "That text looks like patient information. "
+    "Remove names, dates of birth, member IDs, and other patient details, then try again."
+)
+
 # Width of the pgvector column. Every embedding provider uses this width.
 # Changing it means re-ingesting the corpus.
 EMBEDDING_DIM = 384

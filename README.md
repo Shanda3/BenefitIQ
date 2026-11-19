@@ -62,6 +62,8 @@ python -m benefitiq.cli ingest --manifest corpus/office/manifest.yaml
 uvicorn benefitiq.main:app --reload
 ```
 
+The private pilot deploy is documented in `docs/deploy-pilot.md`. This repository does not deploy it and does not contain credentials.
+
 Run the tests and the PHI scan:
 
 ```bash

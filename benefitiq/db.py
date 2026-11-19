@@ -19,9 +19,14 @@ _session_factory = None
 def get_engine():
     global _engine
     if _engine is None:
+        from benefitiq.config import pilot_mode
+
+        pilot = pilot_mode()
         _engine = create_engine(
             database_url(),
             pool_pre_ping=True,
+            pool_size=2 if pilot else 5,
+            max_overflow=0 if pilot else 10,
             connect_args={"connect_timeout": 5},
         )
     return _engine

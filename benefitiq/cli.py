@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -44,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
     count = sub.add_parser("count-public", help="Count rows in the public manifest without writing the database")
     count.add_argument("--manifest", type=Path, default=Path("corpus/public/manifest.yaml"))
 
+    sub.add_parser(
+        "load-pilot",
+        help="Create tables and load the office, stub, and payer policy library",
+    )
+
     args = parser.parse_args(argv)
     try:
         if args.command == "wait-db":
@@ -81,11 +87,45 @@ def main(argv: list[str] | None = None) -> int:
             print(f"approved {approved}")
         elif args.command == "count-public":
             _print_public_counts(args.manifest)
+        elif args.command == "load-pilot":
+            return _load_pilot()
         else:
             parser.error(f"unknown command {args.command}")
     except IngestionError as exc:
         print(f"ingestion failed: {exc}", file=sys.stderr)
         return 1
+    return 0
+
+
+def _load_pilot() -> int:
+    """Migrations and embeddings for the pilot database. The URL is not printed."""
+    if not os.environ.get("DATABASE_URL", "").strip():
+        print("DATABASE_URL is required", file=sys.stderr)
+        return 1
+    from urllib.parse import urlparse
+
+    from benefitiq.config import database_url
+
+    parsed = urlparse(database_url().replace("postgresql+psycopg", "postgresql", 1))
+    host = parsed.hostname or "unknown"
+    name = parsed.path.lstrip("/") or "unknown"
+    print(f"database={host}/{name}")
+    wait_for_db()
+    init_db()
+    for manifest in (
+        Path("corpus/stub/manifest.yaml"),
+        Path("corpus/office/manifest.yaml"),
+        Path("corpus/payers/manifest.yaml"),
+    ):
+        counts = ingest_manifest(manifest)
+        print(f"{manifest} inserted={counts['inserted']} skipped={counts['skipped']}")
+    totals = ingest_policy_library()
+    print(
+        "policies inserted={inserted} unchanged={unchanged} needs_review={needs_review} "
+        "skipped={skipped} failed={failed} chunks={chunks}".format(**totals.as_dict())
+    )
+    for source_id, reason in totals.failures or []:
+        print(f"failed {source_id} {reason}")
     return 0
 
 

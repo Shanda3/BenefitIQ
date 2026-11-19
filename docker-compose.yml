@@ -16,6 +16,7 @@ services:
       retries: 20
   app:
     build: .
+    command: ["local"]
     ports:
       - "8000:8000"
     environment:

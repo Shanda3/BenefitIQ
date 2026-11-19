@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from contextlib import asynccontextmanager
 from datetime import date
 from pathlib import Path
 
@@ -14,12 +15,13 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from benefitiq.constants import DISCLAIMER
-from benefitiq.config import samples_dir
-from benefitiq.db import session_scope
+from benefitiq.access_routes import router as access_router
+from benefitiq.config import chat_enabled, database_url, samples_dir
+from benefitiq.constants import DISCLAIMER, PILOT_BANNER
+from benefitiq.db import get_engine, session_scope
 from benefitiq.engine.recommend import evaluate
 from benefitiq.models import Source
 from benefitiq.ingestion.policy_text import excerpt
@@ -27,12 +29,26 @@ from benefitiq.office.present import plain_gap
 from benefitiq.office.routes import router as office_router
 from benefitiq.retrieval.search import CorpusRepo
 from benefitiq.schemas import CaseInput
+from benefitiq.security import install_phi_log_filter, pilot_middleware, require_pilot_config
 
-app = FastAPI(title="BenefitIQ", version="0.1.0")
+install_phi_log_filter()
+
+
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    require_pilot_config()
+    yield
+
+
+app = FastAPI(title="BenefitIQ", version="0.1.0", lifespan=_lifespan)
+app.middleware("http")(pilot_middleware)
 
 _UI = Path(__file__).resolve().parent / "ui"
 templates = Jinja2Templates(directory=str(_UI / "templates"))
 templates.env.filters["plain_gap"] = plain_gap
+templates.env.globals["disclaimer"] = DISCLAIMER
+templates.env.globals["pilot_banner"] = PILOT_BANNER
+templates.env.globals["chat_enabled"] = chat_enabled
 templates.env.filters["access_chip"] = lambda label: (
     "chip-ready"
     if label == "Public"
@@ -42,6 +58,7 @@ templates.env.filters["access_chip"] = lambda label: (
 )
 app.mount("/static", StaticFiles(directory=str(_UI / "static")), name="static")
 app.include_router(office_router)
+app.include_router(access_router)
 
 _SAMPLE_ID = re.compile(r"^[a-z0-9_]+$")
 
@@ -73,6 +90,18 @@ def _render_result(request: Request, result) -> HTMLResponse:
             "nav": "advanced",
         },
     )
+
+
+@app.get("/healthz")
+def healthz():
+    """Public liveness check. It does not report corpus or case details."""
+    try:
+        database_url()
+        with get_engine().connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception:  # noqa: BLE001 - do not leak connection details
+        return JSONResponse({"status": "unavailable"}, status_code=503)
+    return {"status": "ok"}
 
 
 @app.get("/health")

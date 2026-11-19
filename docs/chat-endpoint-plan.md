@@ -92,11 +92,4 @@ The current suite does not call a model. When the endpoint exists, add tests tha
 
 ## Planned hosting
 
-This is the intended layout when someone chooses to deploy later. This repository does not deploy it.
-
-- The FastAPI app runs as a Cloudflare Container.
-- The UI is static files on Cloudflare Pages, talking only to the BenefitIQ origin.
-- Postgres with pgvector runs on Neon or Supabase, reached through Hyperdrive.
-- `OPENAI_API_KEY` and the database URL live in Cloudflare secrets, not in the image, the Pages project, or git.
-
-No account is created and no deploy step is part of this change.
+The pilot layout is in `docs/deploy-pilot.md`. The FastAPI app and the server-rendered UI run together as one Cloudflare Container. Postgres with pgvector runs on Neon and is reached directly, not through Hyperdrive. `OPENAI_API_KEY` stays unset for the pilot. Chat is not built. This repository does not deploy the service and does not store credentials.
