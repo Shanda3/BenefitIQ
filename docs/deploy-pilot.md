@@ -68,6 +68,24 @@ The command creates the tables, including the access-request table, loads the fi
 
 Use the direct string for this step. Use the pooled string for the running app.
 
+A later run of `make load-pilot` inserts a source id that is not in the database yet and skips a source whose file has not changed. It stops if a source id is already stored and the file hash changed. New office files use new source ids, so this command can load them without editing the sources that are already stored.
+
+Sources added for the additional procedures:
+
+| Source id | File | Effective date |
+| --- | --- | --- |
+| `cms-dental-exceptions` | `corpus/office/cms-dental-exceptions.md` | 2025-07-01 |
+| `oid-36-6060-6` | `corpus/office/oid-36-6060-6.md` | 2010-01-12 |
+
+On the machine that loads Neon, from the repository root, with the direct connection string:
+
+```bash
+export DATABASE_URL="postgresql://…direct-host…/neondb?sslmode=require"
+make load-pilot
+```
+
+That command does not deploy the app. After it finishes, the new source ids are in the database. Sources that were already loaded are skipped. Payer policy text that was already current is left as it is. Humana files stay pending and are not downloaded.
+
 ## 2. Deploy the container
 
 The public address is `https://benefitiq.devyo.app`. `wrangler.jsonc` keeps that address on every deploy: `workers_dev` is false, `preview_urls` is false, and the Worker route is the custom domain `benefitiq.devyo.app`. A redeploy does not publish a `workers.dev` hostname or a preview URL.

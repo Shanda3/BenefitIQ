@@ -6,6 +6,10 @@
 # L33611 and A52512 revision effective date 2021-08-08,
 # Benefit Policy Manual Chapter 15 section 150 effective 2023-01-01 (Rev. 11995),
 # dental coverage page claim rule effective 2025-07-01.
+# cms-dental-exceptions uses that same page and the same claim-rule date.
+# The examples were already in 42 CFR 411.15 before that claim-rule date.
+# oid-36-6060-6 uses the date printed on the Oklahoma Insurance Department bulletin.
+# The bulletin is not a later compilation of the statute.
 documents:
   - path: lcd-l33611.md
     source_id: cms-lcd-l33611
@@ -50,3 +54,28 @@ documents:
     doc_type: policy
     loader: prose
     program: medicare
+
+  - path: cms-dental-exceptions.md
+    source_id: cms-dental-exceptions
+    family_id: cms-dental-exceptions
+    title: CMS Medicare Dental Coverage payment examples
+    publisher: Centers for Medicare & Medicaid Services
+    url: https://www.cms.gov/medicare/coverage/dental
+    effective_from: 2025-07-01
+    doc_type: policy
+    loader: prose
+    program: medicare
+
+  - path: oid-36-6060-6.md
+    source_id: oid-36-6060-6
+    family_id: oid-36-6060-6
+    title: Oklahoma Insurance Department bulletin on 36 O.S. section 6060.6
+    publisher: Oklahoma Insurance Department
+    url: https://www.oid.ok.gov/wp-content/uploads/2019/10/Medically-Necessary-Dental-Procedure-for-Minors.pdf
+    effective_from: 2010-01-12
+    doc_type: policy
+    loader: prose
+    program: oklahoma-fully-insured
+    payer: oklahoma-fully-insured
+    state: OK
+    plan_type: ok-payer

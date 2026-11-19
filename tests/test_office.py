@@ -187,7 +187,7 @@ def test_every_tree_citation_resolves_inside_the_effective_window():
         for spec in found:
             view = cite(repo, spec["source_id"], spec["section"], AS_OF)
             assert view.status == "cited", spec
-            assert view.url.startswith("https://www.cms.gov/")
+            assert view.url.startswith(("https://www.cms.gov/", "https://www.oid.ok.gov/"))
             assert view.effective_from is not None
             assert "localcoverage.cms.gov" not in view.url
 
@@ -212,10 +212,15 @@ def test_unknown_source_and_out_of_window_source_are_not_found():
 def test_office_source_urls_match_the_robots_allow_rule():
     manifest = yaml.safe_load((ROOT / "corpus" / "office" / "manifest.yaml").read_text(encoding="utf-8"))
     urls = [item["url"] for item in manifest["documents"]]
-    assert len(urls) == 4
+    assert len(urls) == 6
+    oid_robots = "User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n"
     for url in urls:
         assert "localcoverage.cms.gov" not in url
-        assert allows(url, CMS_ROBOTS)
+        if "oid.ok.gov" in url:
+            assert allows(url, oid_robots)
+        else:
+            assert url.startswith("https://www.cms.gov/")
+            assert allows(url, CMS_ROBOTS)
 
 
 def test_question_counts_titles_and_no_cpt_codes():
@@ -224,15 +229,26 @@ def test_question_counts_titles_and_no_cpt_codes():
     assert [item["title"] for item in procedures if item["active"]] == [
         "Sleep apnea oral appliance",
         "Dental care needed before a medical treatment (Medicare)",
+        "TMJ splint",
+        "Tooth stabilization with a jaw fracture",
+        "CBCT scan",
+        "Ridge reconstruction with tumor removal",
+        "Anesthesia and facility for dental care (Oklahoma)",
     ]
     assert [item["title"] for item in procedures if not item["active"]] == [
-        "TMJ",
-        "Injury/trauma",
         "Biopsy",
-        "CBCT scan",
+        "Frenectomy",
+        "Impacted tooth extraction",
+        "Cleft and congenital care",
+        "Sinus or oroantral closure",
+        "Jaw osteonecrosis or infection",
+        "Oral lesion excision",
     ]
     assert len(by_id["sleep_appliance"]["questions"]) == 5
     assert len(by_id["medicare_dental"]["questions"]) == 4
+    for procedure_id in ("tmj", "injury_trauma", "cbct", "ridge_reconstruction", "ok_dental_anesthesia"):
+        assert len(by_id[procedure_id]["questions"]) == 4
+        assert by_id[procedure_id]["benefit_path"] == "medical"
 
     def walk(node):
         if isinstance(node, dict):
@@ -355,10 +371,10 @@ def test_back_button_returns_to_the_previous_question(monkeypatch, browser):
 
 def test_coming_soon_tiles_are_disabled_and_rejected(browser):
     home = browser.get("/")
-    assert home.text.count("Coming soon") == 4
+    assert home.text.count("Coming soon") == 7
     assert 'aria-disabled="true"' in home.text
     assert 'disabled' in home.text
-    refused = browser.post("/office/start", data={"procedure_id": "tmj"})
+    refused = browser.post("/office/start", data={"procedure_id": "biopsy"})
     assert refused.status_code == 400
     assert DISCLAIMER in refused.text
     assert "not available yet" in refused.text
@@ -397,7 +413,16 @@ def test_accessibility_basics_on_the_main_screens(monkeypatch, browser):
     assert question.text.count(">No<") == 1
     assert question.text.count(">Not sure<") == 1
     assert ">Back<" in question.text
-    for tile in ("Sleep apnea oral appliance", "TMJ", "Injury/trauma", "Biopsy", "CBCT scan"):
+    for tile in (
+        "Sleep apnea oral appliance",
+        "TMJ splint",
+        "Tooth stabilization with a jaw fracture",
+        "CBCT scan",
+        "Ridge reconstruction with tumor removal",
+        "Anesthesia and facility for dental care (Oklahoma)",
+        "Biopsy",
+        "Frenectomy",
+    ):
         assert tile in home.text
 
 
@@ -432,3 +457,41 @@ def test_tampered_session_is_ignored(browser):
     response = browser.get("/office/question", follow_redirects=False)
     assert response.status_code == 303
     assert response.headers["location"] == "/"
+
+
+def test_new_medicare_examples_cite_the_dental_page(monkeypatch, browser):
+    monkeypatch.setenv("BENEFITIQ_TODAY", "2026-11-18")
+    cases = {
+        "tmj": ["yes", "no", "yes", "yes"],
+        "injury_trauma": ["yes", "no", "yes", "yes"],
+        "cbct": ["yes", "no", "yes", "yes"],
+        "ridge_reconstruction": ["yes", "no", "yes", "yes"],
+    }
+    for procedure_id, choices in cases.items():
+        page = _walk(browser, procedure_id, choices)
+        assert "Bill medical first" in page.text
+        assert "https://www.cms.gov/medicare/coverage/dental" in page.text
+        assert "2025-07-01" in page.text
+        assert "Confirm with the payer." in page.text
+        assert 'data-internal-status="not found"' in page.text
+        assert DISCLAIMER in page.text
+        refused = _walk(browser, procedure_id, ["no", "no", "yes", "yes"])
+        assert "Probably not medical" in refused.text
+        assert "Do not bill" in refused.text
+
+
+def test_oklahoma_anesthesia_bulletin_is_not_a_medicare_rule(monkeypatch, browser):
+    monkeypatch.setenv("BENEFITIQ_TODAY", "2026-11-18")
+    page = _walk(browser, "ok_dental_anesthesia", ["yes", "yes", "yes", "yes"])
+    assert "Bill medical first" in page.text
+    assert "https://www.oid.ok.gov/wp-content/uploads/2019/10/Medically-Necessary-Dental-Procedure-for-Minors.pdf" in page.text
+    assert "2010-01-12" in page.text
+    assert "not a Medicare rule" in page.text
+    assert "Confirm with the payer." in page.text
+    assert 'data-internal-status="not found"' in page.text
+    medicare = _walk(browser, "ok_dental_anesthesia", ["no", "yes", "yes", "yes"])
+    assert "Probably not medical" in medicare.text
+    assert "not a Medicare rule" in medicare.text
+    dental_procedure = _walk(browser, "ok_dental_anesthesia", ["yes", "yes", "yes", "no"])
+    assert "Probably not medical" in dental_procedure.text
+    assert "dental procedure itself" in dental_procedure.text

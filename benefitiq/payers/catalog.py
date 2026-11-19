@@ -63,6 +63,12 @@ OFFICE_DATES = {
     "cms-article-a52512": SourceDate(date(2021, 8, 8), "effective", "Revision effective"),
     "cms-bp102c15-150": SourceDate(date(2023, 1, 1), "effective", "effective"),
     "cms-medicare-dental": SourceDate(date(2025, 7, 1), "effective", "Claim rule effective"),
+    "cms-dental-exceptions": SourceDate(date(2025, 7, 1), "effective", "Claim rule effective"),
+    "oid-36-6060-6": SourceDate(
+        date(2010, 1, 12),
+        "document_date",
+        "Date (not labeled effective or last review)",
+    ),
 }
 
 EXISTING_IDS = {
@@ -70,6 +76,7 @@ EXISTING_IDS = {
     "A52512": "cms-article-a52512",
     "IOM 100-02 Ch.15 §150": "cms-bp102c15-150",
     "CMS Medicare Dental Coverage page": "cms-medicare-dental",
+    "36 O.S. § 6060.6": "oid-36-6060-6",
 }
 
 ACCESS_LABELS = {
@@ -101,9 +108,11 @@ PROCEDURE_TOPICS = {
     "sleep_appliance": ("sleep_appliance", "sleep_test"),
     "medicare_dental": ("linked_dental", "accidental"),
     "tmj": ("tmj",),
-    "injury_trauma": ("accidental",),
+    "injury_trauma": ("accidental", "linked_dental"),
     "biopsy": ("biopsy",),
-    "cbct": ("cbct",),
+    "cbct": ("cbct", "linked_dental"),
+    "ridge_reconstruction": ("bone_graft", "linked_dental"),
+    "ok_dental_anesthesia": ("anesthesia",),
 }
 
 GROUP_LABELS = {

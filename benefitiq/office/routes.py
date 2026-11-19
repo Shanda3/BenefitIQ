@@ -412,7 +412,7 @@ def start(request: Request, procedure_id: str = Form(), plan: str = Form("")):
     procedure = procedure_by_id(procedure_id)
     if procedure is None:
         return _error(request, "That procedure is not on the list.", 404)
-    if not procedure["active"]:
+    if not procedure["active"] or procedure.get("benefit_path") == "dental":
         return _error(request, "That procedure is not available yet.", 400)
     payer_id, segment_id = _plan_ids(plan)
     if plan and payer_id is None:

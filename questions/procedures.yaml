@@ -5,6 +5,7 @@ procedures:
   - id: sleep_appliance
     title: Sleep apnea oral appliance
     blurb: A custom mouthpiece for sleep apnea.
+    benefit_path: medical
     active: true
     questions:
       - id: sleep_test
@@ -262,6 +263,7 @@ procedures:
   - id: medicare_dental
     title: Dental care needed before a medical treatment (Medicare)
     blurb: Dental work before a medical treatment, for Medicare.
+    benefit_path: medical
     active: true
     questions:
       - id: linked_service
@@ -443,17 +445,876 @@ procedures:
             section: care-coordination
 
   - id: tmj
-    title: TMJ
-    active: false
+    title: TMJ splint
+    blurb: A dental splint used with covered treatment of a dislocated jaw joint.
+    benefit_path: medical
+    active: true
+    questions:
+      - id: jaw_splint
+        prompt: Is this a dental splint used as part of covered treatment of a covered medical condition, such as a dislocated jaw joint?
+        help: A splint for jaw-joint symptoms, with no covered medical treatment, is not this example.
+        gap: whether the splint is part of covered treatment of a covered medical condition
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+      - id: routine_only
+        prompt: Is this only a dental appliance for jaw-joint symptoms, with no covered medical treatment?
+        help: That appliance is not the splint example on the Medicare page.
+        gap: whether this is only a dental appliance with no covered medical treatment
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+      - id: coordination
+        prompt: Did the medical and dental providers write down that they coordinated this care?
+        help: Medicare looks for that written coordination before it pays the dental service.
+        gap: written coordination between the medical and dental providers
+        gap_on: [not_sure, "no"]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: coordination
+      - id: enrolled
+        prompt: Will an enrolled Medicare provider bill this?
+        help: The provider who bills has to be enrolled in Medicare.
+        gap: whether the billing provider is enrolled in Medicare
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: A dental splint is an example Medicare can pay only when it is used as part of covered treatment of a covered medical condition, such as a dislocated jaw joint.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-splint
+          - text: The medical and dental providers wrote down how they coordinated this care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: coordination
+          - text: An enrolled Medicare provider bills the service.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+          - text: No code number for this splint was found on the cited page.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-splint
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: tmj-conflict
+        result: need_more_info
+        when:
+          - id: jaw_splint
+            answer: "yes"
+          - id: routine_only
+            answer: "yes"
+        reason: These answers disagree, so this is not ready to bill. One answer says this is a splint used with covered treatment, and another says it is only a dental appliance.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+        checklist:
+          - text: The answers disagree. Confirm whether this is a splint used with covered treatment or only a dental appliance.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-splint
+      - id: tmj-routine
+        result: probably_not_medical
+        when:
+          - id: routine_only
+            answer: "yes"
+        reason: Do not bill medical insurance for this. A dental appliance for jaw-joint symptoms, with no covered medical treatment, is not the splint example Medicare can pay.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+        checklist:
+          - text: A dental appliance for jaw-joint symptoms, with no covered medical treatment, is not the splint example on the Medicare page.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-splint
+      - id: tmj-not-splint
+        result: probably_not_medical
+        when:
+          - id: jaw_splint
+            answer: "no"
+        reason: Do not bill medical insurance for this. The cited example is a dental splint used with covered treatment of a covered medical condition, such as a dislocated jaw joint.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+        checklist:
+          - text: The cited example is a dental splint used with covered treatment of a covered medical condition, such as a dislocated jaw joint.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-splint
+      - id: tmj-not-enrolled
+        result: probably_not_medical
+        when:
+          - id: enrolled
+            answer: "no"
+        reason: Do not bill Medicare for this. The provider who bills has to be enrolled in Medicare.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+        checklist:
+          - text: The billing provider has to be enrolled in Medicare.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+      - id: tmj-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: jaw_splint
+            answer: not_sure
+          - id: routine_only
+            answer: not_sure
+          - id: coordination
+            answer: not_sure
+          - id: coordination
+            answer: "no"
+          - id: enrolled
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: tmj-bill
+        result: bill_medical_first
+        when:
+          - id: jaw_splint
+            answer: "yes"
+          - id: routine_only
+            answer: "no"
+          - id: coordination
+            answer: "yes"
+          - id: enrolled
+            answer: "yes"
+        reason: The answers match the Medicare example checked here for a dental splint used with covered treatment of a covered medical condition. No code number was found.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-splint
+          - source_id: cms-dental-exceptions
+            section: coordination
 
   - id: injury_trauma
-    title: Injury/trauma
-    active: false
-
-  - id: biopsy
-    title: Biopsy
-    active: false
+    title: Tooth stabilization with a jaw fracture
+    blurb: Stabilizing teeth while a jaw fracture is reduced.
+    benefit_path: medical
+    active: true
+    questions:
+      - id: fracture_link
+        prompt: Is this stabilization or immobilization of teeth done in connection with reducing a jaw fracture?
+        help: The cited example is that connection. Repair of the teeth alone is not this example.
+        gap: whether the teeth are stabilized in connection with reducing a jaw fracture
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-fracture
+      - id: tooth_only
+        prompt: Is this only care, treatment, filling, removal, or replacement of a tooth, with no jaw-fracture reduction?
+        help: That care is the dental exclusion, unless another cited exception applies.
+        gap: whether this is only care of a tooth with no jaw-fracture reduction
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+      - id: coordination
+        prompt: Did the medical and dental providers write down that they coordinated this care?
+        help: Medicare looks for that written coordination before it pays the dental service.
+        gap: written coordination between the medical and dental providers
+        gap_on: [not_sure, "no"]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: coordination
+      - id: enrolled
+        prompt: Will an enrolled Medicare provider bill this?
+        help: The provider who bills has to be enrolled in Medicare.
+        gap: whether the billing provider is enrolled in Medicare
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: Stabilizing or immobilizing teeth in connection with reducing a jaw fracture is an example Medicare can pay.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-fracture
+          - text: The medical and dental providers wrote down how they coordinated this care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: coordination
+          - text: An enrolled Medicare provider bills the service.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+          - text: No code number for this stabilization was found on the cited page.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-fracture
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: trauma-conflict
+        result: need_more_info
+        when:
+          - id: fracture_link
+            answer: "yes"
+          - id: tooth_only
+            answer: "yes"
+        reason: These answers disagree, so this is not ready to bill. One answer says the teeth are stabilized while a jaw fracture is reduced, and another says this is only care of a tooth.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-fracture
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+        checklist:
+          - text: The answers disagree. Confirm whether the teeth are stabilized while a jaw fracture is reduced, or this is only care of a tooth.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-fracture
+              - source_id: cms-dental-exceptions
+                section: dental-exclusion
+      - id: trauma-tooth-only
+        result: probably_not_medical
+        when:
+          - id: tooth_only
+            answer: "yes"
+        reason: Do not bill medical insurance for this. Care, treatment, filling, removal, or replacement of a tooth, with no jaw-fracture reduction, is not paid.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+        checklist:
+          - text: Care of a tooth, with no jaw-fracture reduction, is not the example Medicare can pay.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: dental-exclusion
+      - id: trauma-not-linked
+        result: probably_not_medical
+        when:
+          - id: fracture_link
+            answer: "no"
+        reason: Do not bill medical insurance for this. The cited example is stabilization or immobilization of teeth in connection with reducing a jaw fracture.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-fracture
+        checklist:
+          - text: The cited example is stabilization or immobilization of teeth in connection with reducing a jaw fracture.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: jaw-fracture
+      - id: trauma-not-enrolled
+        result: probably_not_medical
+        when:
+          - id: enrolled
+            answer: "no"
+        reason: Do not bill Medicare for this. The provider who bills has to be enrolled in Medicare.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+        checklist:
+          - text: The billing provider has to be enrolled in Medicare.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+      - id: trauma-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: fracture_link
+            answer: not_sure
+          - id: tooth_only
+            answer: not_sure
+          - id: coordination
+            answer: not_sure
+          - id: coordination
+            answer: "no"
+          - id: enrolled
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: trauma-bill
+        result: bill_medical_first
+        when:
+          - id: fracture_link
+            answer: "yes"
+          - id: tooth_only
+            answer: "no"
+          - id: coordination
+            answer: "yes"
+          - id: enrolled
+            answer: "yes"
+        reason: The answers match the Medicare example checked here for stabilizing teeth while a jaw fracture is reduced. No code number was found.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: jaw-fracture
+          - source_id: cms-dental-exceptions
+            section: coordination
 
   - id: cbct
     title: CBCT scan
+    blurb: A scan checked against the Medicare rule for a diagnostic x-ray.
+    benefit_path: medical
+    active: true
+    questions:
+      - id: ancillary_xray
+        prompt: Is this a diagnostic x-ray furnished as part of a dental service these Medicare rules can pay?
+        help: The cited page names diagnostic x-rays. It does not name a cone-beam code. Answer yes only when the chart supports treating this scan as that kind of x-ray for a covered dental service.
+        gap: whether this scan is a diagnostic x-ray for a covered dental service
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: ancillary-xray
+      - id: routine_only
+        prompt: Is this imaging only for routine dental care, with no covered dental service?
+        help: Routine dental care is not paid.
+        gap: whether this imaging is only for routine dental care
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+          - source_id: cms-dental-exceptions
+            section: dental-exclusion
+      - id: coordination
+        prompt: Did the medical and dental providers write down that they coordinated this care?
+        help: The covered dental service this x-ray belongs to needs that written coordination.
+        gap: written coordination between the medical and dental providers
+        gap_on: [not_sure, "no"]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: coordination
+      - id: enrolled
+        prompt: Will an enrolled Medicare provider bill this?
+        help: The provider who bills has to be enrolled in Medicare.
+        gap: whether the billing provider is enrolled in Medicare
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: When the dental service itself is covered, a diagnostic x-ray furnished with it can be paid. The cited page does not name a cone-beam code number.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ancillary-xray
+          - text: Do not bill imaging that is only for routine dental care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+          - text: The medical and dental providers wrote down how they coordinated this care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: coordination
+          - text: An enrolled Medicare provider bills the service.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: cbct-conflict
+        result: need_more_info
+        when:
+          - id: ancillary_xray
+            answer: "yes"
+          - id: routine_only
+            answer: "yes"
+        reason: These answers disagree, so this is not ready to bill. One answer says this is a diagnostic x-ray for a covered dental service, and another says it is only for routine dental care.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ancillary-xray
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+        checklist:
+          - text: The answers disagree. Confirm whether this is a diagnostic x-ray for a covered dental service or imaging only for routine dental care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ancillary-xray
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+      - id: cbct-routine
+        result: probably_not_medical
+        when:
+          - id: routine_only
+            answer: "yes"
+        reason: Do not bill medical insurance for this. Imaging only for routine dental care is not paid.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+        checklist:
+          - text: Imaging only for routine dental care is not paid.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+      - id: cbct-not-xray
+        result: probably_not_medical
+        when:
+          - id: ancillary_xray
+            answer: "no"
+        reason: Do not bill medical insurance for this scan from the rule checked here. That rule is a diagnostic x-ray furnished with a covered dental service. The page does not name a cone-beam code.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ancillary-xray
+        checklist:
+          - text: The cited page names diagnostic x-rays furnished with a covered dental service. It does not name a cone-beam code number.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ancillary-xray
+      - id: cbct-not-enrolled
+        result: probably_not_medical
+        when:
+          - id: enrolled
+            answer: "no"
+        reason: Do not bill Medicare for this. The provider who bills has to be enrolled in Medicare.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+        checklist:
+          - text: The billing provider has to be enrolled in Medicare.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+      - id: cbct-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: ancillary_xray
+            answer: not_sure
+          - id: routine_only
+            answer: not_sure
+          - id: coordination
+            answer: not_sure
+          - id: coordination
+            answer: "no"
+          - id: enrolled
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: cbct-bill
+        result: bill_medical_first
+        when:
+          - id: ancillary_xray
+            answer: "yes"
+          - id: routine_only
+            answer: "no"
+          - id: coordination
+            answer: "yes"
+          - id: enrolled
+            answer: "yes"
+        reason: The answers match the Medicare example checked here for a diagnostic x-ray furnished with a covered dental service. No cone-beam code number was found.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ancillary-xray
+          - source_id: cms-dental-exceptions
+            section: coordination
+
+  - id: ridge_reconstruction
+    title: Ridge reconstruction with tumor removal
+    blurb: Rebuilding a dental ridge at the same time a tumor is removed.
+    benefit_path: medical
+    active: true
+    questions:
+      - id: same_time
+        prompt: Is this ridge reconstruction done because a tumor was removed, and at the same time as that surgery?
+        help: The cited example is that timing. A later rebuild, or a rebuild for dentures, is not this example.
+        gap: whether the ridge is rebuilt at the same time a tumor is removed
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: ridge-tumor
+      - id: denture_prep
+        prompt: Is this reshaping or rebuilding a ridge to prepare the mouth for dentures?
+        help: That preparation is not paid.
+        gap: whether this rebuild is to prepare the mouth for dentures
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+      - id: coordination
+        prompt: Did the medical and dental providers write down that they coordinated this care?
+        help: Medicare looks for that written coordination before it pays the dental service.
+        gap: written coordination between the medical and dental providers
+        gap_on: [not_sure, "no"]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: coordination
+      - id: enrolled
+        prompt: Will an enrolled Medicare provider bill this?
+        help: The provider who bills has to be enrolled in Medicare.
+        gap: whether the billing provider is enrolled in Medicare
+        gap_on: [not_sure]
+        citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: Rebuilding a dental ridge can be paid when it is done because a tumor was removed, and at the same time as that surgery.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ridge-tumor
+          - text: Do not bill a ridge rebuild that prepares the mouth for dentures.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+          - text: The medical and dental providers wrote down how they coordinated this care.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: coordination
+          - text: An enrolled Medicare provider bills the service. No code number for this rebuild was found on the cited page.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+              - source_id: cms-dental-exceptions
+                section: ridge-tumor
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: ridge-conflict
+        result: need_more_info
+        when:
+          - id: same_time
+            answer: "yes"
+          - id: denture_prep
+            answer: "yes"
+        reason: These answers disagree, so this is not ready to bill. One answer says the ridge is rebuilt while a tumor is removed, and another says the rebuild prepares the mouth for dentures.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ridge-tumor
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+        checklist:
+          - text: The answers disagree. Confirm whether the ridge is rebuilt while a tumor is removed, or the work prepares the mouth for dentures.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ridge-tumor
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+      - id: ridge-denture
+        result: probably_not_medical
+        when:
+          - id: denture_prep
+            answer: "yes"
+        reason: Do not bill medical insurance for this. Rebuilding a ridge to prepare the mouth for dentures is not paid.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: not-covered-examples
+        checklist:
+          - text: Rebuilding a ridge to prepare the mouth for dentures is not paid.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: not-covered-examples
+      - id: ridge-not-same-time
+        result: probably_not_medical
+        when:
+          - id: same_time
+            answer: "no"
+        reason: Do not bill medical insurance for this. The cited example is a ridge rebuild done because a tumor was removed, and at the same time as that surgery.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ridge-tumor
+        checklist:
+          - text: The cited example is a ridge rebuild done because a tumor was removed, and at the same time as that surgery.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: ridge-tumor
+      - id: ridge-not-enrolled
+        result: probably_not_medical
+        when:
+          - id: enrolled
+            answer: "no"
+        reason: Do not bill Medicare for this. The provider who bills has to be enrolled in Medicare.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: enrolled
+        checklist:
+          - text: The billing provider has to be enrolled in Medicare.
+            citations:
+              - source_id: cms-dental-exceptions
+                section: enrolled
+      - id: ridge-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: same_time
+            answer: not_sure
+          - id: denture_prep
+            answer: not_sure
+          - id: coordination
+            answer: not_sure
+          - id: coordination
+            answer: "no"
+          - id: enrolled
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: ridge-bill
+        result: bill_medical_first
+        when:
+          - id: same_time
+            answer: "yes"
+          - id: denture_prep
+            answer: "no"
+          - id: coordination
+            answer: "yes"
+          - id: enrolled
+            answer: "yes"
+        reason: The answers match the Medicare example checked here for rebuilding a ridge while a tumor is removed. No code number was found.
+        reason_citations:
+          - source_id: cms-dental-exceptions
+            section: ridge-tumor
+          - source_id: cms-dental-exceptions
+            section: coordination
+
+  - id: ok_dental_anesthesia
+    title: Anesthesia and facility for dental care (Oklahoma)
+    blurb: Anesthesia and hospital or surgery-center expenses under the Oklahoma bulletin. Not a Medicare rule.
+    benefit_path: medical
+    active: true
+    questions:
+      - id: plan_in_scope
+        prompt: Does this health benefit plan provide hospitalization benefits and fall under section 6060.6 of Title 36?
+        help: The bulletin describes those plans. Medicare fee-for-service is not this bulletin. Answer no for Medicare.
+        gap: whether this plan is a hospitalization plan under section 6060.6 of Title 36
+        gap_on: [not_sure]
+        citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+      - id: qualifying_person
+        prompt: Is the patient severely disabled, or a minor eight years of age or under who has a medical or emotional condition that requires hospitalization or general anesthesia for dental care?
+        help: Those are the two groups named in the bulletin.
+        gap: whether the patient is in one of the two groups named in the bulletin
+        gap_on: [not_sure]
+        citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+      - id: medically_necessary
+        prompt: Is the dental procedure medically necessary?
+        help: The bulletin ties the anesthesia and facility expenses to a medically necessary dental procedure.
+        gap: whether the dental procedure is medically necessary
+        gap_on: [not_sure]
+        citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+      - id: facility_expenses
+        prompt: Is the claim for anesthesia expenses, or for hospital or ambulatory surgical center expenses, associated with that dental procedure?
+        help: The bulletin names those expenses. It does not say the dental procedure itself is the paid expense.
+        gap: whether the claim is for anesthesia or facility expenses
+        gap_on: [not_sure]
+        citations:
+          - source_id: oid-36-6060-6
+            section: expenses
+    results:
+      bill_medical_first:
+        label: Bill medical first
+        codes:
+          - status: not_found
+            note: not found
+        checklist:
+          - text: The bulletin says a health benefit plan that provides hospitalization benefits covers anesthesia expenses, and hospital and ambulatory surgical center expenses, for a medically necessary dental procedure when the person is severely disabled or is a minor eight years of age or under with a medical or emotional condition that requires hospitalization or general anesthesia for dental care.
+            citations:
+              - source_id: oid-36-6060-6
+                section: who-is-covered
+          - text: The bulletin does not name a code number, and it does not say the dental procedure itself is the paid expense.
+            citations:
+              - source_id: oid-36-6060-6
+                section: expenses
+          - text: The bulletin says the statute, as written, does not require a diagnosis of a medical, behavioral, or emotional condition before these anesthesia and facility expenses are covered.
+            citations:
+              - source_id: oid-36-6060-6
+                section: no-diagnosis-required
+          - text: The department's position in the same bulletin is coverage for a minor under the age of eight, taking into account the treating practitioner's judgment about anesthesia. A later official compilation of the statute was not added.
+            citations:
+              - source_id: oid-36-6060-6
+                section: department-position
+      probably_not_medical:
+        label: Probably not medical
+        codes:
+          - status: not_found
+            note: not found
+      need_more_info:
+        label: Need more info
+        checklist_from_gaps: true
+        codes:
+          - status: not_found
+            note: not found
+    rules:
+      - id: ok-anesthesia-not-facility
+        result: probably_not_medical
+        when:
+          - id: facility_expenses
+            answer: "no"
+        reason: Do not use this bulletin to bill the dental procedure itself. The bulletin names anesthesia expenses and hospital or ambulatory surgical center expenses.
+        reason_citations:
+          - source_id: oid-36-6060-6
+            section: expenses
+        checklist:
+          - text: The bulletin names anesthesia expenses and hospital or ambulatory surgical center expenses. It does not say the dental procedure itself is the paid expense.
+            citations:
+              - source_id: oid-36-6060-6
+                section: expenses
+      - id: ok-anesthesia-not-plan
+        result: probably_not_medical
+        when:
+          - id: plan_in_scope
+            answer: "no"
+        reason: Do not use this bulletin. It describes a health benefit plan that provides hospitalization benefits under section 6060.6 of Title 36. It is not a Medicare rule.
+        reason_citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+        checklist:
+          - text: This bulletin is for a health benefit plan that provides hospitalization benefits. It is not a Medicare rule.
+            citations:
+              - source_id: oid-36-6060-6
+                section: who-is-covered
+      - id: ok-anesthesia-not-person
+        result: probably_not_medical
+        when:
+          - id: qualifying_person
+            answer: "no"
+        reason: Do not use this bulletin. The person is not in either group the bulletin names.
+        reason_citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+        checklist:
+          - text: The bulletin names a person who is severely disabled, or a minor eight years of age or under with a medical or emotional condition that requires hospitalization or general anesthesia for dental care.
+            citations:
+              - source_id: oid-36-6060-6
+                section: who-is-covered
+      - id: ok-anesthesia-not-necessary
+        result: probably_not_medical
+        when:
+          - id: medically_necessary
+            answer: "no"
+        reason: Do not use this bulletin. It applies when the dental procedure is medically necessary.
+        reason_citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+        checklist:
+          - text: The bulletin ties the anesthesia and facility expenses to a medically necessary dental procedure.
+            citations:
+              - source_id: oid-36-6060-6
+                section: who-is-covered
+      - id: ok-anesthesia-missing
+        result: need_more_info
+        reason_from_gaps: true
+        when_any:
+          - id: plan_in_scope
+            answer: not_sure
+          - id: qualifying_person
+            answer: not_sure
+          - id: medically_necessary
+            answer: not_sure
+          - id: facility_expenses
+            answer: not_sure
+        reason: Some answers are still missing, so this is not ready to bill to medical insurance.
+      - id: ok-anesthesia-bill
+        result: bill_medical_first
+        when:
+          - id: plan_in_scope
+            answer: "yes"
+          - id: qualifying_person
+            answer: "yes"
+          - id: medically_necessary
+            answer: "yes"
+          - id: facility_expenses
+            answer: "yes"
+        reason: The answers match the Oklahoma bulletin checked here for anesthesia and hospital or surgery-center expenses. No code number was found. This is not a Medicare rule.
+        reason_citations:
+          - source_id: oid-36-6060-6
+            section: who-is-covered
+          - source_id: oid-36-6060-6
+            section: expenses
+
+  # Still inactive. A payable rule with an effective date was not found for these.
+  # Biopsy: no Novitas or CMS page names an oral-biopsy payment rule. OAC 317:30-5-697 does not list biopsy criteria.
+  # Frenectomy and impacted extraction: the Medicare page lists them as not paid in the examples checked, and no separate payable exception was found.
+  # Cleft, sinus closure, osteonecrosis, and oral-lesion excision: no public rule with an effective date was added.
+  - id: biopsy
+    title: Biopsy
+    benefit_path: medical
+    active: false
+
+  - id: frenectomy
+    title: Frenectomy
+    benefit_path: medical
+    active: false
+
+  - id: impacted_extraction
+    title: Impacted tooth extraction
+    benefit_path: medical
+    active: false
+
+  - id: cleft_care
+    title: Cleft and congenital care
+    benefit_path: medical
+    active: false
+
+  - id: oroantral
+    title: Sinus or oroantral closure
+    benefit_path: medical
+    active: false
+
+  - id: osteonecrosis
+    title: Jaw osteonecrosis or infection
+    benefit_path: medical
+    active: false
+
+  - id: oral_lesion
+    title: Oral lesion excision
+    benefit_path: medical
     active: false

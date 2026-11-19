@@ -1,0 +1,47 @@
+# Slot for a later dental-plan check. This file is not a coverage determination
+# and it is not loaded as payer policy text.
+# CDT code numbers may be stored later with placeholder labels from labels.yaml.
+# ADA descriptors are not stored.
+benefit_path: dental
+code_system: CDT
+features:
+  - id: frequency_limit
+    label: How often the plan pays the service
+  - id: waiting_period
+    label: How long the person must be covered before the plan pays
+  - id: alternate_benefit
+    label: A different service the plan pays instead
+  - id: prior_authorization
+    label: Approval the plan requires before the service
+payers:
+  - id: delta-dental-ok
+    name: Delta Dental of Oklahoma
+    status: not_loaded
+    missing: No public benefit booklet with an effective date was added.
+  - id: metlife-dental
+    name: MetLife dental
+    status: not_loaded
+    missing: No public benefit booklet with an effective date was added.
+  - id: guardian-dental
+    name: Guardian dental
+    status: not_loaded
+    missing: No public benefit booklet with an effective date was added.
+  - id: cigna-dental
+    name: Cigna Dental
+    status: not_loaded
+    missing: No public benefit booklet with an effective date was added. The Cigna medical index that disallows robots was not opened.
+  - id: united-concordia
+    name: United Concordia
+    status: not_loaded
+    missing: No public benefit booklet with an effective date was added.
+  - id: liberty
+    name: LIBERTY Dental Plan of Oklahoma
+    status: not_loaded
+    missing: SoonerSelect dental enrollment is already listed. The dental office manual was not opened.
+  - id: dentaquest
+    name: DentaQuest of Oklahoma
+    status: not_loaded
+    missing: SoonerSelect dental enrollment is already listed. The provider portal manual was not opened.
+notes:
+  - OAC 317:30-5-696, revised 2022-09-12, is a public SoonerCare dental rule. It includes how often some services are paid and which services need prior authorization. Those frequency rules are not wired into a check.
+  - A dental check would use CDT code numbers and the placeholder labels in labels.yaml. It would not store ADA descriptors.
