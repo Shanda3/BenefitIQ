@@ -70,7 +70,7 @@ Use the direct string for this step. Use the pooled string for the running app.
 
 ## 2. Deploy the container
 
-Find your workers.dev subdomain in the Workers dashboard. The hostname will be `benefitiq.<that-subdomain>.workers.dev`.
+The public address is `https://benefitiq.devyo.app`. `wrangler.jsonc` keeps that address on every deploy: `workers_dev` is false, `preview_urls` is false, and the Worker route is the custom domain `benefitiq.devyo.app`. A redeploy does not publish a `workers.dev` hostname or a preview URL.
 
 Export the required values. `DATABASE_URL` here is the **pooled** Neon string. Then:
 
@@ -78,11 +78,11 @@ Export the required values. `DATABASE_URL` here is the **pooled** Neon string. T
 make deploy
 ```
 
-The command stops if a required name is missing. It uploads the application secrets, builds the image, and deploys the Worker. It does not print secret values.
+The command stops if a required name is missing. It uploads the application secrets, builds the image, and deploys the Worker. It does not print secret values. This repository does not run that command for you.
 
 Docker must be running locally. The image is built for `linux/amd64`.
 
-After the first deploy, open `https://benefitiq.<subdomain>.workers.dev/healthz`. A healthy database returns `{"status":"ok"}`. If the database setting is missing or the database is down, it returns `{"status":"unavailable"}` and does not describe the connection. The rest of the app stays closed until Access is in place and a person is approved.
+After a deploy, open `https://benefitiq.devyo.app/healthz`. A healthy database returns `{"status":"ok"}`. If the database setting is missing or the database is down, it returns `{"status":"unavailable"}` and does not describe the connection. The rest of the app stays closed until Access is in place and a person is approved. The custom domain has to be on the Cloudflare account before the route will answer. This runbook does not create that DNS record.
 
 ## 3. Turn on Cloudflare Access
 
@@ -90,10 +90,10 @@ The app checks a signed Access token on every protected page and then checks the
 
 This is the more robust way to grant access. The other way is a Cloudflare API token that adds the email to an Access policy or group when you click Approve. That token can also lock the office out or open the policy to everyone, and a revoke waits until Access publishes the new rule. This app does not call that API, so the deploy does not need a token that can edit Access. Cloudflare Access still makes every person prove they hold the email, with a one-time PIN. The app then reads the approved row on every request. Approve, deny, and revoke change that row, and each action is written to the log as the action, the admin email, the staff email, and the time. A revoke applies on the next page even while the Access login is still valid. An email that is not approved, and is not in `ADMIN_EMAILS`, is refused by the app. A missing or invalid token is refused as well. The email header Access adds is not trusted on its own.
 
-Create two self-hosted applications on the hostname. The more specific paths must win over the catch-all. Do not add an email allowlist to either policy.
+Create two self-hosted applications on `benefitiq.devyo.app`. The more specific paths must win over the catch-all. Do not add an email allowlist to either policy.
 
 1. **Public paths.** Paths `/request-access`, `/healthz`, and `/static`. Policy action **Bypass**, include everyone. These are the only public paths. `/request-access` is the only public page besides the health check. `/static` is the stylesheet and script those pages use.
-2. **The app.** The hostname with no extra path. Policy action **Allow**, include everyone, login method **One-time PIN**. Copy this application's Audience (AUD) tag into `CLOUDFLARE_ACCESS_AUD`.
+2. **The app.** `benefitiq.devyo.app` with no extra path. Policy action **Allow**, include everyone, login method **One-time PIN**. Copy this application's Audience (AUD) tag into `CLOUDFLARE_ACCESS_AUD`.
 
 If you created the Access application after the first deploy, put the audience tag and the team domain in the environment and run `make deploy` again so the container receives them.
 
