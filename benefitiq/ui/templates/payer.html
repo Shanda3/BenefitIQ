@@ -57,6 +57,14 @@
         {% if hit.source.number %}<span class="quiet">{{ hit.source.number }}</span>{% endif %}
         <span>{{ hit.source.date.label if hit.source.date.value else "Date not found in the source list" }}</span>
         <span class="chip {{ hit.source.access_label|access_chip }}">{{ hit.source.access_label }}</span>
+        {% set info = versions.get(hit.source.source_id) if versions is defined else none %}
+        {% if info %}
+        <span>{% if info.checked == "Not checked yet" %}Not checked yet{% else %}Last checked {{ info.checked }}{% endif %}</span>
+        <span>{{ info.version_words }}</span>
+        <span class="chip {{ info.chip }}" data-testid="source-status">{{ info.label }}</span>
+        {% else %}
+        <span class="quiet">Not checked yet</span>
+        {% endif %}
         {% if hit.role == "fallback" %}<span class="quiet">Parent-company fallback</span>{% endif %}
       </li>
       {% endfor %}

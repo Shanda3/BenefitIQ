@@ -361,6 +361,14 @@ h2 { font-size: 1.15rem; }
 .chip-none { background: var(--none-bg); color: var(--none-ink); }
 .chip-progress { background: var(--accent-soft); color: var(--accent); }
 
+.chunk-quote {
+  margin: 0.4rem 0;
+  padding: 0.45rem 0.7rem;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
 .bar {
   display: block;
   height: 6px;

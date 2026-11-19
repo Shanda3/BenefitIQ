@@ -26,7 +26,7 @@ from benefitiq.ingestion.loaders import (
     get_loader,
 )
 from benefitiq.models import Chunk, CodeRow, Source
-from benefitiq.retrieval.embeddings import embed
+from benefitiq.retrieval.embeddings import embed_many
 
 logger = logging.getLogger("benefitiq.ingest")
 
@@ -164,6 +164,8 @@ def _insert_document(
         )
     )
     session.flush()
+    loaded_chunks = list(loaded.chunks)
+    vectors = embed_many([chunk.text for chunk in loaded_chunks])
     _flush_batches(
         session,
         (
@@ -172,10 +174,10 @@ def _insert_document(
                 source_id=entry.source_id,
                 section_anchor=chunk.section_anchor,
                 body=chunk.text,
-                embedding=embed(chunk.text),
+                embedding=vector,
                 meta=chunk.metadata,
             )
-            for chunk in loaded.chunks
+            for chunk, vector in zip(loaded_chunks, vectors, strict=True)
         ),
     )
     _flush_batches(

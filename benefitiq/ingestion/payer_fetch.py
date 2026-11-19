@@ -9,6 +9,7 @@ does not stop the others.
 from __future__ import annotations
 
 import ssl
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
@@ -23,6 +24,61 @@ USER_AGENT = "BenefitIQ-ingest/0.1 (public-corpus research; respects robots.txt)
 MAX_BYTES = 40 * 1024 * 1024
 CACHE = ROOT / "corpus" / "payers" / "cache"
 INDEXED_MANIFEST = CACHE / "indexed-manifest.yaml"
+
+
+@dataclass
+class FetchView:
+    """One download attempt. `payload` is set only when the same address returned a file."""
+
+    kind: str
+    detail: str
+    payload: bytes | None = None
+    final_url: str = ""
+
+
+def fetch_document(url: str, robots_bodies: dict[str, str | None] | None = None) -> FetchView:
+    """GET one public URL. A block, a missing page, or a move does not raise."""
+    reason = blocked_fetch_reason(url)
+    if reason:
+        return FetchView("blocked", reason)
+    parts = urlsplit(url)
+    if parts.scheme != "https" or not parts.hostname:
+        return FetchView("blocked", "The address is not an https URL.")
+    host = parts.hostname
+    bodies = robots_bodies if robots_bodies is not None else {}
+    try:
+        if host not in bodies:
+            bodies[host] = _fetch_robots(host)
+    except OSError:
+        return FetchView("error", "The site's robots.txt could not be read.")
+    body = bodies[host]
+    if body is not None and not allows(url, body):
+        return FetchView("blocked", "robots.txt disallows this address.")
+    request = Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urlopen(request, timeout=60, context=ssl.create_default_context()) as response:
+            final = urlsplit(response.geturl())
+            if final.hostname != host:
+                return FetchView("moved", "The file moved to another site.", final_url=response.geturl())
+            if final.path != parts.path:
+                return FetchView("moved", "The file moved to a different address.", final_url=response.geturl())
+            written = bytearray()
+            while True:
+                block = response.read(256 * 1024)
+                if not block:
+                    break
+                written.extend(block)
+                if len(written) > MAX_BYTES:
+                    return FetchView("error", "The file is larger than the download cap.")
+            if len(written) < 32:
+                return FetchView("error", "The site did not return a document.")
+            return FetchView("ok", "downloaded", payload=bytes(written), final_url=response.geturl())
+    except HTTPError as exc:
+        if exc.code in {404, 410}:
+            return FetchView("not_found", "The page was not found.")
+        return FetchView("error", "The download failed.")
+    except (URLError, TimeoutError, OSError):
+        return FetchView("error", "The download failed.")
 
 
 def fetch_payer_sources() -> dict[str, str]:

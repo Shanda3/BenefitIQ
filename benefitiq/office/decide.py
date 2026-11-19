@@ -11,10 +11,12 @@ from datetime import date
 
 from benefitiq.db import session_scope
 from benefitiq.engine.recommend import AUDIT, configure_audit_log
+from benefitiq.ingestion.policy_text import excerpt
 from benefitiq.labels import label_for
 from benefitiq.office.tree import procedure_by_id
+from benefitiq.payers.catalog import PROCEDURE_TOPICS
 from benefitiq.payers.scope import plan_scope
-from benefitiq.retrieval.search import CorpusRepo
+from benefitiq.retrieval.search import CorpusRepo, Hit, Record
 
 DISPLAY = {"yes": "Yes", "no": "No", "not_sure": "Not sure"}
 
@@ -37,6 +39,9 @@ class CitationView:
     effective_to: date | None = None
     section: str | None = None
     short: str | None = None
+    quote: str | None = None
+    chunk_id: str | None = None
+    version: int | None = None
 
 
 @dataclass
@@ -80,6 +85,7 @@ class OfficeDecision:
     segment_label: str | None = None
     payer_notice: str | None = None
     uncited_sentence: str | None = None
+    retrieved: list[CitationView] = field(default_factory=list)
     policy_rows: list[dict] = field(default_factory=list)
     state_rows: list[dict] = field(default_factory=list)
     use_medicare_rules: bool = True
@@ -106,6 +112,9 @@ def cite(repo: CorpusRepo, source_id: str | None, section: str | None, as_of: da
         effective_to=record.effective_to,
         section=record.section_anchor,
         short=SHORT_SOURCE.get(record.source_id, record.title),
+        quote=excerpt(record.text) or None,
+        chunk_id=record.chunk_id,
+        version=record.version,
     )
 
 
@@ -127,6 +136,67 @@ def _resolve(
         else:
             narrowed.append(view)
     return narrowed
+
+
+RELEVANCE_FLOOR = 0.55
+
+
+def _relevant(hit: Hit) -> bool:
+    return hit.keyword_score > 0 or hit.vector_score >= RELEVANCE_FLOOR
+
+
+def citation_from_record(record: Record) -> CitationView:
+    """A citation built from one stored chunk, including a short quote."""
+    return CitationView(
+        status="cited",
+        source_id=record.source_id,
+        url=record.url,
+        title=record.title,
+        effective_from=record.effective_from,
+        effective_to=record.effective_to,
+        section=record.section_anchor,
+        short=SHORT_SOURCE.get(record.source_id, record.title),
+        quote=excerpt(record.text) or None,
+        chunk_id=record.chunk_id,
+        version=record.version,
+    )
+
+
+def retrieved_citations(
+    repo: CorpusRepo,
+    query: str,
+    *,
+    as_of: date,
+    payer: str | None,
+    segment: str | None,
+    topics: tuple[str, ...] = (),
+) -> list[CitationView]:
+    """Cite current policy chunks for this plan. Nothing relevant is `not found`."""
+    if not query.strip():
+        return [CitationView(status="not_found")]
+    topic_list: tuple[str | None, ...] = topics or (None,)
+    seen: set[str] = set()
+    views: list[CitationView] = []
+    for topic in topic_list:
+        hits = repo.hybrid_search(
+            query,
+            dos=as_of,
+            payer=payer,
+            segment=segment,
+            topic=topic,
+            limit=4,
+        )
+        for hit in hits:
+            if hit.chunk_id in seen or not _relevant(hit):
+                continue
+            record = repo.get_record(hit.source_id, hit.chunk_id)
+            if record is None or record.doc_type != "policy_text":
+                continue
+            seen.add(hit.chunk_id)
+            views.append(citation_from_record(record))
+    if not views:
+        return [CitationView(status="not_found")]
+    return views
 
 
 def _cited(citations: list[CitationView]) -> bool:
@@ -265,6 +335,25 @@ def _decide(
         code_specs = list(result_spec["codes"]) + list(matched["extra_codes"])
 
     codes = [_present_code(repo, spec, as_of, allowed) for spec in code_specs]
+    retrieved = (
+        retrieved_citations(
+            repo,
+            procedure["title"],
+            as_of=as_of,
+            payer=payer_id,
+            segment=segment_id,
+            topics=PROCEDURE_TOPICS.get(procedure["id"], ()),
+        )
+        if payer_id and segment_id
+        else []
+    )
+    cited_retrieved = [item for item in retrieved if item.status == "cited"]
+    if cited_retrieved and reason.text != "not found":
+        known = {item.chunk_id for item in reason.citations}
+        for item in cited_retrieved:
+            if item.chunk_id not in known:
+                reason.citations.append(item)
+                known.add(item.chunk_id)
     answer_rows = [
         AnswerView(
             prompt=question["prompt"],
@@ -348,6 +437,7 @@ def _decide(
         segment_label=segment_label,
         payer_notice=payer_notice,
         uncited_sentence=uncited_sentence,
+        retrieved=cited_retrieved,
         policy_rows=policy_rows,
         state_rows=state_rows,
         use_medicare_rules=use_medicare_rules,

@@ -46,6 +46,13 @@
     {% if decision.reason.text != "not found" %}
     {% with citations=decision.reason.citations %}{% include "citations.html" %}{% endwith %}
     {% endif %}
+    {% if decision.retrieved %}
+    <h3>Policy text for this plan</h3>
+    <p class="quiet">Quoted from the current version on file.</p>
+    {% with citations=decision.retrieved %}{% include "citations.html" %}{% endwith %}
+    {% elif decision.payer_name and decision.reason.text == "not found" %}
+    <p class="quiet" data-internal-status="not found">No policy text was retrieved for this plan.</p>
+    {% endif %}
   </section>
 
   <section class="panel card" data-testid="codes-to-consider">

@@ -2,8 +2,11 @@
   {% for citation in citations %}
   <li>
     {% if citation.status == "cited" %}
-    <a href="{{ citation.url }}" data-source-id="{{ citation.source_id }}">{{ citation.title }}</a>
+    <a href="{{ citation.url }}" data-source-id="{{ citation.source_id }}" {% if citation.chunk_id %}data-chunk-id="{{ citation.chunk_id }}"{% endif %}>{{ citation.title }}</a>
     <span>Effective {{ citation.effective_from }}{% if citation.effective_to %} to {{ citation.effective_to }}{% endif %}</span>
+    {% if citation.version %}<span>Version {{ citation.version }}</span>{% endif %}
+    {% if citation.section %}<span class="quiet">Section {{ citation.section }}</span>{% endif %}
+    {% if citation.quote %}<blockquote class="chunk-quote" data-testid="chunk-quote">{{ citation.quote }}</blockquote>{% endif %}
     {% else %}
     <span class="gap-copy" data-internal-status="not found">{% if uncited_sentence %}{{ uncited_sentence }}{% else %}{{ "not found"|plain_gap }}{% endif %}</span>
     {% endif %}

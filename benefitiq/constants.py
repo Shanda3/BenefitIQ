@@ -4,7 +4,9 @@ DISCLAIMER = (
     "Decision support for a human biller. Not a final coding or coverage determination."
 )
 
-EMBEDDING_DIM = 64
+# Width of the pgvector column. Every embedding provider uses this width.
+# Changing it means re-ingesting the corpus.
+EMBEDDING_DIM = 384
 
 # Internal safety ranking for exam-family code numbers.
 # Labels live in labels.yaml. These ranks are not code descriptors.

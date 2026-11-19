@@ -1,0 +1,25 @@
+name: Policy update check
+
+# Manual only. No schedule and no secrets. The report is an artifact.
+# It does not approve a new version and it does not deploy.
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+      - name: Re-fetch eligible payer policies
+        run: python -m benefitiq.cli check-updates --report-only
+      - uses: actions/upload-artifact@v4
+        with:
+          name: policy-update-report
+          path: |
+            reports/policy-updates.md
+            reports/policy-updates.csv

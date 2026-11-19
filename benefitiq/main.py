@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import date
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
@@ -21,8 +22,10 @@ from benefitiq.config import samples_dir
 from benefitiq.db import session_scope
 from benefitiq.engine.recommend import evaluate
 from benefitiq.models import Source
+from benefitiq.ingestion.policy_text import excerpt
 from benefitiq.office.present import plain_gap
 from benefitiq.office.routes import router as office_router
+from benefitiq.retrieval.search import CorpusRepo
 from benefitiq.schemas import CaseInput
 
 app = FastAPI(title="BenefitIQ", version="0.1.0")
@@ -82,12 +85,65 @@ def health():
     return {"status": "ok", "sources": int(count or 0)}
 
 
+def _retrieval_debug(query: str, payer: str, segment: str, topic: str) -> dict | None:
+    cleaned = query.strip()
+    if not cleaned:
+        return None
+    with session_scope() as session:
+        repo = CorpusRepo(session)
+        hits = repo.hybrid_search(
+            cleaned,
+            dos=date.today(),
+            payer=payer.strip() or None,
+            segment=segment.strip() or None,
+            topic=topic.strip() or None,
+            limit=8,
+        )
+        rows = []
+        for hit in hits:
+            record = repo.get_record(hit.source_id, hit.chunk_id)
+            keyword = float(hit.keyword_score or 0)
+            vector = float(hit.vector_score or 0)
+            rows.append(
+                {
+                    "title": hit.title,
+                    "source_id": hit.source_id,
+                    "chunk_id": hit.chunk_id,
+                    "section": hit.section_anchor,
+                    "url": hit.url,
+                    "effective_from": hit.effective_from,
+                    "payer": record.payer if record else "",
+                    "keyword_score": f"{keyword:.3f}",
+                    "vector_score": f"{vector:.3f}",
+                    "quote": excerpt(record.text) if record else "",
+                    "relevant": keyword > 0 or vector >= 0.55,
+                }
+            )
+    relevant = [row for row in rows if row["relevant"]]
+    return {"query": cleaned, "rows": rows, "relevant": relevant}
+
+
 @app.get("/advanced", response_class=HTMLResponse)
-def advanced_index(request: Request):
+def advanced_index(
+    request: Request,
+    q: str = "",
+    payer: str = "",
+    segment: str = "",
+    topic: str = "",
+):
     return templates.TemplateResponse(
         request,
         "advanced.html",
-        {"disclaimer": DISCLAIMER, "samples": _sample_ids(), "nav": "advanced"},
+        {
+            "disclaimer": DISCLAIMER,
+            "samples": _sample_ids(),
+            "nav": "advanced",
+            "debug": _retrieval_debug(q, payer, segment, topic),
+            "q": q,
+            "payer": payer,
+            "segment": segment,
+            "topic": topic,
+        },
     )
 
 

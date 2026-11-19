@@ -340,17 +340,26 @@ def test_workspace_accessibility_basics():
     assert _contrast("ffffff", _css_color("accent")) >= 4.5
 
 
-def test_application_code_does_not_call_a_model():
+def test_application_code_does_not_call_a_language_model():
+    """No chat model. The optional embedding provider is the one allowed exception."""
     roots = [ROOT / "benefitiq", ROOT / "questions", ROOT / "corpus", ROOT / "samples"]
+    embedding = (ROOT / "benefitiq" / "retrieval" / "embeddings.py").resolve()
     offenders = []
     for root in roots:
         for path in root.rglob("*"):
             if not path.is_file() or path.suffix.lower() not in {".py", ".html", ".js", ".css", ".yml", ".yaml", ".json", ".md"}:
                 continue
             text = path.read_text(encoding="utf-8").lower()
+            if "chat/completions" in text or "/v1/chat" in text or "responses.create" in text:
+                offenders.append(str(path))
+            if path.resolve() == embedding:
+                continue
             if "openai" in text or "api.openai.com" in text:
                 offenders.append(str(path))
     assert offenders == []
+    embedding_text = embedding.read_text(encoding="utf-8").lower()
+    assert "/v1/embeddings" in embedding_text
+    assert "chat/completions" not in embedding_text
     plan = (ROOT / "docs" / "chat-endpoint-plan.md").read_text(encoding="utf-8")
     assert "POST /api/chat" in plan
     assert "OPENAI_API_KEY" in plan

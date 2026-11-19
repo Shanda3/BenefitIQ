@@ -9,6 +9,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from benefitiq.config import database_url
+from benefitiq.constants import EMBEDDING_DIM
 from benefitiq.models import Base
 
 _engine = None
@@ -62,7 +63,65 @@ def init_db(*, drop: bool = False) -> None:
     if drop:
         Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
+    _ensure_source_columns(engine)
+    _ensure_embedding_width(engine)
     _ensure_search_indexes(engine)
+
+
+def _ensure_source_columns(engine) -> None:
+    """Add version columns on a database created before policy versions existed."""
+    statements = [
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS version integer NOT NULL DEFAULT 1",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS status varchar(32) NOT NULL DEFAULT 'current'",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS check_state varchar(32) NOT NULL DEFAULT 'ok'",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS document_number varchar(80)",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS segment varchar(400)",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS topics varchar(400)",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS date_basis varchar(32)",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS stated_on date",
+        "ALTER TABLE sources ADD COLUMN IF NOT EXISTS last_checked_at timestamptz",
+        "ALTER TABLE sources ALTER COLUMN source_id TYPE varchar(200)",
+        "ALTER TABLE sources ALTER COLUMN family_id TYPE varchar(200)",
+        "ALTER TABLE chunks ALTER COLUMN chunk_id TYPE varchar(320)",
+        "ALTER TABLE chunks ALTER COLUMN source_id TYPE varchar(200)",
+        "ALTER TABLE chunks ALTER COLUMN section_anchor TYPE varchar(200)",
+        "ALTER TABLE code_rows ALTER COLUMN source_id TYPE varchar(200)",
+        "ALTER TABLE code_rows ALTER COLUMN chunk_id TYPE varchar(320)",
+    ]
+    with engine.begin() as conn:
+        exists = conn.execute(text("SELECT to_regclass('public.sources')")).scalar()
+        if not exists:
+            return
+        for statement in statements:
+            conn.execute(text(statement))
+
+
+def _ensure_embedding_width(engine) -> None:
+    with engine.begin() as conn:
+        exists = conn.execute(text("SELECT to_regclass('public.chunks')")).scalar()
+        if not exists:
+            return
+        kind = conn.execute(
+            text(
+                """
+                SELECT format_type(a.atttypid, a.atttypmod)
+                FROM pg_attribute a
+                JOIN pg_class c ON c.oid = a.attrelid
+                JOIN pg_namespace n ON n.oid = c.relnamespace
+                WHERE n.nspname = 'public'
+                  AND c.relname = 'chunks'
+                  AND a.attname = 'embedding'
+                  AND a.attnum > 0
+                  AND NOT a.attisdropped
+                """
+            )
+        ).scalar()
+    expected = f"vector({EMBEDDING_DIM})"
+    if kind and kind != expected:
+        raise RuntimeError(
+            f"chunks.embedding is {kind}; this build expects {expected}. "
+            "Drop the local database and run init-db again."
+        )
 
 
 def _ensure_search_indexes(engine) -> None:

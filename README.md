@@ -32,7 +32,7 @@ synthetic case
 
 Postgres stores the corpus. Prose policies are chunked on section headings. Structured code tables, checklists, coverage rules, and bundling rules are stored as rows and also as citable chunks. A new version is a new `source_id` with its own effective dates. Ingestion refuses to overwrite an existing source.
 
-Retrieval is an exact code-table lookup plus hybrid search: Postgres full text and pgvector. Filters are payer, state, plan type, and date of service inside the effective window. Each hit includes the chunk id, URL, and effective dates. Embeddings are a deterministic local hash so the skeleton does not need an API key.
+Retrieval is an exact code-table lookup plus hybrid search: Postgres full text and pgvector. Filters are payer, state, plan type, segment, topic, and date of service inside the effective window. Each hit includes the chunk id, URL, and effective dates. Embeddings use the local open-source model `BAAI/bge-small-en-v1.5`, so tests and demos need no API key. If `OPENAI_API_KEY` is set in the environment, that provider is used instead. The key is not stored in the repo. Switching providers means ingesting again. Downloaded payer policies are versioned: a changed file waits for review, and retrieval cites the current version. See `docs/policy-updates.md`.
 
 `RulesDrafter` is the only drafter wired up today. `evaluate()` accepts another drafter with the same `draft()` shape. Hard guards and `CitationValidator` still run after it, which is the slot for a later LLM drafting step. A drafted URL is ignored. The validator reloads the URL and the effective dates from the registry.
 
@@ -69,7 +69,7 @@ python scripts/phi_scan.py
 pytest
 ```
 
-Load the public Oklahoma corpus into Postgres with `make ingest`. That downloads the files below into `corpus/public/cache/` (gitignored), then ingests `corpus/public/manifest.yaml`. `make count` prints the Oklahoma row counts without writing the database. `make ingest-stub` loads only the fictional corpus. Docker Compose still loads the stub corpus so the sample UI can start offline.
+Load the public Oklahoma corpus into Postgres with `make ingest`. That downloads the files below into `corpus/public/cache/` (gitignored), then ingests `corpus/public/manifest.yaml`. `make count` prints the Oklahoma row counts without writing the database. `make ingest-stub` loads only the fictional corpus. `make ingest-payers` stores the eligible Oklahoma payer policies as versioned chunks. `make check-updates` re-fetches them and writes `reports/policy-updates.md`. Docker Compose still loads the stub corpus so the sample UI can start offline.
 
 ## Stub corpus
 
