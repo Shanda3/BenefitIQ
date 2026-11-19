@@ -8,4 +8,5 @@ __pycache__/
 htmlcov/
 corpus/public/cache/
 corpus/payers/cache/
+reports/
 *.partial

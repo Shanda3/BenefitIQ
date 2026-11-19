@@ -19,6 +19,60 @@
     {% endfor %}
   </div>
 </section>
+<section class="panel" data-testid="retrieval-debug">
+  <h2>Retrieval debug</h2>
+  <p class="lede">
+    This lists the closest stored chunks for a question. It is decision support for a human biller.
+    A recommendation still has to quote one of these chunks. If none match, the answer is not found.
+  </p>
+  <form method="get" action="/advanced" class="case-form">
+    <label for="q">Question</label>
+    <input id="q" name="q" type="text" value="{{ q }}" placeholder="sleep apnea oral appliance">
+    <label for="payer">Payer id</label>
+    <input id="payer" name="payer" type="text" value="{{ payer }}">
+    <label for="segment">Plan segment</label>
+    <input id="segment" name="segment" type="text" value="{{ segment }}">
+    <label for="topic">Topic</label>
+    <input id="topic" name="topic" type="text" value="{{ topic }}">
+    <button type="submit" class="primary">Search the library</button>
+  </form>
+  {% if debug %}
+    {% if not debug.relevant %}
+    <p data-internal-status="not found">not found</p>
+    <p class="quiet">No chunk was close enough to cite. The neighbors below are for debugging only.</p>
+    {% endif %}
+    {% if debug.rows %}
+    <table class="case-table">
+      <caption>Top chunks</caption>
+      <thead>
+        <tr>
+          <th scope="col">Chunk</th>
+          <th scope="col">Keyword</th>
+          <th scope="col">Vector</th>
+          <th scope="col">Effective</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in debug.rows %}
+        <tr>
+          <td>
+            <span class="source-title">{{ row.title }}</span>
+            <span class="quiet">{{ row.section }} · {{ row.chunk_id }}</span>
+            {% if row.quote %}<blockquote class="chunk-quote">{{ row.quote }}</blockquote>{% endif %}
+            <a href="{{ row.url }}">{{ row.url }}</a>
+          </td>
+          <td>{{ row.keyword_score }}</td>
+          <td>{{ row.vector_score }}</td>
+          <td>{{ row.effective_from }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p data-internal-status="not found">not found</p>
+    {% endif %}
+  {% endif %}
+</section>
 <section class="panel">
   <h2>Case JSON</h2>
   <form method="post" action="/advanced/evaluate" class="case-form">

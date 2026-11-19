@@ -12,9 +12,11 @@
       <tr>
         <th scope="col">Source</th>
         <th scope="col">Kind</th>
-        <th scope="col">URL</th>
+        <th scope="col">Last checked</th>
+        <th scope="col">Version</th>
+        <th scope="col">Status</th>
         <th scope="col">Effective from</th>
-        <th scope="col">Effective to</th>
+        <th scope="col">URL</th>
       </tr>
     </thead>
     <tbody>
@@ -25,9 +27,11 @@
           <span class="quiet">{{ source.publisher }}</span>
         </td>
         <td>{{ source.kind }}</td>
+        <td>{{ source.checked }}</td>
+        <td data-testid="source-version">{{ source.version_words }}</td>
+        <td><span class="chip {{ source.status_chip }}" data-testid="source-status">{{ source.status_label }}</span></td>
+        <td>{% if source.effective_from %}{{ source.effective_from }}{% else %}No date on file{% endif %}</td>
         <td><a href="{{ source.url }}">{{ source.url }}</a></td>
-        <td>{{ source.effective_from }}</td>
-        <td>{% if source.effective_to %}{{ source.effective_to }}{% else %}No end date{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>

@@ -30,6 +30,12 @@ class Record:
     plan_type: str | None
     doc_type: str
     text: str
+    version: int = 1
+    status: str = "current"
+    check_state: str = "ok"
+    document_number: str | None = None
+    segment: str | None = None
+    topics: str | None = None
 
 
 @dataclass
@@ -83,6 +89,12 @@ def _record(chunk: Chunk, source: Source) -> Record:
         plan_type=source.plan_type,
         doc_type=source.doc_type,
         text=chunk.body,
+        version=source.version,
+        status=source.status,
+        check_state=source.check_state,
+        document_number=source.document_number,
+        segment=source.segment,
+        topics=source.topics,
     )
 
 
@@ -210,9 +222,12 @@ class CorpusRepo:
         state: str | None = None,
         plan_type: str | None = None,
         program: str | None = None,
+        segment: str | None = None,
+        topic: str | None = None,
+        current_only: bool = True,
         limit: int = 8,
     ) -> list[Hit]:
-        """Keyword hits and nearest vectors, merged, with the date window applied to both."""
+        """Keyword hits and nearest vectors, merged. Current versions are the default."""
         keyword_hits = self._keyword_hits(
             query,
             dos=dos,
@@ -220,6 +235,9 @@ class CorpusRepo:
             state=state,
             plan_type=plan_type,
             program=program,
+            segment=segment or None,
+            topic=topic or None,
+            current_only=current_only,
             limit=limit,
         )
         vector_hits = self._vector_hits(
@@ -229,6 +247,9 @@ class CorpusRepo:
             state=state,
             plan_type=plan_type,
             program=program,
+            segment=segment or None,
+            topic=topic or None,
+            current_only=current_only,
             limit=limit,
         )
         merged: dict[str, Hit] = {}
@@ -254,9 +275,34 @@ class CorpusRepo:
             AND (CAST(:state AS text) IS NULL OR s.state IS NULL OR s.state = :state)
             AND (CAST(:plan_type AS text) IS NULL OR s.plan_type IS NULL OR s.plan_type = :plan_type)
             AND (CAST(:program AS text) IS NULL OR s.program IS NULL OR s.program = :program)
+            AND (
+                CAST(:current_only AS boolean) = false
+                OR (s.status = 'current' AND s.check_state <> 'blocked')
+            )
+            AND (
+                CAST(:segment AS text) IS NULL
+                OR :segment = ANY (string_to_array(coalesce(s.segment, ''), ','))
+            )
+            AND (
+                CAST(:topic AS text) IS NULL
+                OR :topic = ANY (string_to_array(coalesce(s.topics, ''), ','))
+            )
         """
 
-    def _params(self, query: str, *, dos: date, payer, state, plan_type, program, limit: int) -> dict:
+    def _params(
+        self,
+        query: str,
+        *,
+        dos: date,
+        payer,
+        state,
+        plan_type,
+        program,
+        segment,
+        topic,
+        current_only,
+        limit: int,
+    ) -> dict:
         return {
             "q": query,
             "embedding": vector_literal(embed(query)),
@@ -265,6 +311,9 @@ class CorpusRepo:
             "state": state,
             "plan_type": plan_type,
             "program": program,
+            "segment": segment,
+            "topic": topic,
+            "current_only": current_only,
             "limit": limit,
         }
 

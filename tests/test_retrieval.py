@@ -1,14 +1,17 @@
 from datetime import date
 
+from benefitiq.constants import EMBEDDING_DIM
 from benefitiq.db import session_scope
 from benefitiq.retrieval.embeddings import embed
 from benefitiq.retrieval.search import CorpusRepo
 
 
-def test_embeddings_are_deterministic_and_local():
-    assert len(embed("tooth fracture")) == 64
-    assert embed("tooth fracture") == embed("tooth fracture")
-    assert embed("tooth fracture") != embed("unrelated token")
+def test_embeddings_are_deterministic_and_local(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    vector = embed("tooth fracture")
+    assert len(vector) == EMBEDDING_DIM
+    assert vector == embed("tooth fracture")
+    assert vector != embed("unrelated token")
 
 
 def test_exact_code_lookup_returns_source_window():

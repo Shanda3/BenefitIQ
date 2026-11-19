@@ -10,7 +10,9 @@ from sqlalchemy import select
 
 from benefitiq.constants import DISCLAIMER
 from benefitiq.db import session_scope
+from benefitiq.ingestion.status_view import catalog_status, library_status, version_index
 from benefitiq.models import Source
+from benefitiq.payers.catalog import sources as catalog_sources
 from benefitiq.office.decide import citations_for, decide
 from benefitiq.office.demo import demo_card, demo_cards
 from benefitiq.office.present import BOARD_COLUMNS, board_status_for, chip_class, plain_gap
@@ -280,26 +282,53 @@ def _snapshot(decision, status: str) -> dict:
 
 def _registered_sources() -> list[dict]:
     with session_scope() as session:
-        rows = session.scalars(select(Source)).all()
-        copied = [
-            {
-                "source_id": row.source_id,
-                "title": row.title,
-                "publisher": row.publisher,
-                "url": row.url,
-                "effective_from": row.effective_from,
-                "effective_to": row.effective_to,
-                "kind": (
-                    "Office"
-                    if row.source_id.startswith("cms-")
-                    else "Payer"
-                    if row.source_id.startswith("ok-")
-                    else "Stub"
-                ),
-            }
-            for row in rows
-            if row.doc_type != "policy_text"
-        ]
+        versions = version_index(session)
+        rows = list(session.scalars(select(Source)).all())
+        by_id = {row.source_id: row for row in rows if row.doc_type != "policy_text"}
+        copied: list[dict] = []
+        seen: set[str] = set()
+        for source in catalog_sources():
+            if source.source_id in versions:
+                info = versions[source.source_id]
+            elif source.source_id in by_id and not source.fetch:
+                info = library_status(by_id[source.source_id])
+            else:
+                info = catalog_status(source, None)
+            seen.add(source.source_id)
+            copied.append(
+                {
+                    "source_id": source.source_id,
+                    "title": source.title,
+                    "publisher": source.publisher,
+                    "url": source.url,
+                    "effective_from": source.date.value,
+                    "effective_to": None,
+                    "kind": "Office" if source.source_id.startswith("cms-") else "Payer",
+                    "checked": info["checked"],
+                    "version_words": info["version_words"],
+                    "status_label": info["label"],
+                    "status_chip": info["chip"],
+                }
+            )
+        for row in rows:
+            if row.doc_type == "policy_text" or row.source_id in seen or row.family_id in seen:
+                continue
+            info = library_status(row)
+            copied.append(
+                {
+                    "source_id": row.source_id,
+                    "title": row.title,
+                    "publisher": row.publisher,
+                    "url": row.url,
+                    "effective_from": row.effective_from,
+                    "effective_to": row.effective_to,
+                    "kind": "Stub",
+                    "checked": info["checked"],
+                    "version_words": info["version_words"],
+                    "status_label": info["label"],
+                    "status_chip": info["chip"],
+                }
+            )
     copied.sort(key=lambda item: (item["kind"] != "Office", item["title"]))
     return copied
 
@@ -646,6 +675,8 @@ def payer_detail(payer_id: str, request: Request):
     if scope is None:
         return _error(request, "That plan is not on the list.", 404)
     segment = next(item for item in payer["segments"] if item["id"] == segment_id)
+    with session_scope() as session:
+        versions = version_index(session)
     return _render(
         request,
         "payer.html",
@@ -655,5 +686,6 @@ def payer_detail(payer_id: str, request: Request):
             "segment": segment,
             "scope": scope,
             "figures": _figure_rows(segment),
+            "versions": versions,
         },
     )
