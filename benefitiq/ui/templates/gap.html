@@ -1,3 +1,7 @@
 {% macro gap_text(text) -%}
+{% if text == "not found" and uncited_sentence %}
+<span class="gap-copy" data-internal-status="not found">{{ uncited_sentence }}</span>
+{% else %}
 <span class="gap-copy"{% if text == "not found" %} data-internal-status="not found"{% endif %}>{{ text|plain_gap }}</span>
+{% endif %}
 {%- endmacro %}

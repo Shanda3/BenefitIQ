@@ -5,22 +5,33 @@
 <section class="panel office">
   <h1>New check</h1>
   <p class="lede">Pick a procedure, then answer a few yes or no questions. This helps a person decide whether to bill medical insurance. It does not send a claim.</p>
-  <div class="tiles">
-    {% for procedure in procedures %}
-      {% if procedure.active %}
-      <form method="post" action="/office/start">
-        <input type="hidden" name="procedure_id" value="{{ procedure.id }}">
-        <button type="submit" class="ready" data-testid="procedure-tile">
-          {{ procedure.title }}
-          {% if procedure.blurb %}<span class="blurb">{{ procedure.blurb }}</span>{% endif %}
-        </button>
-      </form>
-      {% else %}
-      <button type="button" disabled aria-disabled="true" data-testid="procedure-soon">
+  <form method="post" action="/office/start" class="plan-field">
+    <label for="plan">Patient's plan</label>
+    <select id="plan" name="plan">
+      <option value="">Not chosen. Questions that use Medicare rules stay as they are.</option>
+      {% for group in plan_menu %}
+      <optgroup label="{{ group.label }}">
+        {% for option in group.options %}
+        <option value="{{ option.value }}">{{ option.label }}</option>
+        {% endfor %}
+      </optgroup>
+      {% endfor %}
+    </select>
+    <div class="tiles">
+      {% for procedure in procedures if procedure.active %}
+      <button type="submit" name="procedure_id" value="{{ procedure.id }}" class="ready" data-testid="procedure-tile">
         {{ procedure.title }}
-        <span class="soon">Coming soon</span>
+        {% if procedure.blurb %}<span class="blurb">{{ procedure.blurb }}</span>{% endif %}
       </button>
-      {% endif %}
+      {% endfor %}
+    </div>
+  </form>
+  <div class="tiles">
+    {% for procedure in procedures if not procedure.active %}
+    <button type="button" disabled aria-disabled="true" data-testid="procedure-soon">
+      {{ procedure.title }}
+      <span class="soon">Coming soon</span>
+    </button>
     {% endfor %}
   </div>
 </section>

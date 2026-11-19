@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — payers{% endblock %}
+{% block body %}
+<section class="page-intro">
+  <h1>Payers</h1>
+  <p class="lede">Pick the patient's plan to see which policies this library has on file. A missing policy is not a coverage decision. Confirm it with the payer.</p>
+</section>
+{% if state_coverage %}
+<section class="panel card">
+  <h2>{{ state_coverage.label }}</h2>
+  <p class="quiet">{{ state_coverage.period }}. {{ state_coverage.source }}.</p>
+  <p>{{ "{:,}".format(state_coverage.total) }} people</p>
+  <ul class="policy-list">
+    {% for row in state_coverage.rows %}
+    <li>{{ row.label }}: {{ "{:,}".format(row.people) }} ({{ row.share }})</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% for group in groups %}
+<section class="panel card">
+  <h2>{{ group.label }}</h2>
+  <ul class="policy-list" data-testid="payer-directory">
+    {% for item in group.entries %}
+    <li>
+      <a href="/payers/{{ item.id }}?segment={{ item.segment_id }}">{{ item.name }}</a>
+      <span class="quiet">{{ item.segment_label }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+{% endblock %}

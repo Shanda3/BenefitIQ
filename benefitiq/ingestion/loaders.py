@@ -81,6 +81,7 @@ def register_loader(name: str) -> Callable[[Loader], Loader]:
 def get_loader(name: str) -> Loader:
     if name not in LOADER_REGISTRY:
         # Importing registers the public-source loaders without a cycle at module import.
+        import benefitiq.ingestion.policy_text  # noqa: F401
         import benefitiq.ingestion.public_loaders  # noqa: F401
 
     try:

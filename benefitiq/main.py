@@ -30,6 +30,13 @@ app = FastAPI(title="BenefitIQ", version="0.1.0")
 _UI = Path(__file__).resolve().parent / "ui"
 templates = Jinja2Templates(directory=str(_UI / "templates"))
 templates.env.filters["plain_gap"] = plain_gap
+templates.env.filters["access_chip"] = lambda label: (
+    "chip-ready"
+    if label == "Public"
+    else "chip-docs"
+    if label in {"Pending document access", "Web address not verified"}
+    else "chip-none"
+)
 app.mount("/static", StaticFiles(directory=str(_UI / "static")), name="static")
 app.include_router(office_router)
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "gap.html" import gap_text %}
+{% from "gap.html" import gap_text with context %}
 {% block title %}BenefitIQ summary {{ decision.case_id }}{% endblock %}
 {% block body_class %}print-view{% endblock %}
 {% block body %}
@@ -16,6 +16,7 @@
     <div><dt>Case</dt><dd data-testid="case-id">{{ decision.case_id }}</dd></div>
     <div><dt>Date</dt><dd data-testid="case-date">{{ decision.as_of }}</dd></div>
     <div><dt>Procedure</dt><dd>{{ decision.procedure_title }}</dd></div>
+    {% if decision.payer_name %}<div><dt>Plan</dt><dd>{{ decision.payer_name }} — {{ decision.segment_label }}</dd></div>{% endif %}
   </dl>
   <h2>Answers</h2>
   <ol class="answers">
@@ -23,6 +24,9 @@
     <li>{{ row.prompt }} <strong>{{ row.display }}</strong></li>
     {% endfor %}
   </ol>
+  {% with payer_name=decision.payer_name, segment_label=decision.segment_label, payer_notice=decision.payer_notice, policy_rows=decision.policy_rows, state_rows=decision.state_rows, fully_insured=decision.fully_insured %}
+  {% include "payer_panel.html" %}
+  {% endwith %}
   <h2>Result</h2>
   <p>{{ gap_text(decision.reason.text) }}
     {% if decision.reason.text != "not found" %}
