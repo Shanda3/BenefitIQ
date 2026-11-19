@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}BenefitIQ — {{ payer.name }}{% endblock %}
+{% block body %}
+<section class="page-intro">
+  <h1>{{ payer.name }}</h1>
+  <p class="lede">{{ segment.label }}. Policies listed here are the ones this library has registered. They are decision support for a human biller.</p>
+  <p><a href="/payers">All payers</a></p>
+</section>
+<form method="get" action="/payers/{{ payer.id }}" class="plan-field">
+  <label for="segment">Plan</label>
+  <select id="segment" name="segment" onchange="this.form.submit()">
+    {% for item in payer.segments %}
+    <option value="{{ item.id }}" {% if item.id == segment.id %}selected{% endif %}>{{ item.label }}</option>
+    {% endfor %}
+  </select>
+  <noscript><button type="submit">Show this plan</button></noscript>
+</form>
+{% if figures %}
+<section class="panel card" data-testid="enrollment">
+  <h2>Enrollment on file</h2>
+  <ul class="policy-list">
+    {% for figure in figures %}
+    <li>
+      {{ figure.label }}: {{ figure.text }}
+      {% if figure.period %}<span class="quiet">{{ figure.period }}</span>{% endif %}
+      {% if figure.source %}<span class="quiet">{{ figure.source }}</span>{% endif %}
+      {% if figure.source_url %}<a href="{{ figure.source_url }}">Source</a>{% endif %}
+      {% if figure.note %}<span class="quiet">{{ figure.note }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% if payer.notes %}
+<section class="panel card">
+  <h2>Notes</h2>
+  <ul>{% for note in payer.notes %}<li>{{ note }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% if payer.gaps %}
+<section class="panel card">
+  <h2>Figures this library does not have</h2>
+  <ul>{% for gap in payer.gaps %}<li>{{ gap }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+<section class="panel card" data-testid="payer-topics">
+  <h2>Policies by topic</h2>
+  {% for topic in scope.topics %}
+  <article class="topic-block">
+    <h3>{{ topic.label }}</h3>
+    <p data-testid="topic-notice">{{ topic.notice }}</p>
+    {% if topic.policies or topic.extras %}
+    <ul class="policy-list">
+      {% for hit in topic.policies + topic.extras %}
+      <li>
+        <a href="{{ hit.source.url }}">{{ hit.source.title }}</a>
+        {% if hit.source.number %}<span class="quiet">{{ hit.source.number }}</span>{% endif %}
+        <span>{{ hit.source.date.label if hit.source.date.value else "Date not found in the source list" }}</span>
+        <span class="chip {{ hit.source.access_label|access_chip }}">{{ hit.source.access_label }}</span>
+        {% if hit.role == "fallback" %}<span class="quiet">Parent-company fallback</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% if scope.state_rules %}
+<section class="panel card" data-testid="state-rule">
+  <h2>Oklahoma rule for fully insured plans</h2>
+  {% if scope.fully_insured == "mixed" %}
+  <p>This state rule applies only if the plan is fully insured. A self-funded plan is different.</p>
+  {% elif scope.fully_insured == "yes" %}
+  <p>This state rule applies to a fully insured plan.</p>
+  {% endif %}
+  <ul class="policy-list">
+    {% for source in scope.state_rules %}
+    <li>
+      <a href="{{ source.url }}">{{ source.title }}</a>
+      {% if source.number %}<span class="quiet">{{ source.number }}</span>{% endif %}
+      <span>{{ source.date.label if source.date.value else "Date not found in the source list" }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

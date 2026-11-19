@@ -17,6 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from benefitiq.db import session_scope
+import benefitiq.ingestion.policy_text  # noqa: F401  registers the policy-text loader
 import benefitiq.ingestion.public_loaders  # noqa: F401  registers public loaders
 from benefitiq.ingestion.loaders import (
     IngestionError,

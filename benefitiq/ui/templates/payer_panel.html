@@ -1,0 +1,38 @@
+{% if payer_name %}
+<section class="panel card" data-testid="payer-panel">
+  <h2>Plan sources</h2>
+  <p>{{ payer_name }}{% if segment_label %} — {{ segment_label }}{% endif %}</p>
+  {% if payer_notice %}
+  <p data-testid="payer-notice">{{ payer_notice }}</p>
+  {% endif %}
+  {% if policy_rows %}
+  <ul class="policy-list" data-testid="payer-policies">
+    {% for row in policy_rows %}
+    <li>
+      <a href="{{ row.url }}">{{ row.title }}</a>
+      {% if row.number %}<span class="quiet">{{ row.number }}</span>{% endif %}
+      <span>{{ row.date_label }}</span>
+      <span class="chip {{ row.access_label|access_chip }}">{{ row.access_label }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if state_rows %}
+  <h3>Oklahoma rule for fully insured plans</h3>
+  {% if fully_insured == "mixed" %}
+  <p>This state rule applies only if the plan is fully insured. A self-funded plan is different.</p>
+  {% elif fully_insured == "yes" %}
+  <p>This state rule applies to a fully insured plan.</p>
+  {% endif %}
+  <ul class="policy-list">
+    {% for row in state_rows %}
+    <li>
+      <a href="{{ row.url }}">{{ row.title }}</a>
+      {% if row.number %}<span class="quiet">{{ row.number }}</span>{% endif %}
+      <span>{{ row.date_label }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endif %}

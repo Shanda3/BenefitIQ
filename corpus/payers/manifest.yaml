@@ -1,0 +1,1011 @@
+# Registry cards for Oklahoma payer sources.
+# Each card stores a URL and a date label. It is not a copy of the policy.
+documents:
+- path: cards/ok-bcbsok-med204-006-medical-management-of-sleep-related-breathing-di.md
+  source_id: ok-bcbsok-med204-006-medical-management-of-sleep-related-breathing-di
+  family_id: ok-bcbsok-med204-006-medical-management-of-sleep-related-breathing-di
+  title: Medical Management of Sleep Related Breathing Disorders
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/medicine/MED204.006_2026-05-15.pdf
+  effective_from: '2026-05-15'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-bcbsok-med204-005-diagnosis-of-obstructive-sleep-apnea-syndrome.md
+  source_id: ok-bcbsok-med204-005-diagnosis-of-obstructive-sleep-apnea-syndrome
+  family_id: ok-bcbsok-med204-005-diagnosis-of-obstructive-sleep-apnea-syndrome
+  title: Diagnosis of Obstructive Sleep Apnea Syndrome
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/medicine/MED204.005_2026-10-01.pdf
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-bcbsok-sur706-009-sleep-related-breathing-disorders-surgical-manag.md
+  source_id: ok-bcbsok-sur706-009-sleep-related-breathing-disorders-surgical-manag
+  family_id: ok-bcbsok-sur706-009-sleep-related-breathing-disorders-surgical-manag
+  title: 'Sleep Related Breathing Disorders: Surgical Management'
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/surgery/SUR706.009_2026-01-01.pdf
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-bcbsok-sur705-010-temporomandibular-joint-disorders.md
+  source_id: ok-bcbsok-sur705-010-temporomandibular-joint-disorders
+  family_id: ok-bcbsok-sur705-010-temporomandibular-joint-disorders
+  title: Temporomandibular Joint Disorders
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/surgery/SUR705.010_2026-01-01.pdf
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-bcbsok-sur705-030-orthognathic-surgery.md
+  source_id: ok-bcbsok-sur705-030-orthognathic-surgery
+  family_id: ok-bcbsok-sur705-030-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/surgery/SUR705.030_2026-01-01.pdf
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-bcbsok-sur716-001-cosmetic-and-reconstructive-procedures.md
+  source_id: ok-bcbsok-sur716-001-cosmetic-and-reconstructive-procedures
+  family_id: ok-bcbsok-sur716-001-cosmetic-and-reconstructive-procedures
+  title: Cosmetic and Reconstructive Procedures
+  publisher: HCSC
+  url: https://medicalpolicy.hcsc.com/content/dam/bcbs/medicalpolicy/pdf/surgery/SUR716.001_2026-01-01.pdf
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: bcbsok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0004-obstructive-sleep-apnea-in-adults.md
+  source_id: ok-aetna-cpb-0004-obstructive-sleep-apnea-in-adults
+  family_id: ok-aetna-cpb-0004-obstructive-sleep-apnea-in-adults
+  title: Obstructive Sleep Apnea in Adults
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/1_99/0004.html
+  effective_from: '2026-10-06'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0028-temporomandibular-disorders.md
+  source_id: ok-aetna-cpb-0028-temporomandibular-disorders
+  family_id: ok-aetna-cpb-0028-temporomandibular-disorders
+  title: Temporomandibular Disorders
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/1_99/0028.html
+  effective_from: '2026-03-12'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0082-dental-services-and-oral-and-maxillofacial-surge.md
+  source_id: ok-aetna-cpb-0082-dental-services-and-oral-and-maxillofacial-surge
+  family_id: ok-aetna-cpb-0082-dental-services-and-oral-and-maxillofacial-surge
+  title: 'Dental Services and Oral and Maxillofacial Surgery: Coverage Under Medical
+    Plans'
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/1_99/0082.html
+  effective_from: '2026-03-18'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0095-orthognathic-surgery.md
+  source_id: ok-aetna-cpb-0095-orthognathic-surgery
+  family_id: ok-aetna-cpb-0095-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/1_99/0095.html
+  effective_from: '2026-03-18'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0124-general-anesthesia-and-monitored-anesthesia-care.md
+  source_id: ok-aetna-cpb-0124-general-anesthesia-and-monitored-anesthesia-care
+  family_id: ok-aetna-cpb-0124-general-anesthesia-and-monitored-anesthesia-care
+  title: General Anesthesia and Monitored Anesthesia Care for Oral and Maxillofacial
+    Surgery and Dental Services
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/100_199/0124.html
+  effective_from: '2026-03-19'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-cpb-0686-oral-and-esophageal-brush-biopsy.md
+  source_id: ok-aetna-cpb-0686-oral-and-esophageal-brush-biopsy
+  family_id: ok-aetna-cpb-0686-oral-and-esophageal-brush-biopsy
+  title: Oral and Esophageal Brush Biopsy
+  publisher: CVS Health
+  url: https://www.aetna.com/cpb/medical/data/600_699/0686.html
+  effective_from: '2026-10-15'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-011-frenulectomy-frenectomy-frenotomy-or-frenuloplas.md
+  source_id: ok-aetna-dental-cpb-011-frenulectomy-frenectomy-frenotomy-or-frenuloplas
+  family_id: ok-aetna-dental-cpb-011-frenulectomy-frenectomy-frenotomy-or-frenuloplas
+  title: Frenulectomy (frenectomy, frenotomy) or frenuloplasty
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB011.html
+  effective_from: '2025-07-21'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-045-oral-cancer-screening-adjuncts-policy.md
+  source_id: ok-aetna-dental-cpb-045-oral-cancer-screening-adjuncts-policy
+  family_id: ok-aetna-dental-cpb-045-oral-cancer-screening-adjuncts-policy
+  title: Oral Cancer Screening Adjuncts Policy
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB045.html
+  effective_from: '2026-03-13'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-018-obstructive-sleep-apnea-points-to-medical-cpb-00.md
+  source_id: ok-aetna-dental-cpb-018-obstructive-sleep-apnea-points-to-medical-cpb-00
+  family_id: ok-aetna-dental-cpb-018-obstructive-sleep-apnea-points-to-medical-cpb-00
+  title: Obstructive sleep apnea (points to medical CPB 0004)
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB018.html
+  effective_from: '2026-07-20'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-019-temporomandibular-disorders.md
+  source_id: ok-aetna-dental-cpb-019-temporomandibular-disorders
+  family_id: ok-aetna-dental-cpb-019-temporomandibular-disorders
+  title: Temporomandibular Disorders
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB019.html
+  effective_from: '2025-07-21'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-020-dental-services-oral-and-maxillofacial-surgery-c.md
+  source_id: ok-aetna-dental-cpb-020-dental-services-oral-and-maxillofacial-surgery-c
+  family_id: ok-aetna-dental-cpb-020-dental-services-oral-and-maxillofacial-surgery-c
+  title: 'Dental services, oral and maxillofacial surgery: coverage under medical
+    and dental'
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB020.html
+  effective_from: '2026-03-13'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-016-deep-sedation-general-anesthesia-and-iv-sedation.md
+  source_id: ok-aetna-dental-cpb-016-deep-sedation-general-anesthesia-and-iv-sedation
+  family_id: ok-aetna-dental-cpb-016-deep-sedation-general-anesthesia-and-iv-sedation
+  title: Deep sedation, general anesthesia and IV sedation for OMS
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB016.html
+  effective_from: '2026-03-13'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-048-dental-radiographic-examinations.md
+  source_id: ok-aetna-dental-cpb-048-dental-radiographic-examinations
+  family_id: ok-aetna-dental-cpb-048-dental-radiographic-examinations
+  title: Dental radiographic examinations
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB048.html
+  effective_from: '2026-03-13'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-001-bone-graft-policy.md
+  source_id: ok-aetna-dental-cpb-001-bone-graft-policy
+  family_id: ok-aetna-dental-cpb-001-bone-graft-policy
+  title: Bone graft policy
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB001.html
+  effective_from: '2026-07-20'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-006-brush-biopsy-transepithelial-sample-collection.md
+  source_id: ok-aetna-dental-cpb-006-brush-biopsy-transepithelial-sample-collection
+  family_id: ok-aetna-dental-cpb-006-brush-biopsy-transepithelial-sample-collection
+  title: Brush biopsy - transepithelial sample collection
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB006.html
+  effective_from: '2026-07-20'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-aetna-dental-cpb-031-odontogenic-cysts.md
+  source_id: ok-aetna-dental-cpb-031-odontogenic-cysts
+  family_id: ok-aetna-dental-cpb-031-odontogenic-cysts
+  title: Odontogenic cysts
+  publisher: CVS Health
+  url: https://www.aetna.com/health-care-professionals/clinical-policy-bulletins/dental-clinical-policy-bulletins/DCPB031.html
+  effective_from: '2025-05-15'
+  doc_type: policy
+  loader: prose
+  payer: aetna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-medical-policy-obstructive-and-central-sleep-apnea-treatment-co.md
+  source_id: ok-uhc-medical-policy-obstructive-and-central-sleep-apnea-treatment-co
+  family_id: ok-uhc-medical-policy-obstructive-and-central-sleep-apnea-treatment-co
+  title: Obstructive and Central Sleep Apnea Treatment (Commercial and Individual
+    Exchange)
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/obstructive-sleep-apnea-treatment.pdf
+  effective_from: '2026-11-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-medical-policy-temporomandibular-joint-disorders-commercial-and.md
+  source_id: ok-uhc-medical-policy-temporomandibular-joint-disorders-commercial-and
+  family_id: ok-uhc-medical-policy-temporomandibular-joint-disorders-commercial-and
+  title: Temporomandibular Joint Disorders (Commercial and Individual Exchange)
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/temporomandibular-joint-disorders.pdf
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-medical-policy-orthognathic-jaw-surgery-commercial-and-individu.md
+  source_id: ok-uhc-medical-policy-orthognathic-jaw-surgery-commercial-and-individu
+  family_id: ok-uhc-medical-policy-orthognathic-jaw-surgery-commercial-and-individu
+  title: Orthognathic (Jaw) Surgery (Commercial and Individual Exchange)
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/comm-medical-drug/orthognathic-jaw-surgery.pdf
+  effective_from: '2026-05-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-ma-medical-policy-treatment-of-temporomandibular-joint-tmj-medicar.md
+  source_id: ok-uhc-ma-medical-policy-treatment-of-temporomandibular-joint-tmj-medicar
+  family_id: ok-uhc-ma-medical-policy-treatment-of-temporomandibular-joint-tmj-medicar
+  title: Treatment of Temporomandibular Joint (TMJ) - Medicare Advantage Medical Policy
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/medadv-mp/treatment-tmj-joint.pdf
+  effective_from: '2026-08-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-cone-beam-computed-tomography-dental-clinical-po.md
+  source_id: ok-uhc-dental-clinical-policy-cone-beam-computed-tomography-dental-clinical-po
+  family_id: ok-uhc-dental-clinical-policy-cone-beam-computed-tomography-dental-clinical-po
+  title: Cone Beam Computed Tomography - Dental Clinical Policy
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/imaging-svcs-cone-beam-ct.pdf
+  effective_from: '2026-06-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-general-anesthesia-and-conscious-sedation-servic.md
+  source_id: ok-uhc-dental-clinical-policy-general-anesthesia-and-conscious-sedation-servic
+  family_id: ok-uhc-dental-clinical-policy-general-anesthesia-and-conscious-sedation-servic
+  title: General Anesthesia and Conscious Sedation Services - Dental Clinical Policy
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/general-anesthesia-conscious-sedation-svcs.pdf
+  effective_from: '2026-09-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-medical-necessity-based-dental-services-dental-c.md
+  source_id: ok-uhc-dental-clinical-policy-medical-necessity-based-dental-services-dental-c
+  family_id: ok-uhc-dental-clinical-policy-medical-necessity-based-dental-services-dental-c
+  title: Medical Necessity-Based Dental Services - Dental Clinical Policy
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/medically-necessary-dental-services.pdf
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-bone-replacement-grafts-dental-clinical-policy.md
+  source_id: ok-uhc-dental-clinical-policy-bone-replacement-grafts-dental-clinical-policy
+  family_id: ok-uhc-dental-clinical-policy-bone-replacement-grafts-dental-clinical-policy
+  title: Bone Replacement Grafts - Dental Clinical Policy
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/bone-replacement-grafts.pdf
+  effective_from: '2026-05-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-oral-surgery-alveoloplasty-and-vestibuloplasty-d.md
+  source_id: ok-uhc-dental-clinical-policy-oral-surgery-alveoloplasty-and-vestibuloplasty-d
+  family_id: ok-uhc-dental-clinical-policy-oral-surgery-alveoloplasty-and-vestibuloplasty-d
+  title: 'Oral Surgery: Alveoloplasty and Vestibuloplasty - Dental Clinical Policy'
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/oral-surgery-alveoloplasty-vestibuloplasty.pdf
+  effective_from: '2026-09-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-oral-surgery-excisional-procedures-dental-clinic.md
+  source_id: ok-uhc-dental-clinical-policy-oral-surgery-excisional-procedures-dental-clinic
+  family_id: ok-uhc-dental-clinical-policy-oral-surgery-excisional-procedures-dental-clinic
+  title: 'Oral Surgery: Excisional Procedures - Dental Clinical Policy'
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/oral-surgery-non-pathologic-excisional-procedures.pdf
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-uhc-dental-clinical-policy-oral-surgery-miscellaneous-surgical-procedures-d.md
+  source_id: ok-uhc-dental-clinical-policy-oral-surgery-miscellaneous-surgical-procedures-d
+  family_id: ok-uhc-dental-clinical-policy-oral-surgery-miscellaneous-surgical-procedures-d
+  title: 'Oral Surgery: Miscellaneous Surgical Procedures - Dental Clinical Policy'
+  publisher: UnitedHealth Group
+  url: https://www.uhcprovider.com/content/dam/provider/docs/public/policies/dental/oral-surgery-miscellaneous-surgical-procedures.pdf
+  effective_from: '2026-08-01'
+  doc_type: policy
+  loader: prose
+  payer: uhc
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0158-obstructive-sleep-apnea-diagnosis-and-treatment-.md
+  source_id: ok-cigna-0158-obstructive-sleep-apnea-diagnosis-and-treatment-
+  family_id: ok-cigna-0158-obstructive-sleep-apnea-diagnosis-and-treatment-
+  title: Obstructive Sleep Apnea Diagnosis and Treatment Services
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0158_coveragepositioncriteria_obstructive_sleep_apnea_diag_trtment_svc.pdf
+  effective_from: '2026-06-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0156-temporomandibular-joint-tmj-disorder-surgery.md
+  source_id: ok-cigna-0156-temporomandibular-joint-tmj-disorder-surgery
+  family_id: ok-cigna-0156-temporomandibular-joint-tmj-disorder-surgery
+  title: Temporomandibular Joint (TMJ) Disorder Surgery
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0156_coveragepositioncriteria_tmj_disorder_surgery.pdf
+  effective_from: '2025-12-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0209-orthognathic-surgery.md
+  source_id: ok-cigna-0209-orthognathic-surgery
+  family_id: ok-cigna-0209-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0209_coveragepositioncriteria_orthognathic_surgery.pdf
+  effective_from: '2026-10-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0415-anesthesia-and-facility-services-for-dental-trea.md
+  source_id: ok-cigna-0415-anesthesia-and-facility-services-for-dental-trea
+  family_id: ok-cigna-0415-anesthesia-and-facility-services-for-dental-trea
+  title: Anesthesia and Facility Services for Dental Treatment
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0415_coveragepositioncriteria_anesthesia_and_facility_services_for_dental_treatment.pdf
+  effective_from: '2026-08-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0586-alveoloplasty.md
+  source_id: ok-cigna-0586-alveoloplasty
+  family_id: ok-cigna-0586-alveoloplasty
+  title: Alveoloplasty
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0586_coveragepositioncriteria_alveoloplasty.pdf
+  effective_from: '2026-08-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0585-dental-implants-medical-plan-coverage.md
+  source_id: ok-cigna-0585-dental-implants-medical-plan-coverage
+  family_id: ok-cigna-0585-dental-implants-medical-plan-coverage
+  title: Dental Implants (medical-plan coverage)
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0585_coveragepositioncriteria_dental_implants.pdf
+  effective_from: '2026-08-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-cigna-0584-intraoral-prosthesis.md
+  source_id: ok-cigna-0584-intraoral-prosthesis
+  family_id: ok-cigna-0584-intraoral-prosthesis
+  title: Intraoral Prosthesis
+  publisher: The Cigna Group
+  url: https://static.cigna.com/assets/chcp/pdf/coveragePolicies/medical/mm_0584_coveragepositioncriteria_intraoral_prosthesis.pdf
+  effective_from: '2026-08-15'
+  doc_type: policy
+  loader: prose
+  payer: cigna
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-och-cp-mp-202-orthognathic-surgery.md
+  source_id: ok-och-cp-mp-202-orthognathic-surgery
+  family_id: ok-och-cp-mp-202-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: Centene
+  url: https://www.oklahomacompletehealth.com/content/dam/centene/oklahoma-complete-health/policies/clinical-policies/CP.MP.202.pdf
+  effective_from: '2025-11-01'
+  doc_type: policy
+  loader: prose
+  payer: och
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-och-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera.md
+  source_id: ok-och-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera
+  family_id: ok-och-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera
+  title: IV Moderate Sedation, IV Deep Sedation, and General Anesthesia for Dental
+    Procedures
+  publisher: Centene
+  url: https://www.oklahomacompletehealth.com/content/dam/centene/oklahoma-complete-health/policies/clinical-policies/CP.MP.61.pdf
+  effective_from: '2026-06-01'
+  doc_type: policy
+  loader: prose
+  payer: och
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-och-cp-mp-31-cosmetic-and-reconstructive-procedures.md
+  source_id: ok-och-cp-mp-31-cosmetic-and-reconstructive-procedures
+  family_id: ok-och-cp-mp-31-cosmetic-and-reconstructive-procedures
+  title: Cosmetic and Reconstructive Procedures
+  publisher: Centene
+  url: https://www.oklahomacompletehealth.com/content/dam/centene/oklahoma-complete-health/policies/clinical-policies/CP.MP.31.pdf
+  effective_from: '2025-08-01'
+  doc_type: policy
+  loader: prose
+  payer: och
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-och-cp-mp-188-pediatric-oral-function-therapy.md
+  source_id: ok-och-cp-mp-188-pediatric-oral-function-therapy
+  family_id: ok-och-cp-mp-188-pediatric-oral-function-therapy
+  title: Pediatric Oral Function Therapy
+  publisher: Centene
+  url: https://www.oklahomacompletehealth.com/content/dam/centene/oklahoma-complete-health/policies/clinical-policies/CP.MP.188.pdf
+  effective_from: '2026-04-01'
+  doc_type: policy
+  loader: prose
+  payer: och
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-och-clinical-payment-policies-index.md
+  source_id: ok-och-clinical-payment-policies-index
+  family_id: ok-och-clinical-payment-policies-index
+  title: Clinical & Payment Policies index
+  publisher: Centene
+  url: https://www.oklahomacompletehealth.com/providers/resources/clinical-payment-policies.html
+  effective_from: '2026-10-23'
+  doc_type: index
+  loader: prose
+  payer: och
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-ambetter-cp-mp-202-orthognathic-surgery.md
+  source_id: ok-ambetter-cp-mp-202-orthognathic-surgery
+  family_id: ok-ambetter-cp-mp-202-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: Centene
+  url: https://www.ambetterhealth.com/content/dam/centene/ambetter-of-oklahoma/ClinicalPolicies/CP.MP.202.pdf
+  effective_from: '2025-11-01'
+  doc_type: policy
+  loader: prose
+  payer: ambetter
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-ambetter-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera.md
+  source_id: ok-ambetter-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera
+  family_id: ok-ambetter-cp-mp-61-iv-moderate-sedation-iv-deep-sedation-and-genera
+  title: IV Moderate Sedation, IV Deep Sedation, and General Anesthesia for Dental
+    Procedures
+  publisher: Centene
+  url: https://www.ambetterhealth.com/content/dam/centene/ambetter-of-oklahoma/ClinicalPolicies/CP.MP.61.pdf
+  effective_from: '2025-09-01'
+  doc_type: policy
+  loader: prose
+  payer: ambetter
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-ambetter-ok-cp-mp-31-cosmetic-and-reconstructive-procedures-oklahoma-.md
+  source_id: ok-ambetter-ok-cp-mp-31-cosmetic-and-reconstructive-procedures-oklahoma-
+  family_id: ok-ambetter-ok-cp-mp-31-cosmetic-and-reconstructive-procedures-oklahoma-
+  title: Cosmetic and Reconstructive Procedures (Oklahoma version)
+  publisher: Centene
+  url: https://www.ambetterhealth.com/content/dam/centene/ambetter-of-oklahoma/ClinicalPolicies/OK.CP.MP.31.pdf
+  effective_from: '2025-06-01'
+  doc_type: policy
+  loader: prose
+  payer: ambetter
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-ambetter-ambetter-of-oklahoma-clinical-payment-policies-i.md
+  source_id: ok-ambetter-ambetter-of-oklahoma-clinical-payment-policies-i
+  family_id: ok-ambetter-ambetter-of-oklahoma-clinical-payment-policies-i
+  title: Ambetter of Oklahoma Clinical & Payment Policies index
+  publisher: Centene
+  url: https://www.ambetterhealth.com/en/ok/provider-resources/clinical-payment-policies/
+  effective_from: '2025-11-01'
+  doc_type: index
+  loader: prose
+  payer: ambetter
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-centene-dental-cp-dp-45-obstructive-sleep-apnea.md
+  source_id: ok-centene-dental-cp-dp-45-obstructive-sleep-apnea
+  family_id: ok-centene-dental-cp-dp-45-obstructive-sleep-apnea
+  title: Obstructive Sleep Apnea
+  publisher: Centene
+  url: https://www.centenedental.com/content/dam/centene/envolve-benefit-options/dental/pdfs/policies/CP.DP.45-Obstructive-Sleep-Apnea.pdf
+  effective_from: '2025-12-01'
+  doc_type: policy
+  loader: prose
+  payer: centene-dental
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-centene-dental-cp-dp-44-orthognathic-surgery.md
+  source_id: ok-centene-dental-cp-dp-44-orthognathic-surgery
+  family_id: ok-centene-dental-cp-dp-44-orthognathic-surgery
+  title: Orthognathic Surgery
+  publisher: Centene
+  url: https://www.centenedental.com/content/dam/centene/envolve-benefit-options/dental/pdfs/policies/CP.DP.44-Orthognathic-Surgery.pdf
+  effective_from: '2025-12-01'
+  doc_type: policy
+  loader: prose
+  payer: centene-dental
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-centene-dental-cp-dp-49-tmj-surgery.md
+  source_id: ok-centene-dental-cp-dp-49-tmj-surgery
+  family_id: ok-centene-dental-cp-dp-49-tmj-surgery
+  title: TMJ Surgery
+  publisher: Centene
+  url: https://www.centenedental.com/content/dam/centene/envolve-benefit-options/dental/pdfs/policies/CP.DP.49-TMJ-Surgery.pdf
+  effective_from: '2020-07-01'
+  doc_type: policy
+  loader: prose
+  payer: centene-dental
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-ok-humana-doc-090009298a562034-orthognathic-surgery-medicaid-oklahoma.md
+  source_id: ok-humana-ok-humana-doc-090009298a562034-orthognathic-surgery-medicaid-oklahoma
+  family_id: ok-humana-ok-humana-doc-090009298a562034-orthognathic-surgery-medicaid-oklahoma
+  title: Orthognathic Surgery - MEDICAID - OKLAHOMA
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=orthognathic&searchtype=freetext&policyType=both
+  effective_from: '2026-06-24'
+  doc_type: policy
+  loader: prose
+  payer: humana-ok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-ok-humana-doc-090009298a48a838-prosthetics-medicaid-oklahoma.md
+  source_id: ok-humana-ok-humana-doc-090009298a48a838-prosthetics-medicaid-oklahoma
+  family_id: ok-humana-ok-humana-doc-090009298a48a838-prosthetics-medicaid-oklahoma
+  title: Prosthetics - MEDICAID - OKLAHOMA
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=maxillofacial&searchtype=freetext&policyType=both
+  effective_from: '2026-01-07'
+  doc_type: policy
+  loader: prose
+  payer: humana-ok
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-humana-doc-090009298a4a681e-orthognathic-surgery-medicare-advantage.md
+  source_id: ok-humana-humana-doc-090009298a4a681e-orthognathic-surgery-medicare-advantage
+  family_id: ok-humana-humana-doc-090009298a4a681e-orthognathic-surgery-medicare-advantage
+  title: Orthognathic Surgery - Medicare Advantage
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=orthognathic&searchtype=freetext&policyType=both
+  effective_from: '2026-02-02'
+  doc_type: policy
+  loader: prose
+  payer: humana
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-humana-doc-090009298a4a6ca6-temporomandibular-disorders-medicare-advantage.md
+  source_id: ok-humana-humana-doc-090009298a4a6ca6-temporomandibular-disorders-medicare-advantage
+  family_id: ok-humana-humana-doc-090009298a4a6ca6-temporomandibular-disorders-medicare-advantage
+  title: Temporomandibular Disorders - Medicare Advantage
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=temporomandibular&searchtype=freetext&policyType=both
+  effective_from: '2026-02-02'
+  doc_type: policy
+  loader: prose
+  payer: humana
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-humana-doc-090009298a6072df-obstructive-sleep-apnea-and-other-sleep-related-.md
+  source_id: ok-humana-humana-doc-090009298a6072df-obstructive-sleep-apnea-and-other-sleep-related-
+  family_id: ok-humana-humana-doc-090009298a6072df-obstructive-sleep-apnea-and-other-sleep-related-
+  title: Obstructive Sleep Apnea and Other Sleep Related Breathing Disorder Treatments
+    - Medicare Advantage
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=sleep%20apnea&searchtype=freetext&policyType=both
+  effective_from: '2026-11-02'
+  doc_type: policy
+  loader: prose
+  payer: humana
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-humana-humana-doc-090009298a6066d6-bone-graft-substitutes-medicare-advantage.md
+  source_id: ok-humana-humana-doc-090009298a6066d6-bone-graft-substitutes-medicare-advantage
+  family_id: ok-humana-humana-doc-090009298a6066d6-bone-graft-substitutes-medicare-advantage
+  title: Bone Graft Substitutes - Medicare Advantage
+  publisher: Humana
+  url: https://mcp.humana.com/tad/tad_new/Search.aspx?criteria=bone%20graft&searchtype=freetext&policyType=both
+  effective_from: '2026-11-02'
+  doc_type: policy
+  loader: prose
+  payer: humana
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-communitycare-communitycare-medical-policies-uses-interqual-be.md
+  source_id: ok-communitycare-communitycare-medical-policies-uses-interqual-be
+  family_id: ok-communitycare-communitycare-medical-policies-uses-interqual-be
+  title: CommunityCare Medical Policies (uses InterQual before 2026-10-03, MCG on/after)
+  publisher: Saint Francis Health System & Ascension St. John
+  url: https://www.ccok.com/ClinicalCriteria/MedicalPolicies.asp?view=provider
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: communitycare
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-communitycare-communitycare-senior-health-plan-medical-policie.md
+  source_id: ok-communitycare-communitycare-senior-health-plan-medical-policie
+  family_id: ok-communitycare-communitycare-senior-health-plan-medical-policie
+  title: CommunityCare Senior Health Plan medical policies (Dual)
+  publisher: Saint Francis Health System & Ascension St. John
+  url: https://ccokadvantage.com/2026/Dual/medical-policies.asp
+  effective_from: '2026-01-01'
+  doc_type: policy
+  loader: prose
+  payer: communitycare
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-healthchoice-healthchoice-health-plans-handbook-2026.md
+  source_id: ok-healthchoice-healthchoice-health-plans-handbook-2026
+  family_id: ok-healthchoice-healthchoice-health-plans-handbook-2026
+  title: HealthChoice Health Plans Handbook 2026
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/content/dam/ok/en/healthchoice/documents/2026-health-handbook-UA.pdf
+  effective_from: '2026-01-01'
+  doc_type: manual
+  loader: prose
+  payer: healthchoice
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-healthchoice-healthchoice-dental-plan-handbook-2026.md
+  source_id: ok-healthchoice-healthchoice-dental-plan-handbook-2026
+  family_id: ok-healthchoice-healthchoice-dental-plan-handbook-2026
+  title: HealthChoice Dental Plan Handbook 2026
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/content/dam/ok/en/healthchoice/documents/2026-dental-handbook-UA.pdf
+  effective_from: '2026-01-01'
+  doc_type: manual
+  loader: prose
+  payer: healthchoice
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-tricare-west-triwest-pk-policy-key-obstructive-sleep-apnea-other-sleep-d.md
+  source_id: ok-tricare-west-triwest-pk-policy-key-obstructive-sleep-apnea-other-sleep-d
+  family_id: ok-tricare-west-triwest-pk-policy-key-obstructive-sleep-apnea-other-sleep-d
+  title: 'Policy Key: Obstructive Sleep Apnea / Other Sleep Disturbances (T-5)'
+  publisher: Defense Health Agency
+  url: https://www.triwest.com/globalassets/TRICARE/provider/PolicyKeys/OSA-Other-Sleep-Disturbances-T-5-PK.pdf
+  effective_from: '2026-07-16'
+  doc_type: policy
+  loader: prose
+  payer: tricare-west
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-tricare-west-triwest-pk-policy-key-adjunctive-dental-west-region.md
+  source_id: ok-tricare-west-triwest-pk-policy-key-adjunctive-dental-west-region
+  family_id: ok-tricare-west-triwest-pk-policy-key-adjunctive-dental-west-region
+  title: 'Policy Key: Adjunctive Dental (West Region)'
+  publisher: Defense Health Agency
+  url: https://tricare.triwest.com/globalassets/tricare/provider/tricare-west-region-Adjunctive-Dental-pk.pdf
+  effective_from: '2025-09-01'
+  doc_type: policy
+  loader: prose
+  payer: tricare-west
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-fep-blue-fep-8-01-67-medical-management-of-obstructive-sleep-apnea-sy.md
+  source_id: ok-fep-blue-fep-8-01-67-medical-management-of-obstructive-sleep-apnea-sy
+  family_id: ok-fep-blue-fep-8-01-67-medical-management-of-obstructive-sleep-apnea-sy
+  title: Medical Management of Obstructive Sleep Apnea Syndrome
+  publisher: Blue Cross Blue Shield Association
+  url: https://www.fepblue.org/-/media/PDFs/Medical-Policies/2026/October/Medical-Policies/Remove-and-Replace/80167-Medical-Management-of-OSA.pdf
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: fep-blue
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-fep-blue-fep-2-01-21-temporomandibular-joint-disorder.md
+  source_id: ok-fep-blue-fep-2-01-21-temporomandibular-joint-disorder
+  family_id: ok-fep-blue-fep-2-01-21-temporomandibular-joint-disorder
+  title: Temporomandibular Joint Disorder
+  publisher: Blue Cross Blue Shield Association
+  url: https://www.fepblue.org/-/media/PDFs/Medical-Policies/2026/July-2026/Medical-Policies/Remove-and-Replace/20121-Temporomandibular-Joint-Disorder.pdf
+  effective_from: '2026-07-01'
+  doc_type: policy
+  loader: prose
+  payer: fep-blue
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-medicare-cgs-a58823-response-to-comments-oral-appliances-for-osa-dl3.md
+  source_id: ok-medicare-cgs-a58823-response-to-comments-oral-appliances-for-osa-dl3
+  family_id: ok-medicare-cgs-a58823-response-to-comments-oral-appliances-for-osa-dl3
+  title: 'Response to Comments: Oral Appliances for OSA - DL33611'
+  publisher: CMS
+  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=58823
+  effective_from: '2021-06-24'
+  doc_type: policy
+  loader: prose
+  payer: medicare-cgs
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-medicare-ffs-ncd-240-4-1-ncd-240-4-1-sleep-testing-for-obstructive-sleep-.md
+  source_id: ok-medicare-ffs-ncd-240-4-1-ncd-240-4-1-sleep-testing-for-obstructive-sleep-
+  family_id: ok-medicare-ffs-ncd-240-4-1-ncd-240-4-1-sleep-testing-for-obstructive-sleep-
+  title: NCD 240.4.1 Sleep Testing for Obstructive Sleep Apnea
+  publisher: CMS
+  url: https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=330
+  effective_from: '2009-03-03'
+  doc_type: policy
+  loader: prose
+  payer: medicare-ffs
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-medicare-novitas-l35049-monitored-anesthesia-care-lcd.md
+  source_id: ok-medicare-novitas-l35049-monitored-anesthesia-care-lcd
+  family_id: ok-medicare-novitas-l35049-monitored-anesthesia-care-lcd
+  title: Monitored Anesthesia Care (LCD)
+  publisher: CMS
+  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=35049
+  effective_from: '2019-10-17'
+  doc_type: policy
+  loader: prose
+  payer: medicare-novitas
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-medicare-novitas-a57361-billing-and-coding-monitored-anesthesia-care.md
+  source_id: ok-medicare-novitas-a57361-billing-and-coding-monitored-anesthesia-care
+  family_id: ok-medicare-novitas-a57361-billing-and-coding-monitored-anesthesia-care
+  title: 'Billing and Coding: Monitored Anesthesia Care'
+  publisher: CMS
+  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=57361
+  effective_from: '2026-10-01'
+  doc_type: policy
+  loader: prose
+  payer: medicare-novitas
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-medicare-palmetto-a59449-billing-and-coding-dental-services.md
+  source_id: ok-medicare-palmetto-a59449-billing-and-coding-dental-services
+  family_id: ok-medicare-palmetto-a59449-billing-and-coding-dental-services
+  title: 'Billing and Coding: Dental Services'
+  publisher: CMS
+  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=59449
+  effective_from: '2023-06-08'
+  doc_type: policy
+  loader: prose
+  payer: medicare-palmetto
+  state: NA
+  program: not-oklahoma
+  plan_type: not-applicable
+- path: cards/ok-sooner-ohca-oac-317-30-5-696-oac-317-30-5-696-coverage-by-category.md
+  source_id: ok-sooner-ohca-oac-317-30-5-696-oac-317-30-5-696-coverage-by-category
+  family_id: ok-sooner-ohca-oac-317-30-5-696-oac-317-30-5-696-coverage-by-category
+  title: OAC 317:30-5-696 Coverage by category
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/coverage-by-category.html
+  effective_from: '2022-09-12'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-sooner-ohca-oac-317-30-5-696-1-oac-317-30-5-696-1-anesthesia.md
+  source_id: ok-sooner-ohca-oac-317-30-5-696-1-oac-317-30-5-696-1-anesthesia
+  family_id: ok-sooner-ohca-oac-317-30-5-696-1-oac-317-30-5-696-1-anesthesia
+  title: OAC 317:30-5-696.1 Anesthesia
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/anesthesia.html
+  effective_from: '2016-09-01'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-sooner-ohca-oac-317-30-5-697-oac-317-30-5-697-oral-surgery-procedures.md
+  source_id: ok-sooner-ohca-oac-317-30-5-697-oac-317-30-5-697-oral-surgery-procedures
+  family_id: ok-sooner-ohca-oac-317-30-5-697-oac-317-30-5-697-oral-surgery-procedures
+  title: OAC 317:30-5-697 Oral surgery procedures
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/oral-surgery-procedures.html
+  effective_from: '2003-07-01'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-sooner-ohca-oac-317-30-5-698-oac-317-30-5-698-services-requiring-prior-author.md
+  source_id: ok-sooner-ohca-oac-317-30-5-698-oac-317-30-5-698-services-requiring-prior-author
+  family_id: ok-sooner-ohca-oac-317-30-5-698-oac-317-30-5-698-services-requiring-prior-author
+  title: OAC 317:30-5-698 Services requiring prior authorization
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/services-requiring-prior-authorization.html
+  effective_from: '2022-09-12'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-sooner-ohca-oac-317-30-5-700-1-oac-317-30-5-700-1-orthodontic-prior-authorizati.md
+  source_id: ok-sooner-ohca-oac-317-30-5-700-1-oac-317-30-5-700-1-orthodontic-prior-authorizati
+  family_id: ok-sooner-ohca-oac-317-30-5-700-1-oac-317-30-5-700-1-orthodontic-prior-authorizati
+  title: OAC 317:30-5-700.1 Orthodontic prior authorization
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/orthodontic-prior-authorization.html
+  effective_from: '2024-09-01'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer
+- path: cards/ok-sooner-ohca-oac-317-30-5-705-oac-317-30-5-705-billing.md
+  source_id: ok-sooner-ohca-oac-317-30-5-705-oac-317-30-5-705-billing
+  family_id: ok-sooner-ohca-oac-317-30-5-705-oac-317-30-5-705-billing
+  title: OAC 317:30-5-705 Billing
+  publisher: State of Oklahoma
+  url: https://oklahoma.gov/ohca/policies-and-rules/xpolicy/medical-providers-fee-for-service/individual-providers-and-specialties/dentists/billing.html
+  effective_from: '2022-09-12'
+  doc_type: rule
+  loader: prose
+  payer: sooner-ohca
+  state: OK
+  program: oklahoma-payer
+  plan_type: ok-payer

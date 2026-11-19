@@ -12,6 +12,7 @@ from benefitiq.schemas import CaseInput
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "corpus" / "stub" / "manifest.yaml"
 OFFICE_MANIFEST = ROOT / "corpus" / "office" / "manifest.yaml"
+PAYER_MANIFEST = ROOT / "corpus" / "payers" / "manifest.yaml"
 SAMPLES = ROOT / "samples"
 
 
@@ -20,6 +21,7 @@ def stub_corpus():
     init_db(drop=True)
     ingest_manifest(MANIFEST)
     ingest_manifest(OFFICE_MANIFEST)
+    ingest_manifest(PAYER_MANIFEST)
     yield
 
 

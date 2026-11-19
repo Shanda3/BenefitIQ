@@ -10,6 +10,12 @@ from __future__ import annotations
 from typing import Any
 
 PLAIN_GAP = "Our sources don't cover this yet. Confirm with the payer."
+LICENSED_CRITERIA = "This payer's criteria aren't public. Confirm with the payer."
+
+
+def payer_gap(payer_name: str) -> str:
+    """Plain sentence when a chosen plan has no policy for this procedure."""
+    return f"Our sources don't cover this for {payer_name} yet. Confirm with the payer."
 
 READY = "Ready to bill"
 NEEDS_DOCS = "Needs documentation"

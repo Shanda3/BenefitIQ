@@ -5,10 +5,10 @@
     <a href="{{ citation.url }}" data-source-id="{{ citation.source_id }}">{{ citation.title }}</a>
     <span>Effective {{ citation.effective_from }}{% if citation.effective_to %} to {{ citation.effective_to }}{% endif %}</span>
     {% else %}
-    <span class="gap-copy" data-internal-status="not found">{{ "not found"|plain_gap }}</span>
+    <span class="gap-copy" data-internal-status="not found">{% if uncited_sentence %}{{ uncited_sentence }}{% else %}{{ "not found"|plain_gap }}{% endif %}</span>
     {% endif %}
   </li>
   {% else %}
-  <li><span class="gap-copy" data-internal-status="not found">{{ "not found"|plain_gap }}</span></li>
+  <li><span class="gap-copy" data-internal-status="not found">{% if uncited_sentence %}{{ uncited_sentence }}{% else %}{{ "not found"|plain_gap }}{% endif %}</span></li>
   {% endfor %}
 </ul>

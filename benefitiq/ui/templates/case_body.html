@@ -1,10 +1,10 @@
-{% from "gap.html" import gap_text %}
+{% from "gap.html" import gap_text with context %}
 <article class="case-detail" data-testid="case-detail">
   <header class="panel card case-head">
     <div>
       <p class="kicker">{% if demo %}{{ demo.synthetic_label }} · {% else %}SYNTHETIC · {% endif %}<span data-testid="case-id">{{ decision.case_id }}</span></p>
       <h1 data-testid="result-phrase">{{ decision.result_label }}</h1>
-      <p class="case-sub">{{ decision.procedure_title }} · <span data-testid="case-date">{{ decision.as_of }}</span></p>
+      <p class="case-sub">{{ decision.procedure_title }}{% if decision.payer_name %} · {{ decision.payer_name }}{% endif %} · <span data-testid="case-date">{{ decision.as_of }}</span></p>
     </div>
     <span class="chip {{ chip_class }}" data-testid="status-chip">{{ board_status }}</span>
   </header>
@@ -35,6 +35,10 @@
     {% endif %}
     {% endif %}
   </section>
+
+  {% with payer_name=decision.payer_name, segment_label=decision.segment_label, payer_notice=decision.payer_notice, policy_rows=decision.policy_rows, state_rows=decision.state_rows, fully_insured=decision.fully_insured %}
+  {% include "payer_panel.html" %}
+  {% endwith %}
 
   <section class="panel card" id="result-card">
     <h2>Result</h2>

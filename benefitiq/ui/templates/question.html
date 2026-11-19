@@ -23,6 +23,11 @@
   <form method="post" action="/office/back" class="back-form">
     <button type="submit">Back</button>
   </form>
+  {% if scope %}
+  {% with payer_name=scope.payer_name, segment_label=scope.segment_label, payer_notice=scope.notice, policy_rows=policy_rows, state_rows=state_rows, fully_insured=scope.fully_insured %}
+  {% include "payer_panel.html" %}
+  {% endwith %}
+  {% endif %}
   <h2>Where this question comes from</h2>
   {% with citations=citations %}{% include "citations.html" %}{% endwith %}
 </section>

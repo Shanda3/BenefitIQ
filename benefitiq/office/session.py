@@ -76,10 +76,18 @@ def decode_state(token: str | None) -> dict[str, Any] | None:
     for key, value in answers.items():
         if isinstance(key, str) and value in {"yes", "no", "not_sure"}:
             clean_answers[key] = value
+    payer_id = payload.get("payer_id")
+    segment_id = payload.get("segment_id")
+    if payer_id is not None and not isinstance(payer_id, str):
+        return None
+    if segment_id is not None and not isinstance(segment_id, str):
+        return None
     return {
         "case_id": case_id,
         "procedure_id": procedure_id,
         "as_of": as_of,
         "index": index,
         "answers": clean_answers,
+        "payer_id": payer_id or None,
+        "segment_id": segment_id or None,
     }

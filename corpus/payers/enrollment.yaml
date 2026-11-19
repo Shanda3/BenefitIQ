@@ -1,0 +1,707 @@
+# Enrollment and market figures for Oklahoma payers.
+# Every number on this page is copied from the November 18, 2026 source notes.
+# A blank figure means the notes did not state one. Do not fill those blanks.
+checked: 2026-11-18
+
+state_coverage:
+  label: Health insurance coverage of the total population
+  period: "2024"
+  source: KFF State Health Facts, Health Insurance Coverage of the Total Population (KFF analysis of the ACS)
+  total: 3959400
+  rows:
+    - label: Employer
+      people: 1749000
+      share: "44.2%"
+    - label: Medicaid (SoonerCare)
+      people: 842400
+      share: "21.3%"
+    - label: Medicare
+      people: 600700
+      share: "15.2%"
+    - label: Non-group (individual and Marketplace)
+      people: 231300
+      share: "5.8%"
+    - label: Military (TRICARE and VA)
+      people: 72100
+      share: "1.8%"
+    - label: Uninsured
+      people: 463900
+      share: "11.7%"
+
+markets:
+  - id: large_group_2024
+    label: Oklahoma large-group fully insured
+    total: 378422
+    period: "2024"
+    source: KFF State Health Facts, market share and enrollment of the largest three insurers, large-group market (KFF analysis of Mark Farrah Associates MLR data)
+    source_url: https://www.kff.org/state-health-policy-data/state-indicator/market-share-and-enrollment-of-largest-three-insurers-large-group-market/
+  - id: small_group_2024
+    label: Oklahoma small-group fully insured
+    total: 158841
+    period: "2024"
+    source: KFF State Health Facts, market share and enrollment of the largest three insurers, small-group market (KFF analysis of Mark Farrah Associates MLR data)
+    source_url: https://www.kff.org/state-health-policy-data/state-indicator/market-share-and-enrollment-of-largest-three-insurers-small-group-market/
+  - id: individual_2024
+    label: Oklahoma individual fully insured
+    total: 281488
+    period: "2024"
+    source: KFF State Health Facts, market share and enrollment of the largest three insurers, individual market
+    source_url: https://www.kff.org/private-insurance/state-indicator/market-share-and-enrollment-of-largest-three-insurers-individual-market/
+  - id: marketplace_oep_2026
+    label: Oklahoma Marketplace plan selections
+    total: 261887
+    period: PY2026 Open Enrollment
+    source: CMS 2026 Open Enrollment report, via KFF Total Marketplace Plan Selections
+  - id: qhp_py2027
+    label: Oklahoma individual-market medical plans in the PY2027 landscape
+    plan_ids: 147
+    plan_county_rows: 3125
+    counties: 77
+    period: PY2027
+    downloaded: 2026-11-18
+    source: CMS QHP Landscape individual_market_medical.zip
+    source_url: https://data.healthcare.gov/datafile/py2027/individual_market_medical.zip
+    note: No SHOP medical plans are listed for Oklahoma. Aetna does not appear in this file.
+  - id: soonerselect_2026
+    label: SoonerSelect medical members
+    total: 571860
+    period: September 2026
+    published: 2026-10-05
+    source: OHCA SoonerSelect Fast Facts, September 2026
+    source_url: https://oklahoma.gov/content/dam/ok/en/okhca/docs/research/data-and-reports/fast-facts/2026/october/SoonerSelect%20FF_Sep2026.pdf
+  - id: medicare_advantage_2026
+    label: Oklahoma Medicare Advantage visible enrollment
+    total: 345724
+    period: October 2026
+    source: CMS Monthly Enrollment by Contract/Plan/State/County (CPSC)
+    source_url: https://www.cms.gov/files/zip/monthly-enrollment-cpsc-october-2026.zip
+    note: Counts include HMO, PPO, PFFS, and MSA plans, and employer group plans. CMS hides cells of 10 or fewer, so every count is a floor.
+
+payers:
+  - id: bcbsok
+    name: Blue Cross and Blue Shield of Oklahoma
+    parent: HCSC
+    segments:
+      - id: large_group
+        label: Employer plan, large group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 298062
+            share: "79%"
+            market: large_group_2024
+            note: HCSC (BCBSOK)
+      - id: small_group
+        label: Employer plan, small group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 143200
+            share: "90%"
+            market: small_group_2024
+            note: HCSC
+      - id: individual
+        label: Individual plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 161543
+            share: "57%"
+            market: individual_2024
+            note: HCSC
+      - id: marketplace
+        label: Marketplace plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: PY2027 medical plan IDs
+            value: 72
+            note: "HIOS 87571. Sold in 77 counties."
+            market: qhp_py2027
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 8174
+            share: "2.4%"
+            market: medicare_advantage_2026
+            note: HCSC total for BCBS OK, IL, MT, and TX brands plus HealthSpring. This is not an Oklahoma-only BCBSOK count.
+    gaps:
+      - No BCBSOK or HCSC medical policy was found for frenectomy, oral biopsy, CBCT, dental anesthesia, or accidental dental injury.
+
+  - id: communitycare
+    name: CommunityCare of Oklahoma
+    parent: Saint Francis Health System and Ascension St. John
+    segments:
+      - id: large_group
+        label: Employer plan, large group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 38346
+            share: "10%"
+            market: large_group_2024
+      - id: small_group
+        label: Employer plan, small group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 10517
+            share: "7%"
+            market: small_group_2024
+      - id: individual
+        label: Individual plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 15633
+            share: "6%"
+            market: individual_2024
+      - id: marketplace
+        label: Marketplace plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: PY2027 medical plan IDs
+            value: 25
+            note: "HIOS 98905. Sold in 27 counties."
+            market: qhp_py2027
+      - id: medicare_advantage
+        label: Medicare Advantage (CommunityCare Senior Health Plan)
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 37658
+            share: "10.9%"
+            market: medicare_advantage_2026
+            note: Saint Francis and St. John (CommunityCare Senior Health Plan)
+    notes:
+      - No dental, sleep apnea, jaw-joint, or jaw-surgery plan policy was found. Requests before 2026-10-03 use InterQual. Requests on or after that date use MCG. Both are licensed and are not public.
+
+  - id: uhc
+    name: UnitedHealthcare
+    parent: UnitedHealth Group
+    segments:
+      - id: large_group
+        label: Employer plan, large group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 21100
+            share: "6%"
+            market: large_group_2024
+            note: UnitedHealth
+      - id: small_group
+        label: Employer plan, small group
+        group: employer
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 5032
+            share: "3%"
+            market: small_group_2024
+            note: UnitedHealth
+      - id: marketplace
+        label: Marketplace plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: PY2027 medical plan IDs
+            value: 15
+            note: "HIOS 45480. Sold in 57 counties."
+            market: qhp_py2027
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 143591
+            share: "41.5%"
+            market: medicare_advantage_2026
+      - id: uhc_dental
+        label: UnitedHealthcare dental plan
+        group: employer
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    gaps:
+      - No public Oklahoma figure for self-funded enrollment was found.
+
+  - id: aetna
+    name: Aetna
+    parent: CVS Health
+    segments:
+      - id: large_group
+        label: Employer plan, large group
+        group: employer
+        fully_insured: mixed
+        medicare: false
+        figures: []
+      - id: small_group
+        label: Employer plan, small group
+        group: employer
+        fully_insured: mixed
+        medicare: false
+        figures:
+          - label: Fully insured enrollment, historical
+            value: 25207
+            share: "14%"
+            period: "2013"
+            source: KFF State Health Facts history
+            note: Third in the Oklahoma small-group market in 2013. This is not a 2024 figure.
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 14504
+            share: "4.2%"
+            market: medicare_advantage_2026
+            note: CVS Health (Aetna Medicare)
+      - id: aetna_dental
+        label: Aetna dental plan
+        group: employer
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    gaps:
+      - Not in the top three of any Oklahoma fully insured market in 2024.
+      - No public Oklahoma figure for self-funded enrollment was found.
+      - Does not appear in the PY2027 Oklahoma Marketplace file.
+    notes:
+      - Self-funded employer plans are not in the fully insured figures.
+
+  - id: cigna
+    name: Cigna Healthcare
+    parent: The Cigna Group
+    segments:
+      - id: large_group
+        label: Employer plan, large group
+        group: employer
+        fully_insured: mixed
+        medicare: false
+        figures: []
+      - id: small_group
+        label: Employer plan, small group
+        group: employer
+        fully_insured: mixed
+        medicare: false
+        figures: []
+    gaps:
+      - Not in the top three of any Oklahoma fully insured market in 2024.
+      - No public Oklahoma figure for self-funded enrollment was found.
+    notes:
+      - The source notes describe Cigna in Oklahoma as mostly self-funded employer administration.
+
+  - id: ambetter
+    name: Ambetter of Oklahoma
+    parent: Centene
+    segments:
+      - id: individual
+        label: Individual plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: Fully insured enrollment
+            value: 64594
+            share: "23%"
+            market: individual_2024
+            note: Centene (Ambetter)
+      - id: marketplace
+        label: Marketplace plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: PY2027 medical plan IDs
+            value: 21
+            note: "HIOS 62505. Sold in 43 counties."
+            market: qhp_py2027
+
+  - id: oscar
+    name: Oscar Insurance Company
+    parent: Oscar Health
+    segments:
+      - id: marketplace
+        label: Marketplace plan
+        group: marketplace
+        fully_insured: "yes"
+        medicare: false
+        figures:
+          - label: PY2027 medical plan IDs
+            value: 14
+            note: "HIOS 91908. Sold in 12 counties."
+            market: qhp_py2027
+    notes:
+      - No Oscar-written sleep apnea, jaw-joint, jaw-surgery, or dental guideline was listed. The plan adopts MCG and eviCore, which are licensed and are not public.
+
+  - id: globalhealth
+    name: GlobalHealth
+    parent: MHH Healthcare, L.P.
+    segments:
+      - id: commercial
+        label: Commercial plan, including the state employee HMO
+        group: employer
+        fully_insured: mixed
+        medicare: false
+        figures: []
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 19239
+            share: "5.6%"
+            market: medicare_advantage_2026
+            note: MHH Healthcare (GlobalHealth)
+    gaps:
+      - Commercial enrollment was not found.
+    notes:
+      - Offers commercial plans, including the State of Oklahoma employee HMO option.
+      - Medical-necessity criteria are MCG, which is licensed and is not public.
+
+  - id: humana
+    name: Humana
+    parent: Humana
+    segments:
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 117184
+            share: "33.9%"
+            market: medicare_advantage_2026
+
+  - id: humana-ok
+    name: Humana Healthy Horizons in Oklahoma
+    parent: Humana
+    segments:
+      - id: soonerselect_medical
+        label: SoonerSelect medical plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 197194
+            period: September 2026
+            market: soonerselect_2026
+    notes:
+      - Only the orthognathic, durable medical equipment, and prosthetics titles carry an Oklahoma Medicaid version in the source list. Jaw-joint and sleep-apnea titles in that list are Medicare Advantage versions.
+      - Whether the Oklahoma Medicaid equipment title addresses an oral appliance was not confirmed.
+
+  - id: och
+    name: Oklahoma Complete Health
+    parent: Centene
+    segments:
+      - id: soonerselect_medical
+        label: SoonerSelect medical plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 191509
+            period: September 2026
+            market: soonerselect_2026
+    notes:
+      - No oral-appliance or jaw-joint policy was on the Oklahoma Complete Health list.
+
+  - id: och-specialty
+    name: Oklahoma Complete Health Children's Specialty Program
+    parent: Centene
+    segments:
+      - id: soonerselect_medical
+        label: SoonerSelect children's specialty plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 18091
+            period: September 2026
+            market: soonerselect_2026
+    gaps:
+      - No separate policy was in the source list for this program.
+
+  - id: aetna-better-health
+    name: Aetna Better Health of Oklahoma
+    parent: CVS Health
+    segments:
+      - id: soonerselect_medical
+        label: SoonerSelect medical plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 183157
+            period: September 2026
+            market: soonerselect_2026
+    notes:
+      - Plan-specific criteria come from state rules, then MCG, then Aetna clinical policy bulletins. MCG is licensed and is not public.
+
+  - id: liberty
+    name: LIBERTY Dental Plan of Oklahoma
+    parent: LIBERTY Dental Plan
+    segments:
+      - id: soonerselect_dental
+        label: SoonerSelect dental plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 341016
+            period: September 2026
+            market: soonerselect_2026
+
+  - id: dentaquest
+    name: DentaQuest of Oklahoma
+    parent: DentaQuest (Sun Life)
+    segments:
+      - id: soonerselect_dental
+        label: SoonerSelect dental plan
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures:
+          - label: Members
+            value: 270380
+            period: September 2026
+            market: soonerselect_2026
+    notes:
+      - The Oklahoma office reference manual is inside the provider portal. That manual was not opened.
+
+  - id: devoted
+    name: Devoted Health
+    parent: Devoted Health
+    segments:
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 2602
+            share: "0.8%"
+            market: medicare_advantage_2026
+    gaps:
+      - No policies were collected. The Oklahoma Medicare Advantage share is under 1%.
+
+  - id: wellcare
+    name: Wellcare
+    parent: Centene
+    segments:
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 2039
+            share: "0.6%"
+            market: medicare_advantage_2026
+            note: Centene (Wellcare)
+    gaps:
+      - No policies were collected. The Oklahoma Medicare Advantage share is under 1%.
+
+  - id: ahao
+    name: American Health Advantage of Oklahoma
+    parent: Mitchell Family Office
+    segments:
+      - id: medicare_advantage
+        label: Medicare Advantage
+        group: medicare_advantage
+        fully_insured: "no"
+        medicare: true
+        figures:
+          - label: Visible enrollment
+            value: 492
+            share: "0.1%"
+            market: medicare_advantage_2026
+    gaps:
+      - No policies were collected. The Oklahoma Medicare Advantage share is under 1%.
+
+  - id: centene-dental
+    name: Centene Dental (Envolve)
+    parent: Centene
+    segments:
+      - id: reference
+        label: Reference dental policies, not an Oklahoma SoonerSelect plan
+        group: reference
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    notes:
+      - These policies are not Oklahoma Complete Health or Ambetter plan documents.
+
+  - id: medicare-ffs
+    name: Medicare fee-for-service
+    parent: Centers for Medicare & Medicaid Services
+    segments:
+      - id: medicare_ffs
+        label: Medicare fee-for-service
+        group: medicare
+        fully_insured: "no"
+        medicare: true
+        figures: []
+    notes:
+      - Part A and Part B for Oklahoma are Novitas Solutions, Jurisdiction H.
+      - Durable medical equipment, including the oral appliance in the Medicare rules, is CGS Administrators, DME MAC Jurisdiction C.
+    gaps:
+      - A separate Oklahoma fee-for-service count was not found. The KFF Medicare total of 600,700 people in 2024 includes every Medicare coverage type.
+
+  - id: medicare-novitas
+    name: Novitas Solutions, Jurisdiction H
+    parent: Centers for Medicare & Medicaid Services
+    segments:
+      - id: medicare_ab
+        label: Medicare Part A and Part B
+        group: medicare
+        fully_insured: "no"
+        medicare: true
+        figures: []
+    notes:
+      - Novitas is the Medicare A/B contractor for Oklahoma. Novitas has no dental billing article. Article A59449 is a Palmetto GBA article and does not apply to Oklahoma.
+
+  - id: medicare-palmetto
+    name: Palmetto GBA
+    parent: Centers for Medicare & Medicaid Services
+    segments:
+      - id: not_oklahoma
+        label: Not an Oklahoma Medicare contractor
+        group: reference
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    notes:
+      - Article A59449 is a Palmetto GBA article. It does not apply to Oklahoma. Novitas Solutions is the Oklahoma Part A and Part B contractor.
+
+  - id: medicare-cgs
+    name: CGS Administrators, DME MAC Jurisdiction C
+    parent: Centers for Medicare & Medicaid Services
+    segments:
+      - id: medicare_dme
+        label: Medicare durable medical equipment
+        group: medicare
+        fully_insured: "no"
+        medicare: true
+        figures: []
+
+  - id: sooner-ohca
+    name: SoonerCare (Oklahoma Health Care Authority)
+    parent: State of Oklahoma
+    segments:
+      - id: medicaid_ffs
+        label: SoonerCare fee-for-service
+        group: soonerselect
+        fully_insured: "no"
+        medicare: false
+        medicaid: true
+        figures: []
+    notes:
+      - OHCA rules (OAC 317:30) govern fee-for-service, and they are the baseline benefit rules for SoonerSelect.
+      - Dental is carved out of the medical managed-care plans.
+      - No OHCA medical rule on oral appliances for sleep apnea was found. Whether the oral appliance is covered under SoonerCare equipment rules is unknown.
+    gaps:
+      - A separate fee-for-service enrollment count was not found.
+
+  - id: healthchoice
+    name: HealthChoice
+    parent: State of Oklahoma (OMES EGID)
+    segments:
+      - id: healthchoice
+        label: State, education, and local-government employees and retirees
+        group: other
+        fully_insured: "no"
+        medicare: false
+        figures:
+          - label: Lives covered
+            stated: about 187,000
+            period: undated, read 2026-11-18
+            source: HealthChoice provider FAQ
+            note: Active and retired state, education, and local-government employees and dependents.
+
+  - id: tricare-west
+    name: TRICARE West
+    parent: Defense Health Agency (TriWest Healthcare Alliance)
+    segments:
+      - id: tricare
+        label: TRICARE West
+        group: other
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    notes:
+      - Oklahoma moved to the TRICARE West Region on 2025-01-01 (TRICARE Newsroom).
+      - KFF's Military category is 72,100 people in 2024. That category is TRICARE and VA together, not a TRICARE enrollment count.
+    gaps:
+      - An Oklahoma-specific TRICARE count was not found.
+
+  - id: fep-blue
+    name: FEP Blue
+    parent: Blue Cross Blue Shield Association
+    segments:
+      - id: fehb
+        label: Federal employee plan
+        group: other
+        fully_insured: "no"
+        medicare: false
+        figures: []
+    gaps:
+      - Oklahoma FEHB enrollment was not found.
+
+  - id: oklahoma-fully-insured
+    name: Oklahoma fully insured plans
+    parent: Oklahoma Insurance Department
+    segments:
+      - id: state_rule
+        label: State rule for fully insured plans
+        group: other
+        fully_insured: "yes"
+        medicare: false
+        figures: []
+    notes:
+      - 36 O.S. § 6060.6 requires fully insured plans to cover anesthesia and facility costs for qualifying dental procedures. It does not apply to self-funded employer plans.

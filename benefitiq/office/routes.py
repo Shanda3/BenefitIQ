@@ -22,6 +22,8 @@ from benefitiq.office.session import (
     office_today,
 )
 from benefitiq.office.tree import load_tree, procedure_by_id
+from benefitiq.payers.catalog import GROUP_LABELS, enrollment, market_by_id, payers, payer_by_id
+from benefitiq.payers.scope import plan_scope
 
 router = APIRouter()
 
@@ -37,6 +39,157 @@ def _render(request: Request, name: str, context: dict, status_code: int = 200) 
     response = _templates().TemplateResponse(request, name, context, status_code=status_code)
     response.headers["Cache-Control"] = "no-store"
     return response
+
+
+def plan_menu() -> list[dict]:
+    """Payer and plan choices for the new-check form. Reference rows stay on the browse page."""
+    grouped: dict[str, list[dict]] = {}
+    for payer in payers():
+        if payer["id"] in {"medicare-palmetto", "oklahoma-fully-insured", "centene-dental"}:
+            continue
+        for segment in payer["segments"]:
+            group = segment.get("group") or "other"
+            grouped.setdefault(group, []).append(
+                {
+                    "value": f"{payer['id']}:{segment['id']}",
+                    "label": f"{payer['name']} — {segment['label']}",
+                }
+            )
+    order = (
+        "employer",
+        "marketplace",
+        "soonerselect",
+        "medicare_advantage",
+        "medicare",
+        "other",
+    )
+    menu = []
+    for key in order:
+        if key in grouped:
+            menu.append({"label": GROUP_LABELS.get(key, key), "options": grouped[key]})
+    return menu
+
+
+def _plan_ids(raw: str) -> tuple[str | None, str | None]:
+    if not raw or ":" not in raw:
+        return None, None
+    payer_id, segment_id = raw.split(":", 1)
+    if plan_scope(payer_id, segment_id) is None:
+        return None, None
+    return payer_id, segment_id
+
+
+def _panel_rows(scope) -> tuple[list[dict], list[dict]]:
+    if scope is None:
+        return [], []
+    seen: set[str] = set()
+    policies: list[dict] = []
+    for topic in scope.topics:
+        for hit in topic.policies + topic.extras:
+            source = hit.source
+            if hit.role == "baseline" or source.source_id in seen:
+                continue
+            if not source.counts_as_coverage and source.date.value is None and source.access == "public":
+                continue
+            seen.add(source.source_id)
+            policies.append(
+                {
+                    "title": source.title,
+                    "number": source.number,
+                    "url": source.url,
+                    "date_label": source.date.label if source.date.value else "Date not found in the source list",
+                    "access_label": source.access_label,
+                }
+            )
+    rules = [
+        {
+            "title": source.title,
+            "number": source.number,
+            "url": source.url,
+            "date_label": source.date.label if source.date.value else "Date not found in the source list",
+        }
+        for source in scope.state_rules
+    ]
+    return policies, rules
+
+
+def _figure_text(figure: dict) -> str:
+    if figure.get("stated"):
+        text = str(figure["stated"])
+    elif "value" in figure:
+        value = figure["value"]
+        text = f"{value:,}" if isinstance(value, int) else str(value)
+    else:
+        return ""
+    share = figure.get("share")
+    if share:
+        text = f"{text} ({share})"
+    extra = []
+    for key in ("plans", "counties", "plan_ids"):
+        if key in figure:
+            extra.append(f"{figure[key]} {key.replace('_', ' ')}")
+    if extra:
+        text = f"{text}; {'; '.join(extra)}"
+    return text
+
+
+def _figure_rows(segment: dict) -> list[dict]:
+    rows = []
+    for figure in segment.get("figures") or []:
+        market = market_by_id(figure["market"]) if figure.get("market") else None
+        text = _figure_text(figure)
+        if not text:
+            continue
+        rows.append(
+            {
+                "label": figure.get("label") or "Enrollment",
+                "text": text,
+                "period": (market or {}).get("period") or figure.get("period") or "",
+                "source": (market or {}).get("source") or figure.get("source") or "",
+                "source_url": (market or {}).get("source_url") or figure.get("source_url") or "",
+                "note": figure.get("note") or "",
+            }
+        )
+    return rows
+
+
+def _payer_groups() -> list[dict]:
+    grouped: dict[str, list[dict]] = {}
+    for payer in payers():
+        segment = payer["segments"][0]
+        group = segment.get("group") or "other"
+        grouped.setdefault(group, []).append(
+            {
+                "id": payer["id"],
+                "name": payer["name"],
+                "segment_id": segment["id"],
+                "segment_label": segment["label"],
+            }
+        )
+    order = (
+        "employer",
+        "marketplace",
+        "soonerselect",
+        "medicare_advantage",
+        "medicare",
+        "other",
+        "reference",
+    )
+    groups = []
+    for key in order:
+        if key in grouped:
+            groups.append({"label": GROUP_LABELS.get(key, key), "entries": grouped[key]})
+    return groups
+
+
+def _case_scope(state: dict | None):
+    if not state:
+        return None
+    payer_id = state.get("payer_id")
+    segment_id = state.get("segment_id")
+    if not payer_id or not segment_id:
+        return None
+    return plan_scope(payer_id, segment_id, state.get("procedure_id"))
 
 
 def _redirect(url: str, state: dict | None = None, *, clear: bool = False) -> RedirectResponse:
@@ -105,7 +258,11 @@ def _snapshot(decision, status: str) -> dict:
         "synthetic": True,
         "demo": False,
         "label": "SYNTHETIC",
-        "procedure": decision.procedure_title,
+        "procedure": (
+            f"{decision.procedure_title} · {decision.payer_name}"
+            if decision.payer_name
+            else decision.procedure_title
+        ),
         "date": decision.as_of.isoformat(),
         "result_label": decision.result_label,
         "board_status": status,
@@ -132,9 +289,16 @@ def _registered_sources() -> list[dict]:
                 "url": row.url,
                 "effective_from": row.effective_from,
                 "effective_to": row.effective_to,
-                "kind": "Office" if row.source_id.startswith("cms-") else "Stub",
+                "kind": (
+                    "Office"
+                    if row.source_id.startswith("cms-")
+                    else "Payer"
+                    if row.source_id.startswith("ok-")
+                    else "Stub"
+                ),
             }
             for row in rows
+            if row.doc_type != "policy_text"
         ]
     copied.sort(key=lambda item: (item["kind"] != "Office", item["title"]))
     return copied
@@ -145,7 +309,12 @@ def home(request: Request):
     return _render(
         request,
         "index.html",
-        {"procedures": load_tree()["procedures"], "step": 1, "nav": "check"},
+        {
+            "procedures": load_tree()["procedures"],
+            "step": 1,
+            "nav": "check",
+            "plan_menu": plan_menu(),
+        },
     )
 
 
@@ -177,10 +346,21 @@ def local_case(request: Request):
 
 @router.get("/procedures", response_class=HTMLResponse)
 def procedures(request: Request):
+    payer_id, segment_id = _plan_ids(request.query_params.get("plan", ""))
+    cards = []
+    for procedure in load_tree()["procedures"]:
+        scope = plan_scope(payer_id, segment_id, procedure["id"]) if payer_id else None
+        cards.append({"procedure": procedure, "scope": scope})
     return _render(
         request,
         "procedures.html",
-        {"nav": "procedures", "procedures": load_tree()["procedures"]},
+        {
+            "nav": "procedures",
+            "procedures": load_tree()["procedures"],
+            "cards": cards,
+            "plan_menu": plan_menu(),
+            "selected_plan": f"{payer_id}:{segment_id}" if payer_id else "",
+        },
     )
 
 
@@ -199,18 +379,23 @@ def help_page(request: Request):
 
 
 @router.post("/office/start")
-def start(request: Request, procedure_id: str = Form()):
+def start(request: Request, procedure_id: str = Form(), plan: str = Form("")):
     procedure = procedure_by_id(procedure_id)
     if procedure is None:
         return _error(request, "That procedure is not on the list.", 404)
     if not procedure["active"]:
         return _error(request, "That procedure is not available yet.", 400)
+    payer_id, segment_id = _plan_ids(plan)
+    if plan and payer_id is None:
+        return _error(request, "Choose a plan from the list.", 400)
     state = {
         "case_id": new_case_id(),
         "procedure_id": procedure["id"],
         "as_of": office_today().isoformat(),
         "index": 0,
         "answers": {},
+        "payer_id": payer_id,
+        "segment_id": segment_id,
     }
     return _redirect("/office/question", state)
 
@@ -233,6 +418,9 @@ def question(request: Request):
     except ValueError:
         return _redirect("/", clear=True)
     previous = state["answers"].get(current["id"])
+    scope = _case_scope(state)
+    allowed = set() if scope is not None and not scope.use_medicare_rules else None
+    policy_rows, state_rows = _panel_rows(scope)
     return _render(
         request,
         "question.html",
@@ -243,9 +431,13 @@ def question(request: Request):
             "number": index + 1,
             "total": len(questions),
             "previous": {"yes": "Yes", "no": "No", "not_sure": "Not sure"}.get(previous or ""),
-            "citations": citations_for(current["citations"], as_of),
+            "citations": citations_for(current["citations"], as_of, allowed),
             "nav": "check",
             "case_id": state["case_id"],
+            "scope": scope,
+            "policy_rows": policy_rows,
+            "state_rows": state_rows,
+            "uncited_sentence": scope.uncited_sentence if scope else None,
         },
     )
 
@@ -326,6 +518,8 @@ def _finished(request: Request):
         state["answers"],
         as_of=as_of,
         case_id=state["case_id"],
+        payer_id=state.get("payer_id"),
+        segment_id=state.get("segment_id"),
     )
     return decision, None
 
@@ -347,6 +541,7 @@ def _case_context(decision, *, editable: bool, stepper_path: str, print_href: st
         "review_answer": decision.answers[review - 1] if total else None,
         "snapshot": _snapshot(decision, status) if editable else None,
         "demo": None,
+        "uncited_sentence": decision.uncited_sentence,
     }
 
 
@@ -381,6 +576,7 @@ def print_summary(request: Request):
             "nav": "check",
             "board_status": board_status_for(decision),
             "chip_class": chip_class(board_status_for(decision)),
+            "uncited_sentence": decision.uncited_sentence,
         },
     )
 
@@ -423,5 +619,41 @@ def demo_print(case_id: str, request: Request):
             "nav": "cases",
             "board_status": card["board_status"],
             "chip_class": card["chip_class"],
+        },
+    )
+
+
+@router.get("/payers", response_class=HTMLResponse)
+def payer_index(request: Request):
+    return _render(
+        request,
+        "payers.html",
+        {
+            "nav": "payers",
+            "groups": _payer_groups(),
+            "state_coverage": enrollment().get("state_coverage"),
+        },
+    )
+
+
+@router.get("/payers/{payer_id}", response_class=HTMLResponse)
+def payer_detail(payer_id: str, request: Request):
+    payer = payer_by_id(payer_id)
+    if payer is None:
+        return _error(request, "That payer is not on the list.", 404)
+    segment_id = request.query_params.get("segment") or payer["segments"][0]["id"]
+    scope = plan_scope(payer_id, segment_id)
+    if scope is None:
+        return _error(request, "That plan is not on the list.", 404)
+    segment = next(item for item in payer["segments"] if item["id"] == segment_id)
+    return _render(
+        request,
+        "payer.html",
+        {
+            "nav": "payers",
+            "payer": payer,
+            "segment": segment,
+            "scope": scope,
+            "figures": _figure_rows(segment),
         },
     )
