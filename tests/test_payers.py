@@ -114,8 +114,8 @@ def _figures():
 def test_every_source_row_is_added_already_or_skipped():
     counts = registry_counts()
     assert counts["csv_rows"] == 102
-    assert counts["added"] == 97
-    assert counts["already"] == 4
+    assert counts["added"] == 96
+    assert counts["already"] == 5
     assert counts["skipped"] == 1
     assert counts["citable"] == 77
     assert counts["fetch"] == 69
@@ -129,6 +129,40 @@ def test_every_source_row_is_added_already_or_skipped():
     skipped = skipped_sources()[0]
     assert "medicalpolicy.bcbsok.com" in skipped.url
     assert "terms-gated" in skipped.reason
+
+
+def test_dental_plan_slot_is_not_an_active_check():
+    from benefitiq.office.tree import TreeError, _procedure, load_tree
+    from benefitiq.payers.dental_plan import FEATURE_IDS, dental_plan
+
+    slot = dental_plan()
+    assert [item["id"] for item in slot["features"]] == list(FEATURE_IDS)
+    assert {item["id"] for item in slot["payers"]} == {
+        "delta-dental-ok",
+        "metlife-dental",
+        "guardian-dental",
+        "cigna-dental",
+        "united-concordia",
+        "liberty",
+        "dentaquest",
+    }
+    assert all(item["status"] == "not_loaded" for item in slot["payers"])
+    loaded = load_tree()["procedures"]
+    assert all(item["benefit_path"] == "medical" for item in loaded)
+    assert not any(item["benefit_path"] == "dental" and item["active"] for item in loaded)
+    with pytest.raises(TreeError, match="dental benefit path cannot be active"):
+        _procedure(
+            {"id": "later", "title": "Later", "active": True, "benefit_path": "dental"},
+            index=0,
+        )
+
+
+def test_oklahoma_bulletin_is_already_in_the_office_corpus():
+    bulletin = [item for item in sources() if item.source_id == "oid-36-6060-6"]
+    assert len(bulletin) == 1
+    assert bulletin[0].disposition == "already"
+    assert bulletin[0].fetch is False
+    assert bulletin[0].date.value.isoformat() == "2010-01-12"
 
 
 def test_humana_is_pending_and_not_fetched():
@@ -265,12 +299,12 @@ def test_payer_pages_and_plan_filter(monkeypatch):
 
     procedures = client.get("/procedures?plan=bcbsok:large_group")
     assert procedures.status_code == 200
-    assert procedures.text.count("Coming soon") == 8
+    assert procedures.text.count("Coming soon") == 14
     assert payer_gap("Blue Cross and Blue Shield of Oklahoma") in _shown(procedures.text)
     assert "<form" not in client.get("/sources").text
 
     plain = client.get("/procedures")
-    assert plain.text.count("Coming soon") == 8
+    assert plain.text.count("Coming soon") == 14
 
 
 def _finish(plan: str):

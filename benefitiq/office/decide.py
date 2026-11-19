@@ -26,6 +26,8 @@ SHORT_SOURCE = {
     "cms-article-a52512": "Article A52512",
     "cms-bp102c15-150": "Manual Ch. 15 §150",
     "cms-medicare-dental": "CMS dental coverage",
+    "cms-dental-exceptions": "CMS dental coverage",
+    "oid-36-6060-6": "OID bulletin 36 O.S. § 6060.6",
 }
 
 

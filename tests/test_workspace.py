@@ -294,9 +294,21 @@ def test_procedures_library_lists_active_and_coming_soon():
     assert "<h1>Procedures library</h1>" in page.text
     assert "Sleep apnea oral appliance" in page.text
     assert "Dental care needed before a medical treatment (Medicare)" in page.text
-    for title in ("TMJ", "Injury/trauma", "Biopsy", "CBCT scan"):
+    for title in (
+        "TMJ splint",
+        "Tooth stabilization with a jaw fracture",
+        "CBCT scan",
+        "Ridge reconstruction with tumor removal",
+        "Biopsy",
+        "Frenectomy",
+        "Impacted tooth extraction",
+        "Cleft and congenital care",
+        "Sinus or oroantral closure",
+        "Jaw osteonecrosis or infection",
+        "Oral lesion excision",
+    ):
         assert title in page.text
-    assert page.text.count("Coming soon") == 8
+    assert page.text.count("Coming soon") == 14
     assert 'aria-disabled="true"' in page.text
     assert 'href="/advanced"' in page.text
 

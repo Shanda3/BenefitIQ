@@ -13,6 +13,7 @@ from benefitiq.constants import FORBIDDEN_CONTENT_KEYS
 from benefitiq.labels import load_labels
 
 RESULT_IDS = ("bill_medical_first", "probably_not_medical", "need_more_info")
+BENEFIT_PATHS = ("medical", "dental")
 RESULT_LABELS = {
     "bill_medical_first": "Bill medical first",
     "probably_not_medical": "Probably not medical",
@@ -206,6 +207,12 @@ def _procedure(raw: Any, *, index: int) -> dict[str, Any]:
     active = raw.get("active")
     if not isinstance(active, bool):
         raise TreeError(f"{where} needs active: true or false")
+    benefit_path = raw.get("benefit_path")
+    if benefit_path not in BENEFIT_PATHS:
+        raise TreeError(f"{where} benefit_path must be medical or dental")
+    # A dental-plan check is a later path. The medical questions stay the only active flow.
+    if benefit_path == "dental" and active:
+        raise TreeError(f"{where} dental benefit path cannot be active yet")
     blurb = raw.get("blurb") or ""
     if not isinstance(blurb, str):
         raise TreeError(f"{where} blurb must be text")
@@ -214,6 +221,7 @@ def _procedure(raw: Any, *, index: int) -> dict[str, Any]:
             "id": procedure_id.strip(),
             "title": title.strip(),
             "blurb": blurb.strip(),
+            "benefit_path": benefit_path,
             "active": False,
             "questions": [],
             "results": {},
@@ -295,6 +303,7 @@ def _procedure(raw: Any, *, index: int) -> dict[str, Any]:
         "id": procedure_id.strip(),
         "title": title.strip(),
         "blurb": blurb.strip(),
+        "benefit_path": benefit_path,
         "active": True,
         "questions": questions,
         "results": results,
